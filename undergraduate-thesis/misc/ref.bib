@@ -19,127 +19,467 @@
 %
 % Compile with: xelatex -> biber -> xelatex -> xelatex
 
-@article{yuFeiJiZongTiDuoXueKeSheJiYouHuaDeXianZhuangYuFaZhanFangXiang2008, 
-  title = {飞机总体多学科设计优化的现状与发展方向},
-  author = {余, 雄庆},
-  date = {2008},
-  journaltitle = {南京航空航天大学学报},
-  pages = {417--426},
-  issn = {1005-2615},
-  url = {http://kns.cnki.net/kcms/detail/detail.aspx?filename=NJHK200804000&dbcode=CJFQ&dbname=CJFD2008&v=},
-  urldate = {2020-02-29},
-  keywords = {aircraft design,multidisciplinary design optimization,optimization,优化,多学科设计优化,飞行器设计},
-  langid = {中文;},
-  number = {04}
+@String(PAMI = {IEEE Trans. Pattern Anal. Mach. Intell.})
+@String(IJCV = {Int. J. Comput. Vis.})
+@String(CVPR= {IEEE Conf. Comput. Vis. Pattern Recog.})
+@String(ICCV= {Int. Conf. Comput. Vis.})
+@String(ECCV= {Eur. Conf. Comput. Vis.})
+@String(ICRA= {Int. Conf. Robot. Auto.})
+@String(NIPS= {Adv. Neural Inform. Process. Syst.})
+@String(ICPR = {Int. Conf. Pattern Recog.})
+@String(BMVC= {Brit. Mach. Vis. Conf.})
+@String(TOG= {ACM Trans. Graph.})
+@String(TRO = {IEEE Trans. Robot.})
+@String(TIP  = {IEEE Trans. Image Process.})
+@String(TVCG = {IEEE Trans. Vis. Comput. Graph.})
+@String(TMM  = {IEEE Trans. Multimedia})
+@String(ACMMM= {ACM Int. Conf. Multimedia})
+@String(ICME = {Int. Conf. Multimedia and Expo})
+@String(ICASSP=	{ICASSP})
+@String(ICIP = {IEEE Int. Conf. Image Process.})
+@String(ACCV  = {ACCV})
+@String(ICLR = {Int. Conf. Learn. Represent.})
+@String(IJCAI = {IJCAI})
+@String(PR   = {Pattern Recognition})
+@String(AAAI = {AAAI})
+@String(CVPRW= {IEEE Conf. Comput. Vis. Pattern Recog. Worksh.})
+@String(CSVT = {IEEE Trans. Circuit Syst. Video Technol.})
+
+@String(SPL	= {IEEE Sign. Process. Letters})
+@String(VR   = {Vis. Res.})
+@String(JOV	 = {J. Vis.})
+@String(TVC  = {The Vis. Comput.})
+@String(JCST  = {J. Comput. Sci. Tech.})
+@String(CGF  = {Comput. Graph. Forum})
+@String(CVM = {Computational Visual Media})
+
+@String(TRO = {TRO})
+@String(ICRA= {ICRA})
+@String(PAMI  = {IEEE TPAMI})
+@String(IJCV  = {IJCV})
+@String(CVPR  = {CVPR})
+@String(ICCV  = {ICCV})
+@String(ECCV  = {ECCV})
+@String(NIPS  = {NeurIPS})
+@String(ICPR  = {ICPR})
+@String(BMVC  =	{BMVC})
+@String(TOG   = {ACM TOG})
+@String(TIP   = {IEEE TIP})
+@String(TVCG  = {IEEE TVCG})
+@String(TCSVT = {IEEE TCSVT})
+@String(TMM   =	{IEEE TMM})
+@String(ACMMM = {ACM MM})
+@String(ICME  =	{ICME})
+@String(ICASSP=	{ICASSP})
+@String(ICIP  = {ICIP})
+@String(ACCV  = {ACCV})
+@String(ICLR  = {ICLR})
+@String(IJCAI = {IJCAI})
+@String(PR = {PR})
+@String(AAAI = {AAAI})
+@String(CVPRW= {CVPRW})
+@String(CSVT = {IEEE TCSVT})
+@String(threeDOR = {3DOR})
+@String(MICCAI = {MICCAI})
+@String(SPIE = {SPIE})
+
+@article{krizhevsky2017imagenet,
+  title={Imagenet classification with deep convolutional neural networks},
+  author={Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E},
+  journal={Communications of the ACM},
+  volume={60},
+  number={6},
+  pages={84--90},
+  year={2017},
+  publisher={AcM New York, NY, USA}
 }
-@article{Hajela2012Application,
-  title={Application of global sensitivity equations in multidisciplinary aircraft synthesis},
-  author={Hajela, P. and Bloebaum, C. L. and Sobieszczanski-Sobieski, Jaroslaw},
-  journal={Journal of Aircraft},
-  volume={27},
-  number={12},
-  pages = {1002-110},
-  year={1990},
+
+@article{simonyan2014very,
+  title={Very deep convolutional networks for large-scale image recognition},
+  author={Simonyan, Karen and Zisserman, Andrew},
+  journal={arXiv preprint arXiv:1409.1556},
+  year={2014}
 }
-@book{李成智2004飞行之梦,
-  title={飞行之梦:航空航天发展史概论},
-  author={李成智 and 李小宁 and 田大山},
-  publisher={北京航空航天大学},
-  location={北京},
-  year={2004},
-  language={zh},
-  keywords={book},
+
+@inproceedings{he2016deep,
+  title={Deep residual learning for image recognition},
+  author={He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={770--778},
+  year={2016}
 }
-@book{Raymer1992Aircraft,
-  title={Aircraft design: A Conceptual Approach},
-  author={Raymer and DanielP},
-  location={Reston, Virginia},
-  publisher={American Institute of Aeronautics and Astronautics},
+
+@article{dosovitskiy2020image,
+  title={An image is worth 16x16 words: Transformers for image recognition at scale},
+  author={Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and Gelly, Sylvain and others},
+  journal={arXiv preprint arXiv:2010.11929},
+  year={2020}
+}
+
+@inproceedings{qi2017pointnet,
+  title={Pointnet: Deep learning on point sets for 3d classification and segmentation},
+  author={Qi, Charles R and Su, Hao and Mo, Kaichun and Guibas, Leonidas J},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={652--660},
+  year={2017}
+}
+
+@article{huang2021comprehensive,
+  title={A comprehensive survey on point cloud registration},
+  author={Huang, Xiaoshui and Mei, Guofeng and Zhang, Jian and Abbas, Rana},
+  journal={arXiv preprint arXiv:2103.02690},
+  year={2021}
+}
+
+@inproceedings{besl1992method,
+  title={Method for registration of 3-D shapes},
+  author={Besl, Paul J and McKay, Neil D},
+  booktitle={Sensor fusion IV: control paradigms and data structures},
+  volume={1611},
+  pages={586--606},
   year={1992},
-  keywords={book},
+  organization={Spie}
 }
-@inproceedings{sunpinyi,
-    author = {孙品一},
-    title = {高校学报编辑工作现代化特征},
-    location = {北京},
-    publisher = {北京师范大学出版社},
-    year = {1998},
-    pages = {10-22},
-    editor = {张为民},
-    booktitle = {中国高等学校自然科学学报研究会. 科技编辑学论文集(2)},
+
+@article{yang2019performance,
+  title={A performance evaluation of correspondence grouping methods for 3D rigid data matching},
+  author={Yang, Jiaqi and Xian, Ke and Wang, Peng and Zhang, Yanning},
+  journal={IEEE transactions on pattern analysis and machine intelligence},
+  volume={43},
+  number={6},
+  pages={1859--1874},
+  year={2019},
+  publisher={IEEE}
 }
-@inbook{luoyun,
-  title={安全科学理论体系的发展及趋势探讨},
-  author={罗云},
-  location = {北京},
-  publisher={科学出版社},
-  year={2000},
-  pages = {1-5},
-  editor = {白春华 and 何学秋 and 吴宗之},
-  booktitle = {21世纪安全科学与技术的发展趋势},
+
+@inproceedings{qi2019deep,
+  title={Deep hough voting for 3d object detection in point clouds},
+  author={Qi, Charles R and Litany, Or and He, Kaiming and Guibas, Leonidas J},
+  booktitle={proceedings of the IEEE/CVF International Conference on Computer Vision},
+  pages={9277--9286},
+  year={2019}
 }
-@phdthesis{zhanghesheng,
-  author = {张和生},
-  title = {嵌入式单片机系统设计},
-  location = {北京},
-  school = {北京理工大学},
-  year = {1998},
-  language={zh},
-  keywords={thesis},
+
+@inproceedings{wang2018sgpn,
+  title={Sgpn: Similarity group proposal network for 3d point cloud instance segmentation},
+  author={Wang, Weiyue and Yu, Ronald and Huang, Qiangui and Neumann, Ulrich},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={2569--2578},
+  year={2018}
 }
-@phdthesis{Sobieski,
-  author = {Sobieski, I. P.},
-  title = {Multidisciplinary Design Using Collaborative Optimization},
-  location = {United States -- California},
-  school = {Stanford University},
-  year = {1998},
-  keywords={thesis},
+
+@inproceedings{han2020occuseg,
+  title={Occuseg: Occupancy-aware 3d instance segmentation},
+  author={Han, Lei and Zheng, Tian and Xu, Lan and Fang, Lu},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={2940--2949},
+  year={2020}
 }
-@techreport{fengxiqiao,
-  author = {冯西桥},
-  title = {核反应堆压力容器的LBB分析},
-  address = {北京},
-  institution = {清华大学核能技术设计研究院},
-  year = {1997},
-  language={zh},
-  keywords={techreport},
+
+@inproceedings{barath2018multi,
+  title={Multi-class model fitting by energy minimization and mode-seeking},
+  author={Barath, Daniel and Matas, Jiri},
+  booktitle={Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages={221--236},
+  year={2018}
 }
-@techreport{Sobieszczanski,
-  author = {Sobieszczanski-Sobieski, J.},
-  title = {Optimization by Decomposition: A Step from Hierarchic to Non-Hierarchic Systems},
-  institution = {NASA CP-3031},
-  year = {1989},
-  keywords={techreport},
+
+@article{hartley1997defense,
+  title={In defense of the eight-point algorithm},
+  author={Hartley, Richard I},
+  journal={IEEE Transactions on pattern analysis and machine intelligence},
+  volume={19},
+  number={6},
+  pages={580--593},
+  year={1997},
+  publisher={IEEE}
 }
-@patent{jiangxizhou,
-  author = {姜锡洲},
-  title = {一种温热外敷药制备方案},
-  location = {中国},
-  number = {88105607},
-  date = {1989-07-26},
+
+@inproceedings{tang2022multi,
+  title={Multi-instance point cloud registration by efficient correspondence clustering},
+  author={Tang, Weixuan and Zou, Danping},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={6667--6676},
+  year={2022}
 }
-@standard{GB/T16159—1996,
-  publisher ={中国标准出版社},
-  title={GB/T 16159—1996. 汉语拼音正词法基本规则},
-  location = {北京},
-  year={1996},
-  language={zh},
-  keywords={standard},
+
+@inproceedings{barath2019progressive,
+  title={Progressive-x: Efficient, anytime, multi-model fitting algorithm},
+  author={Barath, Daniel and Matas, Jiri},
+  booktitle={Proceedings of the IEEE/CVF international conference on computer vision},
+  pages={3780--3788},
+  year={2019}
 }
-@newspaper{xiexide,
-  author = {谢希德},
-  title={创造学习的思路},
-  date={1998-12-25},
-  number = {10},
-  journal = {人民日报},
-  keywords = {newspaper},
+
+@article{barath2021progressive,
+  title={Progressive-x+: Clustering in the consensus space},
+  author={Barath, Daniel and Rozumny, Denys and Eichhardt, Ivan and Hajder, Levente and Matas, Jiri},
+  journal={arXiv preprint arXiv:2103.13875},
+  year={2021}
 }
-@online{yaoboyuan,
-  author = {姚伯元},
-  title = {毕业设计(论文)规范化管理与培养学生综合素质},
-  organization = {中国高等教育网教学研究},
-  date = {2005-02-02},
-  url     = {http://www.cnnic.net.cn/hlwfzyj/hlwxzbg/201201/P020120709345264469680},
-  urldate = {2013-03-26},
-  keywords = {online},
+
+@inproceedings{kanazawa2004detection,
+  title={Detection of planar regions with uncalibrated stereo using distributions of feature points.},
+  author={Kanazawa, Yasushi and Kawakami, Hiroshi},
+  booktitle={BMVC},
+  pages={1--10},
+  year={2004}
+}
+
+@inproceedings{kluger2020consac,
+  title={Consac: Robust multi-model fitting by conditional sample consensus},
+  author={Kluger, Florian and Brachmann, Eric and Ackermann, Hanno and Rother, Carsten and Yang, Michael Ying and Rosenhahn, Bodo},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={4634--4643},
+  year={2020}
+}
+
+@inproceedings{barath2018graph,
+  title={Graph-cut RANSAC},
+  author={Barath, Daniel and Matas, Ji{\v{r}}{\'\i}},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={6733--6741},
+  year={2018}
+}
+
+@inproceedings{toldo2008robust,
+  title={Robust multiple structures estimation with j-linkage},
+  author={Toldo, Roberto and Fusiello, Andrea},
+  booktitle={Computer Vision--ECCV 2008: 10th European Conference on Computer Vision, Marseille, France, October 12-18, 2008, Proceedings, Part I 10},
+  pages={537--547},
+  year={2008},
+  organization={Springer}
+}
+
+@inproceedings{magri2014t,
+  title={T-linkage: A continuous relaxation of j-linkage for multi-model fitting},
+  author={Magri, Luca and Fusiello, Andrea},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={3954--3961},
+  year={2014}
+}
+
+@inproceedings{magri2015robust,
+  title={Robust multiple model fitting with preference analysis and low-rank approximation},
+  author={Magri, Luca and Andrea, Fusiello and others},
+  booktitle={Procedings of the British Machine Vision Conference 2015},
+  pages={20--1},
+  year={2015}
+}
+
+@inproceedings{magri2016multiple,
+  title={Multiple model fitting as a set coverage problem},
+  author={Magri, Luca and Fusiello, Andrea},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={3318--3326},
+  year={2016}
+}
+
+@inproceedings{leordeanu2005spectral,
+  title={A spectral technique for correspondence problems using pairwise constraints},
+  author={Leordeanu, Marius and Hebert, Martial},
+  booktitle={Tenth IEEE International Conference on Computer Vision (ICCV'05) Volume 1},
+  volume={2},
+  pages={1482--1489},
+  year={2005},
+  organization={IEEE}
+}
+
+@inproceedings{yuan2022pointclm,
+  title={PointCLM: A Contrastive Learning-based Framework for Multi-instance Point Cloud Registration},
+  author={Yuan, Mingzhi and Li, Zhihao and Jin, Qiuye and Chen, Xinrong and Wang, Manning},
+  booktitle={Computer Vision--ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23--27, 2022, Proceedings, Part IX},
+  pages={595--611},
+  year={2022},
+  organization={Springer}
+}
+
+@inproceedings{huang2021predator,
+  title={Predator: Registration of 3d point clouds with low overlap},
+  author={Huang, Shengyu and Gojcic, Zan and Usvyatsov, Mikhail and Wieser, Andreas and Schindler, Konrad},
+  booktitle={Proceedings of the IEEE/CVF Conference on computer vision and pattern recognition},
+  pages={4267--4276},
+  year={2021}
+}
+
+@inproceedings{lin2017feature,
+  title={Feature pyramid networks for object detection},
+  author={Lin, Tsung-Yi and Doll{\'a}r, Piotr and Girshick, Ross and He, Kaiming and Hariharan, Bharath and Belongie, Serge},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={2117--2125},
+  year={2017}
+}
+
+@inproceedings{thomas2019kpconv,
+  title={Kpconv: Flexible and deformable convolution for point clouds},
+  author={Thomas, Hugues and Qi, Charles R and Deschaud, Jean-Emmanuel and Marcotegui, Beatriz and Goulette, Fran{\c{c}}ois and Guibas, Leonidas J},
+  booktitle={Proceedings of the IEEE/CVF international conference on computer vision},
+  pages={6411--6420},
+  year={2019}
+}
+
+@inproceedings{qin2022geometric,
+  title={Geometric transformer for fast and robust point cloud registration},
+  author={Qin, Zheng and Yu, Hao and Wang, Changjian and Guo, Yulan and Peng, Yuxing and Xu, Kai},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={11143--11152},
+  year={2022}
+}
+
+@inproceedings{sun2020circle,
+  title={Circle loss: A unified perspective of pair similarity optimization},
+  author={Sun, Yifan and Cheng, Changmao and Zhang, Yuhan and Zhang, Chi and Zheng, Liang and Wang, Zhongdao and Wei, Yichen},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={6398--6407},
+  year={2020}
+}
+
+@inproceedings{sarlin2020superglue,
+  title={Superglue: Learning feature matching with graph neural networks},
+  author={Sarlin, Paul-Edouard and DeTone, Daniel and Malisiewicz, Tomasz and Rabinovich, Andrew},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={4938--4947},
+  year={2020}
+}
+
+@techreport{schenker1992sensor,
+  title={Sensor fusion IV: Control paradigms and data structures; Proceedings of the Meeting, Boston, MA, Nov. 12-15, 1991},
+  author={Schenker, Paul S},
+  year={1992},
+  institution={Society of Photo-Optical Instrumentation Engineers (SPIE Proceedings. Vol. 1611)}
+}
+
+@article{pomerleau2015review,
+  title={A review of point cloud registration algorithms for mobile robotics},
+  author={Pomerleau, Fran{\c{c}}ois and Colas, Francis and Siegwart, Roland and others},
+  journal={Foundations and Trends{\textregistered} in Robotics},
+  volume={4},
+  number={1},
+  pages={1--104},
+  year={2015},
+  publisher={Now Publishers, Inc.}
+}
+
+@inproceedings{aoki2019pointnetlk,
+  title={Pointnetlk: Robust \& efficient point cloud registration using pointnet},
+  author={Aoki, Yasuhiro and Goforth, Hunter and Srivatsan, Rangaprasad Arun and Lucey, Simon},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={7163--7172},
+  year={2019}
+}
+
+@inproceedings{bai2020d3feat,
+  title={D3feat: Joint learning of dense detection and description of 3d local features},
+  author={Bai, Xuyang and Luo, Zixin and Zhou, Lei and Fu, Hongbo and Quan, Long and Tai, Chiew-Lan},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={6359--6367},
+  year={2020}
+}
+
+@inproceedings{wang2022you,
+  title={You only hypothesize once: Point cloud registration with rotation-equivariant descriptors},
+  author={Wang, Haiping and Liu, Yuan and Dong, Zhen and Wang, Wenping},
+  booktitle={Proceedings of the 30th ACM International Conference on Multimedia},
+  pages={1630--1641},
+  year={2022}
+}
+
+@article{bustos2017guaranteed,
+  title={Guaranteed outlier removal for point cloud registration with correspondences},
+  author={Bustos, Alvaro Parra and Chin, Tat-Jun},
+  journal={IEEE transactions on pattern analysis and machine intelligence},
+  volume={40},
+  number={12},
+  pages={2868--2882},
+  year={2017},
+  publisher={IEEE}
+}
+
+@article{yang2020teaser,
+  title={Teaser: Fast and certifiable point cloud registration},
+  author={Yang, Heng and Shi, Jingnan and Carlone, Luca},
+  journal={IEEE Transactions on Robotics},
+  volume={37},
+  number={2},
+  pages={314--333},
+  year={2020},
+  publisher={IEEE}
+}
+
+@inproceedings{yi2018learning,
+  title={Learning to find good correspondences},
+  author={Yi, Kwang Moo and Trulls, Eduard and Ono, Yuki and Lepetit, Vincent and Salzmann, Mathieu and Fua, Pascal},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={2666--2674},
+  year={2018}
+}
+
+@inproceedings{xie2021learning,
+  title={Learning to find good correspondences of multiple objects},
+  author={Xie, Youye and Tang, Yingheng and Tang, Gongguo and Hoff, William},
+  booktitle={2020 25th International Conference on Pattern Recognition (ICPR)},
+  pages={2779--2786},
+  year={2021},
+  organization={IEEE}
+}
+
+@article{chang2015shapenet,
+  title={Shapenet: An information-rich 3d model repository},
+  author={Chang, Angel X and Funkhouser, Thomas and Guibas, Leonidas and Hanrahan, Pat and Huang, Qixing and Li, Zimo and Savarese, Silvio and Savva, Manolis and Song, Shuran and Su, Hao and others},
+  journal={arXiv preprint arXiv:1512.03012},
+  year={2015}
+}
+
+@inproceedings{avetisyan2019scan2cad,
+  title={Scan2cad: Learning cad model alignment in rgb-d scans},
+  author={Avetisyan, Armen and Dahnert, Manuel and Dai, Angela and Savva, Manolis and Chang, Angel X and Nie{\ss}ner, Matthias},
+  booktitle={Proceedings of the IEEE/CVF Conference on computer vision and pattern recognition},
+  pages={2614--2623},
+  year={2019}
+}
+
+@article{sunmodelnet40,
+  title={MODELNET40-C: ARobustness BENCHMARK FOR 3D POINT CLOUD RECOGNITION UNDER CORRUPTION},
+  author={Sun, Jiachen and Zhang, Qingzhao and Kailkhura, Bhavya and Yu, Zhiding and Xiao, Chaowei and Mao, Z Morley}
+}
+
+
+@misc{jubuhequanjuxinxidetuxiang,
+  author = {肖郑磊}, 
+  title = {基于局部和全局信息的图像与点云配准算法研究},
+}
+
+@article{zidongjiashilujingguihua,
+ author = {周慧子 and 胡学敏 and 陈龙 and 田梅 and 熊豆},
+ title = {面向自动驾驶的动态路径规划避障算法},
+ journal = {计算机应用},
+ volume = {37},
+ number = {883-888},
+ year = {2017},
+ issn = {1001-9081},
+}
+
+@inproceedings{deng2018ppfnet,
+  title={Ppfnet: Global context aware local features for robust 3d point matching},
+  author={Deng, Haowen and Birdal, Tolga and Ilic, Slobodan},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={195--205},
+  year={2018}
+}
+
+@inproceedings{deng2018ppf,
+  title={Ppf-foldnet: Unsupervised learning of rotation invariant 3d local descriptors},
+  author={Deng, Haowen and Birdal, Tolga and Ilic, Slobodan},
+  booktitle={Proceedings of the European conference on computer vision (ECCV)},
+  pages={602--618},
+  year={2018}
+}
+
+@inproceedings{stuckler2012robust,
+  title={Robust real-time registration of RGB-D images using multi-resolution surfel representations},
+  author={St{\"u}ckler, J{\"o}rg and Behnke, Sven},
+  booktitle={ROBOTIK 2012; 7th German Conference on Robotics},
+  pages={1--4},
+  year={2012},
+  organization={VDE}
 }
