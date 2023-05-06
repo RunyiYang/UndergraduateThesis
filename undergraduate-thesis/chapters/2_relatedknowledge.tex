@@ -71,7 +71,27 @@
 \section{刚体运动参数估计}
 刚体运动参数估计是点云配准任务的最后一个阶段的任务。对于位移来说，常用的是位移向量（Transition）；旋转的运动参数有不同的表示形式，如欧拉角\cite{pio1966euler}、四元数\cite{shoemake1985animating}、旋转矩阵\cite{horn1954doubly}、轴角\cite{diebel2006representing}等。下面我们对旋转的表示进行简要介绍。
 
-\subsection{欧拉角和轴角}
+\subsection{欧拉角}
+三次坐标旋转依次可以描述任意旋转。我们考虑三次旋转，其中第一次旋转是关于 $k$ 轴的角度 $\psi$，第二次旋转是关于 $j$ 轴的角度 $\theta$，第三次旋转是关于 $i$ 轴的角度 $\phi$。为了简化符号，我们将这些角度排列成一个三维向量，称为欧拉角向量，定义为 
+\begin{equation}
+    u := [\phi, \theta, \psi]^T
+\end{equation}
+将欧拉角向量映射到其对应的旋转矩阵的函数，$R_{ijk} : R^3 \to SO(3)$，定义为
+\begin{equation}
+    R_{ijk}(\phi, \theta, \psi) := R_i(\phi)R_j(\theta)R_k(\psi)
+\end{equation}
+与一般情况相同，如果 $z \in R^3$ 是世界坐标系中的一个向量，$z_0 \in R^3$ 是以体固定坐标表示的相同向量，那么以下关系成立：
+\begin{equation}
+    z_0 = R_{ijk}(u) z
+\end{equation}
+\begin{equation}
+    z = R_{ijk}(u)^T z_0
+\end{equation}
+也就是说，欧拉角并不是定义在三维线性空间的群，欧拉角的相互转换需要借助旋转矩阵来进行表达。
+
+在自动化或者航空航天领域比较常用的欧拉角的分解方式是 $Z-Y-X$，也就是说，先绕 $z$ 轴旋转 $\psi$ 角，然后绕 $y$ 轴旋转 $\theta$ 角，最后绕 $x$ 轴旋转 $\phi$ 角。这种分解方式也被称为航空分解（Aerospace decomposition），通常这种方式中的$Z-Y-X$会被称为“偏航 - 俯仰 - 旋转 (yaw - pitch - roll)”。在这种分解方式中，欧拉角向量的顺序是 $u = [\psi, \theta, \phi]^T$。
+
+欧拉角的一个缺点是会碰到著名的万象锁问题\cite{vsenk2006rotation}，也就是说，当 $\theta = \pm \frac{\pi}{2}$ 时，旋转矩阵 $R_{ijk}(u)$ 的值会变成奇异的。理论上可以证明，只要想要用3个数来表达三位旋转时，基本都会碰到奇异性问题\cite{stuelpnagel1964parametrization}。由于这种原理，欧拉角不适用于迭代和插值，在传统的SLAM中和深度学习中几乎都不会是用这种方式来进行迭代，但是欧拉角对于人机交互是友好的。
 
 \subsection{四元数}
 
