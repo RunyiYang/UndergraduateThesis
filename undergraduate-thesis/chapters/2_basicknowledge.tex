@@ -19,7 +19,7 @@
 %%
 
 \chapter{点云配准相关背景知识介绍}
-本章将对点云配准的基本理论和相关背景知识进行系统阐述，包括配准的运动学解析、常用数据集、常用配准算法以及相关深度学习方法，并且我们会基于点云配准的评价指标，扩展到多实例点云配准的评价指标。
+本章将对点云配准的基本理论和相关背景知识进行系统阐述，首先会介绍点云数据的特征，然后会对点云配准的刚体运动和运动参数估计进行介绍。
 
 \section{点云数据}
 三维世界中的数据表证有多种类型，如点云数据(Point Clouds)\cite{leberl2010point}、三角网格(Triangle Mesh)\cite{jiang2020local}、体素(Voxel Grids)\cite{guan2020voxel}、深度相机数据(RGB-D Camera)\cite{cruz2012kinect}等，可视化数据如图\ref{fig:3ddata}所示，本文主要研究的是点云数据，因此本节将对点云数据进行简要介绍。
@@ -68,8 +68,8 @@
 
 5. Point Pair Features（PPF） \cite{deng2018ppfnet}：描述点云中两个点之间的几何关系，PPF 是一个四元组$(\alpha, d, \theta, \phi)$，其中$\alpha$是两点之间的距离，$d$是两点的法向量之差，$\theta$是两点的法线之间的角度，$\phi$是两点的法线在两点之间连线所确定的平面上的角度。PPF特征在处理点云配准问题时具有很高的鲁棒性，因为它仅依赖于点云的几何信息。
 
-\section{刚体运动参数估计}
-刚体运动参数估计是点云配准任务的最后一个阶段的任务。对于位移来说，常用的是位移向量（Transition）；旋转的运动参数有不同的表示形式，如欧拉角\cite{pio1966euler}、四元数\cite{shoemake1985animating}、旋转矩阵\cite{horn1954doubly}、轴角\cite{diebel2006representing}等。下面我们对旋转的表示进行简要介绍。
+\section{刚体运动表示}
+刚体运动表示是点云配准任务的最后一个阶段的任务。对于位移来说，常用的是位移向量（Transition）；旋转的运动参数有不同的表示形式，如欧拉角\cite{pio1966euler}、四元数\cite{shoemake1985animating}、旋转矩阵\cite{horn1954doubly}、轴角\cite{diebel2006representing}等。下面我们进行简要介绍。
 
 \subsection{旋转矩阵}
 旋转矩阵是一种与向量相乘时旋转向量同时保持其长度的矩阵。所有 $3 \times 3$ 旋转矩阵的特殊正交群表示为 $SO(3)$。因此，如果 $\boldsymbol{R} \in SO(3)$，那么
@@ -119,6 +119,28 @@
     \boldsymbol{a} = \boldsymbol{R}^T \boldsymbol{a}' = \boldsymbol{R}^{-1} \boldsymbol{a}'
 \end{equation}
 
+在欧式变换中，除了旋转还有平移，将$\boldsymbol{a}$经过一次旋转$\boldsymbol{R}$和平移$\boldsymbol{t}$，最终得到了$\boldsymbol{a}'$，把旋转和平移组合起来，得到：
+\begin{equation}
+    \boldsymbol{a}' = \boldsymbol{R} \boldsymbol{a} + \boldsymbol{t}
+    \label{eq:rotation_translation}
+\end{equation}
+
+\subsection{变换矩阵}
+在三维空间中，我们可以通过平移和旋转来描述一个刚体的变换。我们将平移和旋转组合起来，得到一个变换矩阵，用来描述一个刚体的变换。假设我们有一个刚体，它的初始位置在原点，我们将它平移到 $\boldsymbol{t}$，然后将它旋转到 $\boldsymbol{R}$，则这个刚体的变换矩阵为：
+\begin{equation}
+    \boldsymbol{T} = 
+    \begin{bmatrix}
+    \boldsymbol{R} & \boldsymbol{t} \\
+    \boldsymbol{0}^T & 1
+    \end{bmatrix}
+\end{equation}
+将向量改写为齐次形式$\widetilde{\boldsymbol{a}} = [a_1, a_2, a_3, 1]^T = [\boldsymbol{a}, 1]^T$， 那么我们可以将式 \ref{eq:rotation_translation} 重写为：
+\begin{equation}
+    \widetilde{\boldsymbol{a}}' = \boldsymbol{T} \widetilde{\boldsymbol{a}} = \boldsymbol{R} \boldsymbol{a} + \boldsymbol{t}
+\end{equation}  
+
+依靠变换矩阵，我们可以对多次变换的累加进行很简洁的数学表达。假设我们有一个刚体$\boldsymbol{a}$，它的初始位置在原点，我们将它经过 $\boldsymbol{T}_1, \boldsymbol{T}_2$ 两次变换，则这个刚体的最终位置为$\widetilde{\boldsymbol{a}}' = \boldsymbol{T}_1 \boldsymbol{T}_2 \widetilde{\boldsymbol{a}}$。
+
 \subsection{欧拉角}
 三次坐标旋转依次可以描述任意旋转。我们考虑三次旋转，其中第一次旋转是关于 $\boldsymbol{k}$ 轴的角度 $\psi$，第二次旋转是关于 $\boldsymbol{j}$ 轴的角度 $\theta$，第三次旋转是关于 $\boldsymbol{i}$ 轴的角度 $\phi$，如图 \ref{fig:rotation} (a, b ,c)所示。为了简化符号，我们将这些角度排列成一个三维向量，称为欧拉角向量，定义为 
 \begin{equation}
@@ -129,19 +151,18 @@
     \boldsymbol{R}_{ijk}(\phi, \theta, \psi) := \boldsymbol{R}_i(\phi)\boldsymbol{R}_j(\theta)\boldsymbol{R}_k(\psi)
 \end{equation}
 与一般情况相同，如果 $\boldsymbol{z} \in R^3$ 是世界坐标系中的一个向量，$\boldsymbol{z}_0 \in R^3$ 是以体固定坐标表示的相同向量，那么以下关系成立：
-\begin{equation}
-    \boldsymbol{z}_0 = \boldsymbol{R}_{ijk}(\boldsymbol{u}) \boldsymbol{z}
-\end{equation}
-\begin{equation}
+\begin{align}
+    \boldsymbol{z}_0 = \boldsymbol{R}_{ijk}(\boldsymbol{u}) \boldsymbol{z} \\
     \boldsymbol{z} = \boldsymbol{R}_{ijk}(\boldsymbol{u})^T \boldsymbol{z}_0
-\end{equation}
+\end{align}
 也就是说，欧拉角并不是定义在三维线性空间的群，欧拉角的相互转换需要借助旋转矩阵来进行表达。
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{images/rotation.pdf}
+    \includegraphics[width=\textwidth]{images/rotation.pdf}
     \caption{欧拉角旋转表示}
     \label{fig:rotation}
+    \vspace{-0.5cm}
 \end{figure}
 
 在自动化或者航空航天领域比较常用的欧拉角的分解方式是 $Z-Y-X$，也就是说，先绕 $z$ 轴旋转 $\psi$ 角，然后绕 $y$ 轴旋转 $\theta$ 角，最后绕 $x$ 轴旋转 $\phi$ 角。这种分解方式也被称为航空分解（Aerospace decomposition），通常这种方式中的$Z-Y-X$会被称为“偏航 - 俯仰 - 旋转 (yaw - pitch - roll)”。在这种分解方式中，欧拉角向量的顺序是 $\boldsymbol{u} = [\psi, \theta, \phi]^T$，如图 \ref{fig:rotation} (d)所示。
@@ -187,23 +208,20 @@
 \end{equation}
 其中，$\boldsymbol{q} = [\cos \frac{\theta}{2}, \boldsymbol{n} \sin \frac{\theta}{2}]$。
 
+
+\section{运动学参数估计}
 \subsection{基于奇异值分解的线性代数求解}
 奇异值分解\cite{levinson2020analysis} (Singular Value Decomposition, SVD) 是线性代数中一种重要的矩阵分解，在信号处理、计算机视觉、运动估计中有着非常广泛的运用。下面，我们对奇异值分解的线性代数部分进行简要介绍。
 
 奇异值分解对一个矩形数据矩阵（定义为$\boldsymbol{A}$，其中$\boldsymbol{A}$是一个$n \times p$矩阵）进行处理，其中n行代表观察值，p列代表变量。SVD定理如下：
-
 \begin{equation}
 \boldsymbol{A}_{n \times p} = \boldsymbol{U}_{n \times n} \boldsymbol{S}_{n \times p} \boldsymbol{V}^T_{p \times p}
 \end{equation}
 其中
-
-\begin{equation}
-\boldsymbol{U}^T \boldsymbol{U} = \boldsymbol{I}_{n \times n}
-\end{equation}
-
-\begin{equation}
-\boldsymbol{V}^T \boldsymbol{V} = \boldsymbol{I}_{p \times p}
-\end{equation}
+\begin{align}
+    \boldsymbol{U}^T \boldsymbol{U} = \boldsymbol{I}_{n \times n} \\
+    \boldsymbol{V}^T \boldsymbol{V} = \boldsymbol{I}_{p \times p}
+\end{align}
 
 即$\boldsymbol{U}$和$\boldsymbol{V}$是正交的。$\boldsymbol{U}$的列是左奇异向量（观察值系数向量）；$\boldsymbol{S}$（与$\boldsymbol{A}$的维度相同）具有奇异值，并且是对角的（模振幅）；$\boldsymbol{V}^T$的行是右奇异向量（变量水平向量）。SVD表示了原始数据在协方差矩阵为对角线的坐标系中的扩展。
 
@@ -289,58 +307,60 @@ f(x) = \frac{1}{2} ||Jx - r_0||^2
 
 这与线性情况相同。这里通常使用的近似是在解附近的 $r_i$ 近似线性，这样 $\nabla^2 r_j(x)$ 较小。还要注意，只有在残差较小时，式 \ref{eq:hessian_approx} 才有效。对于大残差问题，不能使用二次近似求解\cite{李娇娇2022基于深度学习的}。
 
-考虑到点云配准问题，我们可以将 Levenberg-Marquardt 算法应用于点云之间的非线性最小二乘优化问题。在这种情况下，我们寻求最小化点云之间的距离，同时考虑旋转和平移变换。通过迭代地优化变换参数，Levenberg-Marquardt 算法可以在点云配准问题中找到一个稳定的解决方案。
+考虑到点云配准问题，我们可以将 Levenberg-Marquardt 算法应用于点云之间的非线性最小二乘优化问题。在这种情况下，我们寻求点云对应度量的最小距离，同时考虑旋转和平移变换。通过迭代地优化变换参数，Levenberg-Marquardt 算法可以在点云配准问题中找到一个稳定的解决方案。点云对应度量之间的误差主要有点到点（point-to-point）、点到面（point-to-plane）、面到面（plane-to-plane）这几类方式。如图 \ref{fig:point2plane} 所示，我们以最小化点到面距离为例，来说明 Levenberg-Marquardt 算法的求解过程。
 
+\begin{figure}[htbp]
+    \centering
+    \vspace{-0.5cm}
+    \includegraphics[width=0.8\textwidth]{images/LM_point2plane.pdf}
+    \caption{最小化点到面距离示意图}
+    \label{fig:point2plane} 
+    \vspace{-1.5cm}
+\end{figure}
 
-\section{标准数据集}
-\subsection{ModelNet40}
-\subsection{ShapeNet}
-\subsection{Scan2CAD}
+在刚体运动参数估计任务中，LM 算法的关键步骤包括：
 
-\section{点云配准评价指标}
-\subsection{基于特征提取与匹配的评价指标}
-\subsection{基于刚体运动的评价指标}
-\subsection{多实例点云配准评价指标}
+（1）在运动前的点云数据中找到特征点 $\boldsymbol{p}_i$ 和运动后的点云数据中对应的特征点 $\boldsymbol{q}_j$ 以及特征面 $\boldsymbol{S}_l$；
 
-\section{点云处理与配准相关深度学习技术}
-\subsection{深度学习概述}
-\subsection{多层感知机}
-\subsection{卷积神经网络}
-\subsubsection{三维卷积神经网络}
-\subsubsection{点云卷积神经网络}
-\subsection{注意力机制}
-\subsection{谱聚类算法}
+（2）计算特征点 $\boldsymbol{p}_i$ 到特征面 $\boldsymbol{S}_l$ 的欧氏距离 $d_e$；
+
+（3）基于特征点到特征面的距离度量，构建匹配对的约束关系：
+\begin{equation}
+f(\boldsymbol{p}_i, \boldsymbol{T}) = d_e
+\end{equation}
+其中，$\boldsymbol{T}$ 代表刚体运动变换参数。
+
+利用 LM 非线性优化方法，估计位姿变换矩阵：
+\begin{equation}
+\hat{\boldsymbol{T}} = \boldsymbol{T} - (\boldsymbol{J}^T \boldsymbol{J} + \lambda \boldsymbol{I})^{-1} \boldsymbol{J}^T f
+\label{eq:LM}
+\end{equation}
+通过链式法则计算雅可比矩阵：
+\begin{equation}
+\boldsymbol{J} = \frac{\partial f}{\partial \boldsymbol{T}} = \frac{\partial f}{\partial \boldsymbol{p}_i} \frac{\partial \boldsymbol{p}_i}{\partial \boldsymbol{T}}
+\end{equation}
+将雅可比矩阵带入公式 \ref{eq:LM}，可以求解刚体运动变换参数 $\boldsymbol{T}$。
+
+（4）检查变换参数是否为最优估计，如果满足以下条件：
+\begin{equation}
+0 < \frac{f(\boldsymbol{p}_i, \hat{\boldsymbol{T}}) - f(\boldsymbol{p}_i, \boldsymbol{T})}{|f(\boldsymbol{p}_i, \boldsymbol{T})|} < T_d
+\end{equation}
+则当前变换参数为最优估计。否则，调整阻尼因子 $\lambda$，继续迭代求解最优变换参数。其中，$T_d$ 是距离阈值。
+
+（5）将求解得到的最优变换参数应用于运动前的特征点 $\boldsymbol{p}_i$，得到 $\boldsymbol{q}'_j$，如果满足以下条件：
+\begin{equation}
+|\boldsymbol{p}_i - \boldsymbol{q}_j| > |\boldsymbol{p}_i - \boldsymbol{q}'_j|
+\end{equation}
+则认为 $\boldsymbol{q}_j$ 是点 $\boldsymbol{p}_i$ 的最佳匹配点。否则，减小阻尼因子 $\lambda$，继续迭代求解最优匹配点对。如果达到最大迭代次数仍未找到最优匹配点对，将点 $\boldsymbol{p}_i$ 视为噪点并从原始点云数据中剔除，继续处理其他特征点。
+
+总之，使用 LM 算法进行点云配准的过程可以分为以下几个步骤：
+
+1. 在运动前后的点云数据中提取特征点和特征面；\\
+2. 计算特征点之间的欧氏距离并建立约束关系；\\
+3. 使用 LM 算法进行非线性优化，求解刚体运动变换参数；\\
+4. 根据求解结果判断当前变换参数是否为最优估计；如非最优，调整阻尼因子并继续迭代；\\
+5. 应用求解得到的最优变换参数，寻找最佳匹配点对；\\
+6. 若达到最大迭代次数仍未找到最优匹配点对，将当前特征点视为噪点并剔除，继续处理其他特征点。
 
 \section{小结}
-
-\begin{lstlisting}[language=Python, caption={Python Code}, label={lst:pythonfile}]
-import numpy as np
-
-def incmatrix(genl1,genl2):
-    m = len(genl1)
-    n = len(genl2)
-    M = None #to become the incidence matrix
-    VT = np.zeros((n*m,1), int)  #dummy variable
-
-    #compute the bitwise xor matrix
-    M1 = bitxormatrix(genl1)
-    M2 = np.triu(bitxormatrix(genl2),1)
-
-    for i in range(m-1):
-        for j in range(i+1, m):
-            [r,c] = np.where(M2 == M1[i,j])
-            for k in range(len(r)):
-                VT[(i)*n + r[k]] = 1;
-                VT[(i)*n + c[k]] = 1;
-                VT[(j)*n + r[k]] = 1;
-                VT[(j)*n + c[k]] = 1;
-
-                if M is None:
-                    M = np.copy(VT)
-                else:
-                    M = np.concatenate((M, VT), 1)
-
-                VT = np.zeros((n*m,1), int)
-
-    return M
-\end{lstlisting}
+本章主要介绍了点云配准任务的基础知识，包括点云数据的特点，运动学表达和刚体运动参数估计方法。主要介绍了两种最常用的点云配准求解刚体运动最优变换参数的方法，一个是基于奇异值分解 (SVD) 的线性代数求解方法，一个是基于Levenberg-Marquardt算法的非线性优化求解。
