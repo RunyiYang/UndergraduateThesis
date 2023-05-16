@@ -82,7 +82,7 @@ $\mathbf{p}_i \leftarrow \min (\mathbf{p}_i, \mathbf{p}_j),$ 其中 $\min(\cdot)
 
 \subsection{合并重复变换.}
 有时来自不同簇的相似变换会生成，这意味着它们可能属于同一个实例。在这种情况下，我们需要合并它们。
-给定两个估计的变换 $(\mathbf{R}_1, \mathbf{t}_1)$ 和 $(\mathbf{R}_2, \mathbf{t}_2)$，我们计算每个对应关系的对齐误差，即 $e{ki} = |\mathbf{y}{i}-(\mathbf{R}k \mathbf{x}_{i} + \mathbf{t}_k)|^2, (k = 1,2)$。接下来，我们设置 $p_{ki} = 1$ 如果 $e_{ki} < inlier\_thresh$，否则 $p_{ki}=0$。因此，我们为两个变换获得两个二进制集 $P_1, P_2$。合并两个变换的条件是
+给定两个估计的变换 $(\mathbf{R}_1, \mathbf{t}_1)$ 和 $(\mathbf{R}_2, \mathbf{t}_2)$，我们计算每个对应关系的对齐误差，即 $e_{ki} = |\mathbf{y}_{i}-(\mathbf{R}_k \mathbf{x}_{i} + \mathbf{t}_k)|^2, (k = 1,2)$。接下来，我们设置 $p_{ki} = 1$ 如果 $e_{ki} < inlier\_thresh$，否则 $p_{ki}=0$。因此，我们为两个变换获得两个二进制集 $P_1, P_2$。合并两个变换的条件是
 \begin{equation}
 IOU = |P_1 \cap P_2|/|P_1 \cup P_2| \geq 80%.
 \label{eq:iou}
