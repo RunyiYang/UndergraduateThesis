@@ -1,0 +1,14 @@
+%!TEX root = ../geotrans.tex
+
+\begin{figure*}[t]
+  \begin{overpic}[width=1.0\linewidth]{figures/images/pipeline.pdf}
+  \put(0,40.3){\scriptsize \rule[-0.4ex]{0.2ex}{1.0em}\rule[0.6ex]{2.2ex}{0.1em} 1. Feature Extraction \rule[0.6ex]{2.2ex}{0.1em}\rule[-0.4ex]{0.2ex}{1.0em}}
+  \put(15.55,40.3){\scriptsize \rule[-0.4ex]{0.2ex}{1.0em}\rule[0.6ex]{6ex}{0.1em} 2. Superpoint Matching \rule[0.6ex]{6ex}{0.1em}\rule[-0.4ex]{0.2ex}{1.0em}}
+  \put(37.4,40.3){\scriptsize \rule[-0.4ex]{0.2ex}{1.0em}\rule[0.6ex]{13.2ex}{0.1em} 3. Point Matching \rule[0.6ex]{13.2ex}{0.1em}\rule[-0.4ex]{0.2ex}{1.0em}}
+  \put(65.2,40.3){\scriptsize \rule[-0.4ex]{0.2ex}{1.0em}\rule[0.6ex]{12.7ex}{0.1em} 4. Local-to-Global Registration \rule[0.6ex]{12.7ex}{0.1em}\rule[-0.4ex]{0.2ex}{1.0em}}
+  \end{overpic}
+  \vspace{-20pt}
+  \caption{The backbone downsamples the input point clouds and learns features in multiple resolution levels. The Superpoint Matching Module extracts high-quality superpoint correspondences between $\hat{\mathcal{P}}$ and $\hat{\mathcal{Q}}$ using the Geometric Transformer which iteratively encodes intra-point-cloud geometric structures and inter-point-cloud geometric consistency. The superpoint correspondences are then propagated to dense points $\tilde{\mathcal{P}}$ and $\tilde{\mathcal{Q}}$ by the Point Matching Module. Finally, the transformation is computed with a local-to-global registration method.}
+  \label{fig:overview}
+  \vspace{-10pt}
+\end{figure*}

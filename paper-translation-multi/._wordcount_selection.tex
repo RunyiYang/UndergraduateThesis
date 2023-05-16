@@ -1,0 +1,57 @@
+\BITSetup{
+  cover = {
+    % 在封面中载入有「北京理工大学」字样的图片，如无必要请勿改动。
+    headerImage = images/header.png,
+    % 在封面标题中使用思源黑体，使用此选项可以保证与 Word 封面标题的字体一致。
+    xiheiFont = STXIHEI.TTF,
+    % 官方模板采用了固定的下划线宽度。我们采用以下两个选项来达成这个效果。
+    % 如果你想要使用自动计算的下划线宽度，也可以删去以下两个选项。
+    autoWidth = false,
+    valueMaxWidth = 20em,
+  },
+  info = {
+    title = 基于深度学习的端到端多实例点云配准,
+    titleEn = {Deep Learning Based End-To-End \\ Multi-instance Point Cloud Registration},
+    % 想要删除某项封面信息，直接删除该项即可。
+    % 想要让某项封面信息留空（但是保留下划线），请设置为空字符串。
+    % 如需要换行，则用 “\\” 符号分割。
+    school = 自动化学院,
+    major = 自动化,
+    author = 杨润一,
+    class = 06011902,
+    studentId = 1120191211,
+    supervisor = 由育阳,
+    translationTitle = 多实例点云配准的高效对应聚类方法,
+    translationOriginTitle = Multi-instance Point Cloud Registration \\ by Efficient Correspondence Clustering,
+    keywords = {点云配准; 多实例; 聚类; 对应聚类; 深度学习；毕业设计（外文翻译）},
+    % 如果你的毕设为校外毕设，请将下面这一行语句解除注释（删除第一个百分号字符）并填写你的校外毕设导师名字
+  },
+  style = {
+    % 保持参考文献的缩进样式与 Word 模板一致。
+    % 如果你不需要此样式，请将此行注释掉。
+    bibliographyIndent = false,
+    % head = {自定义页眉文字}
+  }
+}
+
+% 有关参考文献的样式可以在此处修改；如无必要无需修改。
+\usepackage[
+  backend=biber,
+  style=gb7714-2015,
+  gbalign=gb7714-2015,
+  gbnamefmt=lowercase,
+  gbpub=false,
+  doi=false,
+  url=false,
+  eprint=false,
+  isbn=false,
+]{biblatex}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{gensymb}

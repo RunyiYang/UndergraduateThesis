@@ -1,0 +1,49 @@
+%%
+% The BIThesis Template for Bachelor Paper Translation
+%
+% 北京理工大学毕业设计（论文） —— 使用 XeLaTeX 编译
+%
+% Copyright 2020-2023 BITNP
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Feng Kaiyu.
+%
+% Compile with: xelatex -> biber -> xelatex -> xelatex
+%%
+
+% 第一章节
+
+\chapter{相关工作}
+\label{sec:related}
+
+\section{基于对应关系的方法。}
+我们的工作遵循基于对应关系的方法的思路~\cite{deng2018ppfnet,deng2018ppf,gojcic2019perfect,choy2019fully}。
+它们首先提取两个点云之间的对应关系，然后使用稳健的姿态估计器，例如RANSAC，恢复变换。
+由于稳健的估计器，它们在室内和室外场景配准中取得了最新的性能。
+这些方法可以根据它们提取对应关系的方式进一步分类为两类。
+第一类旨在检测更可重复的关键点~\cite{bai2020d3feat,huang2021predator}并为关键点学习更强大的描述符~\cite{choy2019fully,ao2021spinnet,wang2021you}。
+而第二类~\cite{yu2021cofinet}通过考虑所有可能的匹配而不需要检测关键点来检索对应关系。
+我们的方法遵循无需检测的方法，并通过利用几何信息来提高对应关系的准确性。
+
+\section{直接配准方法。}
+最近，直接配准方法已经出现。他们以端到端的方式使用神经网络估计变换。
+这些方法可以进一步分为两类。
+第一类~\cite{wang2019deep,wang2019prnet,yew2020rpm,fu2021robust}遵循ICP~\cite{besl1992method}的思路，该方法迭代地建立软对应关系，并使用可微分的加权SVD计算变换。
+第二类~\cite{aoki2019pointnetlk,huang2020feature,xu2021omnet}首先为每个点云提取一个全局特征向量，并使用全局特征向量回归变换。
+虽然直接配准方法在单个合成形状上取得了有希望的结果，但在大规模场景中它们可能会失败，如~\cite{huang2021predator}所述。
+
+\section{深度稳健估计器。}
+由于传统的稳健估计器，如RANSAC在高离群值比率的情况下会出现收敛速度慢和不稳定的问题，因此提出了深度稳健估计器~\cite{pais20203dregnet,choy2020deep,bai2021pointdsc}作为替代方案。
+它们通常包含一个分类网络来拒绝离群值和一个估计网络来计算变换。
+与传统的稳健估计器相比，它们在准确性和速度上都有所改进。
+然而，它们需要训练一个特定的网络。
+相比之下，我们的方法通过一个无参数的局部到全局的配准方案实现了快速和精确的配准。

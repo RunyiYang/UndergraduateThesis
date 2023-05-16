@@ -1,0 +1,284 @@
+%%
+% The BIThesis Template for Bachelor Paper Translation
+%
+% 北京理工大学毕业设计（论文） —— 使用 XeLaTeX 编译
+%
+% Copyright 2020-2023 BITNP
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Feng Kaiyu.
+%
+% Compile with: xelatex -> biber -> xelatex -> xelatex
+%%
+
+% 第一章节
+\chapter{实验分析}
+\section{室内基准测试：3DMatch和3DLoMatch}
+\label{sec:exp-indoor}
+
+\subsection{数据集}
+3DMatch~\cite{zeng20173dmatch}包含62个场景，其中46个用于训练，8个用于验证，8个用于测试。
+我们使用了由~\cite{huang2021predator}预处理的训练数据，并在3DMatch和3DLoMatch~\cite{huang2021predator}协议上进行评估。
+3DMatch中的点云对有超过30％的重叠，而3DLoMatch中的点云对重叠度低，范围在10％至30％之间。
+
+% \vspace{-10pt}
+\subsection{指标}
+根据~\cite{bai2020d3feat,huang2021predator}，我们使用三个指标评估性能：
+(1) \emph{内点比例} (Inlier Ratio, IR)，在地面真实变换下，残差低于特定阈值（例如，0.1m）的假设对应关系的比例；
+(2) \emph{特征匹配召回率} (Feature Matching Recall, FMR)，内点比例高于特定阈值（例如，5％）的点云对的比例；
+(3) \emph{配准召回率} (Registration Recall, RR)，变换误差小于特定阈值（例如，RMSE < 0.2m）的点云对的比例。
+
+\begin{table}[!t]
+  \setlength{\tabcolsep}{1.8pt}
+  \scriptsize
+  \centering
+  \begin{tabular}{l|ccccc|ccccc}
+  \toprule
+   & \multicolumn{5}{c|}{3DMatch} & \multicolumn{5}{c}{3DLoMatch} \\
+  \# Samples & 5000 & 2500 & 1000 & 500 & 250 & 5000 & 2500 & 1000 & 500 & 250 \\
+  \midrule
+  \multicolumn{11}{c}{\emph{Feature Matching Recall} (\%) $\uparrow$} \\
+  \midrule
+  PerfectMatch~\cite{gojcic2019perfect} & 95.0 & 94.3 & 92.9 & 90.1 & 82.9 & 63.6 & 61.7 & 53.6 & 45.2 & 34.2 \\
+  FCGF~\cite{choy2019fully} & 97.4 & 97.3 & 97.0 & 96.7 & 96.6 & 76.6 & 75.4 & 74.2 & 71.7 & 67.3 \\
+  D3Feat~\cite{bai2020d3feat} & 95.6 & 95.4 & 94.5 & 94.1 & 93.1 & 67.3 & 66.7 & 67.0 & 66.7 & 66.5 \\
+  SpinNet~\cite{ao2021spinnet} & 97.6 & 97.2 & 96.8 & 95.5 & 94.3 & 75.3 & 74.9 & 72.5 & 70.0 & 63.6 \\
+  Predator~\cite{huang2021predator} & 96.6 & 96.6 & 96.5 & 96.3 & 96.5 & 78.6 & 77.4 & 76.3 & 75.7 & 75.3 \\
+  YOHO~\cite{wang2021you} & \textbf{98.2} & 97.6 & 97.5 & 97.7 & 96.0 & 79.4 & 78.1 & 76.3 & 73.8 & 69.1 \\
+  CoFiNet~\cite{yu2021cofinet} & \underline{98.1} & \textbf{98.3} & \textbf{98.1} & \textbf{98.2} & \textbf{98.3} & \underline{83.1} & \underline{83.5} & \underline{83.3} & \underline{83.1} & \underline{82.6} \\
+  GeoTransformer (\emph{ours}) & 97.9 & \underline{97.9} & \underline{97.9} & \underline{97.9} & \underline{97.6} & \textbf{88.3} & \textbf{88.6} & \textbf{88.8} & \textbf{88.6} & \textbf{88.3} \\ % RGE with Proj
+  \midrule
+  \multicolumn{11}{c}{\emph{Inlier Ratio} (\%) $\uparrow$} \\
+  \midrule
+  PerfectMatch~\cite{gojcic2019perfect} & 36.0 & 32.5 & 26.4 & 21.5 & 16.4 & 11.4 & 10.1 & 8.0 & 6.4 & 4.8 \\
+  FCGF~\cite{choy2019fully} & 56.8 & 54.1 & 48.7 & 42.5 & 34.1 & 21.4 & 20.0 & 17.2 & 14.8 & 11.6 \\
+  D3Feat~\cite{bai2020d3feat} & 39.0 & 38.8 & 40.4 & 41.5 & 41.8 & 13.2 & 13.1 & 14.0 & 14.6 & 15.0 \\
+  SpinNet~\cite{ao2021spinnet} & 47.5 & 44.7 & 39.4 & 33.9 & 27.6 & 20.5 & 19.0 & 16.3 & 13.8 & 11.1 \\
+  Predator~\cite{huang2021predator} & 58.0 & 58.4 & \underline{57.1} & \underline{54.1} & 49.3 & \underline{26.7} & \underline{28.1} & \underline{28.3} & \underline{27.5} & 25.8 \\
+  YOHO~\cite{wang2021you} & \underline{64.4} & \underline{60.7} & 55.7 & 46.4 & 41.2 & 25.9 & 23.3 & 22.6 & 18.2 & 15.0 \\
+  CoFiNet~\cite{yu2021cofinet} & 49.8 & 51.2 & 51.9 & 52.2 & \underline{52.2} & 24.4 & 25.9 & 26.7 & 26.8 & \underline{26.9} \\
+  GeoTransformer (\emph{ours}) & \textbf{71.9} & \textbf{75.2} & \textbf{76.0} & \textbf{82.2} & \textbf{85.1} & \textbf{43.5} & \textbf{45.3} & \textbf{46.2} & \textbf{52.9} & \textbf{57.7} \\
+  \midrule
+  \multicolumn{11}{c}{\emph{Registration Recall} (\%) $\uparrow$} \\
+  \midrule
+  PerfectMatch~\cite{gojcic2019perfect} & 78.4 & 76.2 & 71.4 & 67.6 & 50.8 & 33.0 & 29.0 & 23.3 & 17.0 & 11.0 \\
+  FCGF~\cite{choy2019fully} & 85.1 & 84.7 & 83.3 & 81.6 & 71.4 & 40.1 & 41.7 & 38.2 & 35.4 & 26.8  \\
+  D3Feat~\cite{bai2020d3feat} & 81.6 & 84.5 & 83.4 & 82.4 & 77.9 & 37.2 & 42.7 & 46.9 & 43.8 & 39.1 \\
+  SpinNet~\cite{ao2021spinnet} & 88.6 & 86.6 & 85.5 & 83.5 & 70.2 & 59.8 & 54.9 & 48.3 & 39.8 & 26.8 \\
+  Predator~\cite{huang2021predator} & 89.0 & 89.9 & \underline{90.6} & 88.5 & 86.6 & 59.8 & 61.2 & 62.4 & 60.8 & 58.1 \\
+  YOHO~\cite{wang2021you} & \underline{90.8} & \underline{90.3} & 89.1 & \underline{88.6} & 84.5 & 65.2 & 65.5 & 63.2 & 56.5 & 48.0 \\
+  CoFiNet~\cite{yu2021cofinet} & 89.3 & 88.9 & 88.4 & 87.4 & \underline{87.0} & \underline{67.5} & \underline{66.2} & \underline{64.2} & \underline{63.1} & \underline{61.0} \\
+  GeoTransformer (\emph{ours}) & \textbf{92.0} & \textbf{91.8} & \textbf{91.8} & \textbf{91.4} & \textbf{91.2} & \textbf{75.0} & \textbf{74.8} & \textbf{74.2} & \textbf{74.1} & \textbf{73.5} \\
+  \bottomrule
+  \end{tabular}
+  \vspace{-5pt}
+  \caption{
+ 在3DMatch and 3DLoMatch上的结果.
+  }
+  \label{table:results-3dmatch}
+  \vspace{-10pt}
+  \end{table}
+
+\subsection{对应性结果}
+首先，我们将我们的方法与近期的最先进技术：PerfectMatch~\cite{gojcic2019perfect}，FCGF~\cite{choy2019fully}，D3Feat~\cite{bai2020d3feat}，SpinNet~\cite{ao2021spinnet}，Predator~\cite{huang2021predator}，YOHO~\cite{wang2021you}和CoFiNet~\cite{yu2021cofinet}进行比较，比较结果见\ref{table:results-3dmatch}(顶部和中部)。按照~\cite{bai2020d3feat,huang2021predator}的方式，我们报告了不同数量对应性的结果。对于\emph{特征匹配召回率}，我们的方法在3DLoMatch上至少提高了$5$百分点（pp），显示了其在低重叠情况下的有效性。对于\emph{内点比例}，改进更为显著。它在3DMatch和3DLoMatch上均超过了基准线，分别提高了$7{\sim}33$ pp和$17{\sim}31$ pp。对应性越少，提升越大。这表明我们的方法提取的对应性更为可靠。
+
+% \vspace{-10pt}
+\subsection{配准结果}
+\label{sec:exp-registration}
+为了评估配准性能，我们首先比较了通过RANSAC获得的\emph{配准召回率}，比较结果见\ref{table:results-3dmatch}(底部)。按照~\cite{bai2020d3feat,huang2021predator}的方式，我们运行了$50$K次RANSAC迭代来估计转换。GeoTransformer在3DMatch和3DLoMatch上都获得了新的最先进的结果。它在3DMatch上超过了之前的最好结果$1.2$ pp，在3DLoMatch上超过了$7.5$ pp，显示了其在高重叠和低重叠场景下的效能。更重要的是，我们的方法在不同数量的样本下都很稳定，因此它不需要像以前的方法那样\cite{choy2019fully,ao2021spinnet,wang2021you,yu2021cofinet}采样大量的对应性来提高性能。
+
+\begin{table}[!t]
+  \scriptsize
+  \setlength{\tabcolsep}{1pt}
+  \centering
+  \begin{tabular}{l|c|c|cc|ccc}
+  \toprule
+  \multirow{2}{*}{Model} & \multirow{2}{*}{Estimator} & \multirow{2}{*}{\#Samples} & \multicolumn{2}{c|}{RR(\%)} & \multicolumn{3}{c}{Time(s)} \\
+   & & & 3DM & 3DLM & Model & Pose & Total\\
+  \midrule
+  FCGF~\cite{choy2019fully} & RANSAC-\emph{50k} & 5000 & 85.1 & 40.1 & 0.052 & 3.326 & 3.378 \\
+  D3Feat~\cite{bai2020d3feat} & RANSAC-\emph{50k} & 5000 & 81.6 & 37.2 & 0.024 & 3.088 & 3.112 \\
+  SpinNet~\cite{ao2021spinnet} & RANSAC-\emph{50k} & 5000 & 88.6 & 59.8 & 60.248 & 0.388 & 60.636 \\
+  Predator~\cite{huang2021predator} & RANSAC-\emph{50k} & 5000 & 89.0 & 59.8 & 0.032 & 5.120 & 5.152 \\
+  CoFiNet~\cite{yu2021cofinet} & RANSAC-\emph{50k} & 5000 & \underline{89.3} & \underline{67.5} & 0.115 & 1.807 & 1.922 \\
+  GeoTransformer (\emph{ours}) & RANSAC-\emph{50k} & 5000 & \textbf{92.0} & \textbf{75.0} & 0.075 & 1.558 & 1.633 \\
+  \midrule
+  % FCGF~\cite{choy2019fully} & weighted SVD & 250 & 21.2 & 1.1 & 0.052 & 0.004 & 0.056 \\  % 250 keypoints
+  FCGF~\cite{choy2019fully} & weighted SVD & 250 & 42.1 & 3.9 & 0.052 & 0.008 & 0.056 \\  % 5000 keypoints, top 250 corr
+  % FCGF~\cite{choy2019fully} & weighted SVD & 250 & 28.9 & 2.5 & 0.052 & 0.008 & 0.056 \\  % 5000 keypoints, random 250 corr
+  % D3Feat~\cite{bai2020d3feat} & weighted SVD & 250 & 19.1 & 1.0 & 0.024 & 0.004 & 0.028 \\  % 250 keypoints
+  D3Feat~\cite{bai2020d3feat} & weighted SVD & 250 & 37.4 & 2.8 & 0.024 & 0.008 & 0.032 \\  % 5000 keypoints, top 250 corr
+  % D3Feat~\cite{bai2020d3feat} & weighted SVD & 250 & 25.5 & 1.5 & 0.024 & 0.008 & 0.032 \\  % 5000 keypoints, random 250 corr
+  SpinNet~\cite{ao2021spinnet} & weighted SVD & 250 & 34.0 & 2.5 & 60.248 & 0.006 & 60.254 \\  % 5000 keypoints, top 250 corr
+  % SpinNet~\cite{ao2021spinnet} & weighted SVD & 250 & 20.9 & 1.8 &  & 0.008 & \\  % 5000 keypoints, random 250 corr
+  % Predator~\cite{huang2021predator} & weighted SVD & 250 & 52.9 & 11.4 & 0.032 & 0.004 & 0.036 \\  % 250 keypoints
+  Predator~\cite{huang2021predator} & weighted SVD & 250 & 50.0 & 6.4 & 0.032 & 0.009 & 0.041 \\  % 5000 keypoints, top 250 corr
+  % Predator~\cite{huang2021predator} & weighted SVD & 250 & 48.2 & 6.1 & 0.032 & 0.009 & 0.041 \\  % 5000 keypoints, random 250 corr
+  CoFiNet~\cite{yu2021cofinet} & weighted SVD & 250 & \underline{64.6} & \underline{21.6} & 0.115 & 0.003 & 0.118 \\
+  GeoTransformer (\emph{ours}) & weighted SVD & 250 & \textbf{86.5} & \textbf{59.9} & 0.075 & 0.003 & 0.078 \\
+  \midrule
+  CoFiNet~\cite{yu2021cofinet} & LGR & all & 87.6 & 64.8 & 0.115 & 0.028 & 0.143 \\
+  GeoTransformer (\emph{ours}) & LGR & all & \textbf{91.5} & \textbf{74.0} & 0.075 & 0.013 & 0.088 \\
+  \bottomrule
+  \end{tabular}
+  \vspace{-5pt}
+  \caption{
+  Registration results w/o RANSAC on 3DMatch (3DM) and 3DLoMatch (3DLM).
+  The \emph{model time} is the time for feature extraction, while the \emph{pose time} is for transformation estimation.
+  }
+  \label{table:direct}
+  \end{table}
+  
+我们接着在\ref{table:direct}中比较了\emph{不}使用RANSAC的配准结果。我们开始时通过对应性上的加权SVD来求解对齐变换。基线要么无法达到合理的结果，要么性能下降严重。相比之下，GeoTransformer（使用加权SVD）在3DMatch上达到了$86.5\%$的配准召回率，在3DLoMatch上达到了$59.9\%$，接近Predator使用RANSAC的结果。在没有RANSAC的异常值过滤下，高内点比率对于成功配准是必需的。然而，高内点比率并不一定会导致高配准召回率，因为对应性可能会聚集在一起，如~\cite{huang2021predator}所述。尽管如此，我们的方法通过提取可靠且分布良好的超点对应性，在没有RANSAC的情况下仍然表现良好。
+
+当我们使用我们的局部到全局配准（LGR）来计算变换时，我们的方法将3DMatch的配准召回率提升到$91.5\%$，3DLoMatch提升到$74.0\%$，大幅超过所有基于RANSAC的基线。这些结果也非常接近我们使用RANSAC的结果，但LGR在姿态时间上比RANSAC快了$100$倍以上。这些结果展示了我们的方法在准确性和速度上的优越性。
+
+\input{figures/gallery}
+
+\subsection{消融实验}
+\label{sec:exp-ablation}
+我们进行了广泛的消融实验，以更好地理解我们方法中的各个模块\footnote{由于篇幅限制，我们在附录~\textcolor{red}{D.3}中呈现了一些消融实验的结果。}。
+为了评估超点（patch）匹配，我们引入了另一个指标\emph{Patch Inlier Ratio}（PIR），它表示具有实际重叠的patch匹配的比例。
+FMR和IR是使用\emph{所有}稠密点对应性进行报告的，使用LGR进行配准。
+
+\begin{table}[!t]
+  \scriptsize
+  \setlength{\tabcolsep}{3pt}
+  \centering
+  \begin{tabular}{l|cccc|cccc}
+  \toprule
+   \multirow{2}{*}{Model} & \multicolumn{4}{c|}{3DMatch} & \multicolumn{4}{c}{3DLoMatch} \\
+   & PIR & FMR & IR & RR & PIR & FMR & IR & RR \\
+  \midrule
+  (a) graph neural network & 73.3 & 97.9 & 56.5 & 89.5 & 39.4 & 84.9 & 29.2 & 69.8 \\
+  % (b) vanilla self-attention & 80.0 & 97.9 & 61.0 & 89.0 & 45.2 & 84.7 & 33.1 & 67.1 \\
+  (b) vanilla self-attention & 79.6 & 97.9 & 60.1 & 89.0 & 45.2 & 85.6 & 32.6 & 68.4 \\
+  (c) self-attention w/ ACE & 83.2 & \textbf{98.1} & 68.5 & 89.3 & 48.2 & 84.3 & 38.9 & 69.3 \\
+  (d) self-attention w/ RCE & 80.0 & 97.9 & 66.1 & 88.5 & 46.1 & 84.6 & 37.9 & 68.7 \\
+  (e) self-attention w/ PPF & 83.5 & 97.5 & 68.5 & 88.6 & 49.8 & 83.8 & 39.9 & 69.5 \\
+  (f) self-attention w/ RDE & \underline{84.9} & \underline{98.0} & \underline{69.1} & \underline{90.7} & \underline{50.6} & \underline{85.8} & \underline{40.3} & \underline{72.1} \\
+  (g) geometric self-attention & \textbf{86.1} & 97.7 & \textbf{70.3} & \textbf{91.5} & \textbf{54.9} & \textbf{88.1} & \textbf{43.3} & \textbf{74.0} \\
+  \bottomrule
+  \end{tabular}
+  \vspace{-5pt}
+  \caption{
+  Ablation experiments of the geometric self-attention.
+  }
+  \label{table:ablation-study-rge}
+  \vspace{-10pt}
+  \end{table}
+  
+  \begin{table}[!t]
+  \scriptsize
+  \setlength{\tabcolsep}{2.5pt}
+  \centering
+  % \begin{tabular}{cccccc|P{3em}P{3em}P{3em}|c}
+  \begin{tabular}{l|cccc|cccc}
+  \toprule
+  \multirow{2}{*}{Model} & \multicolumn{4}{c|}{3DMatch} & \multicolumn{4}{c}{3DLoMatch} \\
+   % & PIR(\%) & FMR(\%) & IR(\%) & RR(\%) & PIR(\%) & FMR(\%) & IR(\%) & RR(\%) \\
+   & PIR & FMR & IR & RR & PIR & FMR & IR & RR \\
+  \midrule
+  (a) cross-entropy loss & 80.0 & 97.7 & 65.7 & 90.0 & 45.9 & 85.1 & 37.4 & 68.4 \\
+  (b) weighted cross-entropy loss & 83.2 & \textbf{98.0} & 67.4 & 90.0 & 49.0 & \underline{86.2} & 38.6 & 70.7 \\
+  (c) circle loss & \underline{85.1} & \underline{97.8} & \underline{69.5} & \underline{90.4} & \underline{51.5} & 86.1 & \underline{41.3} & \underline{71.5} \\
+  (d) overlap-aware circle loss & \textbf{86.1} & 97.7 & \textbf{70.3} & \textbf{91.5} & \textbf{54.9} & \textbf{88.1} & \textbf{43.3} & \textbf{74.0} \\
+  \bottomrule
+  \end{tabular}
+  \vspace{-5pt}
+  \caption{
+  Ablation experiments of the overlap-aware circle loss.
+  }
+  \label{table:ablation-study-ocl}
+  \vspace{-10pt}
+  \end{table}
+
+为了研究\emph{几何自注意力}的有效性，我们在\ref{table:ablation-study-rge}中比较了七种点云内部特征学习的方法：
+(a) 图神经网络~\cite{huang2021predator}，(b) 无位置嵌入的自注意力~\cite{yu2021cofinet}，(c) 绝对坐标嵌入~\cite{sarlin2020superglue}，(d) 相对坐标嵌入~\cite{zhao2021point}，(e) 点对特征嵌入~\cite{drost2010model,raposo2017using}，(f) 对点对距离进行嵌入，(g) 几何结构嵌入。
+一般而言，注入几何信息可以提升性能。
+但是基于坐标的嵌入由于其对变换的不变性而受到一定限制。
+令人惊讶的是，图神经网络在RR上表现良好，这要归功于$k$NN图的变换不变性。
+然而，图神经网络的感受野受限，这对IR性能产生了不利影响。
+虽然PPF嵌入在理论上对于变换是不变的，但在实践中很难为超点估计准确的法线，这导致了较差的性能。
+
+我们的方法在所有指标上都远远优于其他方法，尤其是在低重叠情况下，即使仅使用了点对距离嵌入，也表现出很强的鲁棒性。
+
+下一步，我们对\emph{重叠感知的圆形损失}进行了消融研究，如\ref{table:ablation-study-ocl}所示。
+我们比较了四种用于监督超点匹配的损失函数：(a) 交叉熵损失~\cite{sarlin2020superglue}，(b) 加权交叉熵损失~\cite{yu2021cofinet}，(c) 圆形损失~\cite{sun2020circle}和 (d) 重叠感知的圆形损失。
+对于前两种模型，我们使用最优传输层来计算匹配矩阵，就像~\cite{yu2021cofinet}中那样。
+圆形损失要比两种交叉熵损失的变体效果更好，验证了以度量学习方式监督超点匹配的有效性。
+我们的重叠感知的圆形损失在所有指标上都远远优于普通的圆形损失。
+
+\subsection{定性结果}
+%
+图 \ref{fig:gallery} 提供了使用普通自注意力和我们的几何自注意力模型的配准结果图库。
+几何自注意力有助于从结构较弱的区域中根据它们与更显著区域的几何关系推断出补丁匹配 ($1^{\text{st}}$ 行)，
+并且能够拒绝在特征空间中相似但位置不同的异常匹配 ($2^{\text{nd}}$ 和 $3^{\text{rd}}$ 行)。
+
+图 \ref{fig:attention} 可视化了我们的几何自注意力学习到的注意力分数，显示了锚点补丁匹配之间的显著一致性。
+这表明我们的方法能够学习到跨点云的几何一致性，这对于准确的对应关系至关重要。
+
+\input{figures/attention}
+
+\section{室外基准测试：KITTI odometry}
+\label{sec:exp-outdoor}
+
+\subsection{数据集}
+KITTI odometry~\cite{geiger2012we} 包含由LiDAR扫描的11个室外驾驶场景序列。
+我们遵循~\cite{choy2019fully,bai2020d3feat,huang2021predator}，使用序列0-5进行训练，序列6-7进行验证，序列8-10进行测试。
+与~\cite{choy2019fully,bai2020d3feat,huang2021predator} 一样，我们使用ICP对地面真值位姿进行优化，并且仅评估距离至少为$10\text{m}$的点云配对。
+
+% \vspace{-10pt}
+\subsection{评估指标}
+我们遵循~\cite{huang2021predator} 以三个指标评估我们的 GeoTransformer：
+(1) \emph{相对旋转误差}（Relative Rotation Error, RRE），估计旋转矩阵与地面真值旋转矩阵之间的测地线距离，
+(2) \emph{相对平移误差}（Relative Translation Error, RTE），估计平移向量与地面真值平移向量之间的欧氏距离，以及
+(3) \emph{配准成功率}（Registration Recall, RR），在RRE$<$5$^\circ$和RTE$<$2m的阈值下，点云配对的比例。
+
+\begin{table}[!t]
+  \scriptsize
+  % \setlength{\tabcolsep}{1.2pt}
+  \centering
+  \begin{tabular}{l|ccc}
+  \toprule
+  Model & RTE(cm) & RRE($^{\circ}$) & RR(\%) \\
+  \midrule
+  3DFeat-Net~\cite{yew20183dfeat} & 25.9 & \textbf{0.25} & 96.0 \\
+  FCGF~\cite{choy2019fully} & 9.5 & 0.30 & \underline{96.6} \\
+  D3Feat~\cite{bai2020d3feat} & \underline{7.2} & 0.30 & \textbf{99.8} \\
+  SpinNet~\cite{ao2021spinnet} & 9.9 & 0.47 & 99.1 \\
+  Predator~\cite{huang2021predator} & \textbf{6.8} & \underline{0.27} & \textbf{99.8} \\
+  CoFiNet~\cite{yu2021cofinet} & 8.2 & 0.41 & \textbf{99.8} \\
+  GeoTransformer (\emph{ours}, RANSAC-\emph{50k}) & 7.4 & \underline{0.27} & \textbf{99.8} \\
+  \midrule
+  FMR~\cite{huang2020feature} & $\sim$66 & 1.49 & 90.6 \\
+  DGR~\cite{choy2020deep} & $\sim$32 & 0.37 & 98.7 \\
+  HRegNet~\cite{lu2021hregnet} & $\sim$\underline{12} & \underline{0.29} & \underline{99.7} \\
+  GeoTransformer (\emph{ours}, LGR) & \textbf{6.8} & \textbf{0.24} & \textbf{99.8} \\
+  \bottomrule
+  \end{tabular}
+  \vspace{-5pt}
+  \caption{
+  在KITTI odometry上的实验结果.
+  % For the RANSAC-free methods, we use the results reported in~\cite{lu2021hregnet}.
+  % , where RTE is rounded to centimeter.
+  }
+  \vspace{-10pt}
+  \label{table:kitti}
+\end{table}
+
+\subsection{配准结果。}
+在\ref{table:kitti}(顶部)中，我们将我们的方法与基于RANSAC的最先进方法进行比较：3DFeat-Net~\cite{yew20183dfeat}，FCGF~\cite{choy2019fully}，D3Feat~\cite{bai2020d3feat}，SpinNet~\cite{ao2021spinnet}，Predator~\cite{huang2021predator}和CoFiNet~\cite{yu2021cofinet}。
+我们的方法与这些方法相当，展现了在室外场景中的良好通用性。
+我们进一步与三种无需RANSAC的方法进行比较，如\ref{table:kitti}(底部)所示：FMR~\cite{huang2020feature}，DGR~\cite{choy2020deep}和HRegNet~\cite{lu2021hregnet}。
+我们的方法在所有基准方法上都取得了很大的优势。
+此外，我们的方法在使用LGR时超过了所有基于RANSAC的方法。

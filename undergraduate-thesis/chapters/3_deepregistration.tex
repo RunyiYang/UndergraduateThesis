@@ -27,7 +27,7 @@
     \vspace{-1.0cm}
 \end{table}
 
-在本次任务中，我们使用ModelNet40、ShapeNet、Scan2CAD组成多实例点云配准仿真数据集进行训练和测试。所以，我们对这三个数据集和多实例点云配准数据集进行了详细的介绍。
+在本次任务中，我们使用ModelNet40、ShapeNet、Scan2CAD组成多实例点云配准仿真数据集进行训练和测试。所以，我们对这3个数据集和多实例点云配准数据集进行了详细的介绍。
 
 \subsection{ModelNet40}
 ModelNet 是一个用于三维物体识别和检索的大规模数据集。它包含两个子集：ModelNet10 和 ModelNet40。ModelNet10 包含 10 个类别的 4,899 个模型，而 ModelNet40 包含 40 个类别的 12,311 个模型。ModelNet 数据集中的模型主要是合成的 CAD 模型，并以网格 (mesh) 的形式呈现。本文主要使用 ModelNet40 数据集。 
@@ -518,5 +518,11 @@ Predator采用端到端的训练，使用三种与地面真实对应关系相关
 \end{cases}
 \end{equation}
 
-\subsection{小结}
+\section{实验结果与分析}
+本文
+\subsection{PointNet}
+\subsection{PointNet++}
+\subsection{Predator}
+
+\section{小结}
 本章我们简要介绍了本文所使用的数据集，和点云配准评价指标。然后围绕基于深度学习的点云配准层层递进，由深度学习的基础知识介绍到了目前最常用的深度学习点云处理模型PointNet, PointNet++和Predator。后面，我们会使用预训练的PointNet和Predator作为点云特征提取器，对于描述子进行后处理。

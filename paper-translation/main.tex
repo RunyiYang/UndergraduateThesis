@@ -49,9 +49,9 @@
     class = 06011902,
     studentId = 1120191211,
     supervisor = 由育阳,
-    translationTitle = 多实例点云配准的高效对应聚类方法,
-    translationOriginTitle = Multi-instance Point Cloud Registration \\ by Efficient Correspondence Clustering,
-    keywords = {点云配准; 多实例; 聚类; 对应聚类; 深度学习；毕业设计（外文翻译）},
+    translationTitle = Geometrc Transformer: 快速且稳健的点云配准,
+    translationOriginTitle = Geometric Transformer for Fast and \\ Robust Point Cloud Registration,
+    keywords = {点云配准; 描述子; 特征描述; 深度学习; 毕业设计（外文翻译）},
     % 如果你的毕设为校外毕设，请将下面这一行语句解除注释（删除第一个百分号字符）并填写你的校外毕设导师名字
   },
   style = {
@@ -75,15 +75,18 @@
   isbn=false,
 ]{biblatex}
 
-\usepackage{caption}
-\usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{amsfonts}
 \usepackage{booktabs}
-\usepackage{gensymb}
 
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{mathtools}
+\usepackage{overpic}
+\usepackage{stmaryrd}
 
 % 参考文献引用文件位于 misc/ref.bib
 \addbibresource{misc/ref.bib}
@@ -107,14 +110,15 @@
 \mainmatter
 
 % 第一章
-\input{chapters/1_chapter1.tex}
+\input{chapters/1_introduction.tex}
+\input{chapters/2_related.tex}
+\input{chapters/3_method.tex}
+\input{chapters/4_experiments.tex}
+\input{chapters/5_conclusion.tex}
 % 在这里添加第二章、第三章……TeX 文件的引用
-\input{chapters/2_chapter2.tex}
-\input{chapters/3_chapter3.tex}
-\input{chapters/Method.tex}
-\input{chapters/Experiments.tex}
-\input{chapters/Limitations.tex}
-\input{chapters/Conclusion.tex}
+% \input{chapters/2_chapter2.tex}
+% \input{chapters/3_chapter3.tex}
+
 % 后置部分
 \backmatter
 

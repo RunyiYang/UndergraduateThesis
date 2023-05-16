@@ -1,0 +1,253 @@
+%%
+% The BIThesis Template for Bachelor Paper Translation
+%
+% 北京理工大学毕业设计（论文） —— 使用 XeLaTeX 编译
+%
+% Copyright 2020-2023 BITNP
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Feng Kaiyu.
+%
+% Compile with: xelatex -> biber -> xelatex -> xelatex
+%%
+
+% 第一章节
+
+\chapter{方法}
+\label{sec:geotrans}
+
+\input{figures/pipeline}
+
+给定两个点云$\mathcal{P} = \{\textbf{p}_i \in \mathbb{R}^3 \mid i = 1, ..., N\}$ 和 $\mathcal{Q} = \{\textbf{q}_i \in \mathbb{R}^3 \mid i = 1, ..., M\}$，我们的目标是估计一个刚性变换$\textbf{T} = \{\textbf{R}, \textbf{t}\}$来对齐这两个点云，其中$\textbf{R} \in SO(3)$是3D旋转，$\textbf{t} \in \mathbb{R}^3$是3D平移。变换可以通过以下方式求解：
+% \vspace{-3pt}
+\begin{equation}
+\min_{\textbf{R}, \textbf{t}} \sum\nolimits_{(\textbf{p}^{*}_{x_i}, \textbf{q}^{*}_{y_i}) \in \mathcal{C}^{*}} \lVert \textbf{R} \cdot \textbf{p}^{*}_{x_i} + \textbf{t} - \textbf{q}^{*}_{y_i} \rVert^2_2.
+% \vspace{-3pt}
+\end{equation}
+在这里，$\mathcal{C}^{*}$是$\mathcal{P}$和$\mathcal{Q}$之间的真实对应关系集合。由于在实际中我们无法知道$\mathcal{C}^{*}$，所以我们需要首先在两个点云之间建立点对应关系，然后估计对齐变换。
+
+我们的方法采用分层对应关系模式，以从粗到细的方式找到对应关系。我们采用KPConv-FPN同时对输入点云进行下采样并提取点特征（\ref{sec:model-backbone}）。第一级和最后一级（最粗糙的）下采样点对应于需要匹配的密集点和超点。使用\emph{超点匹配模块}提取超点对应关系，其相邻的局部区域与彼此重叠（\ref{sec:model-pam}）。基于此，\emph{点匹配模块}进一步将超点对应关系细化到密集点（\ref{sec:model-pom}）。最后，从密集对应关系中恢复对齐变换，无需依赖RANSAC（\ref{sec:model-estimation}）。流程图示在\ref{fig:overview}中。
+
+\section{超点采样和特征提取}
+\label{sec:model-backbone}
+我们利用KPConv-FPN主干~\cite{thomas2019kpconv,lin2017feature}为点云提取多级特征。点特征学习的一个副产品是点下采样。我们在下采样点上进行工作，因为点云配准实际上可以通过一组更粗糙的点的对应关系来确定。原始点云通常过于密集，以至于点对点的对应关系是多余的，有时甚至过于集中而无法使用。
+
+对应于最粗糙的分辨率的点，由$\hat{\mathcal{P}}$和$\hat{\mathcal{Q}}$表示，被视为需要匹配的\emph{超点}。相关的学习特征被表示为$\hat{\textbf{F}}{}^{\mathcal{P}} {\in} \mathbb{R}^{\lvert \hat{\mathcal{P}} \rvert \times \hat{d}}$ 和 $\hat{\textbf{F}}{}^{\mathcal{Q}} {\in} \mathbb{R}^{\lvert \hat{\mathcal{Q}} \rvert \times \hat{d}}$。
+在原始分辨率的$1/2$处计算密集点对应关系，即，由$\tilde{\mathcal{P}}$ 和 $\tilde{\mathcal{Q}}$表示的第一级下采样点。他们的学习特征由$\tilde{\textbf{F}}{}^{\mathcal{P}} {\in} \mathbb{R}^{\lvert \tilde{\mathcal{P}} \rvert \times \tilde{d}}$ 和 $\tilde{\textbf{F}}{}^{\mathcal{Q}} {\in} \mathbb{R}^{\lvert \tilde{\mathcal{Q}} \rvert \times \tilde{d}}$表示。
+
+对于每个超点，我们使用点到节点分组策略 \cite{li2018so,yu2021cofinet}在其周围构建一个局部\emph{贴片}。
+特别地，$\tilde{\mathcal{P}}$中的每个点及其来自$\tilde{\textbf{F}}{}^{\mathcal{P}}$的特征都分配给几何空间中最近的超点：
+\vspace{-2pt}
+\begin{equation}
+\mathcal{G}^{\mathcal{P}}_i = \{\tilde{\textbf{p}} \in \tilde{\mathcal{P}} \mid i = \arg\min\nolimits_j (\lVert \tilde{\textbf{p}} - \hat{\textbf{p}}_j \rVert_2), \hat{\textbf{p}}_j \in \hat{\mathcal{P}}\}.
+\vspace{-2pt}
+\end{equation}
+这本质上导致了由超点生成的输入点云的Voronoi分解。
+与$\mathcal{G}^{\mathcal{P}}_i$中的点相关的特征矩阵表示为$\textbf{F}^{\mathcal{P}}_i \subset \tilde{\textbf{F}}{}^{\mathcal{P}}$。
+具有空贴片的超点将被移除。
+对于$\mathcal{Q}$，计算并以类似方式表示贴片$\{\mathcal{G}^{\mathcal{Q}}_i\}$和特征矩阵$\{\textbf{F}^{\mathcal{Q}}_i\}$。
+
+\section{超点匹配模块}
+\label{sec:model-pam}
+%在粗到细的匹配流程中，点对应关系的准确性大大受到超点（贴片）匹配准确性的影响。我们设计了一种新颖的变换器模块，以实现高度可靠的超点匹配。
+
+\input{figures/geotr}
+
+%\vspace{-10pt}
+\subsection{Geometric Transformer.}
+%
+全局上下文在许多计算机视觉任务中已被证明至关重要~\cite{dosovitskiy2020image,sun2021loftr,yu2021cofinet}。
+因此，Transformer被用来利用全局上下文信息进行点云配准。
+然而，现有的方法~\cite{wang2019deep,huang2021predator,yu2021cofinet}通常只将高级点云特征提供给变换器，并不明确地编码几何结构。
+这使得学习到的特征在几何上的区分度较低，导致严重的匹配模糊和大量的异常匹配，特别是在重叠度低的情况下。
+一种直接的解决方案是明确注入3D点坐标的位置嵌入~\cite{yang2019modeling,zhao2021point}。
+然而，由此产生的基于坐标的变换器自然是\emph{变换变化的}，而配准需要\emph{变换不变性}，因为输入点云可以处于任意姿态。
+
+为此，我们提出了\emph{Geometric Transformer}，它不仅编码高级点特征，而且明确捕捉点云内部的几何结构和点云间的几何一致性。
+GeoTransformer由一个\emph{几何自注意}模块组成，用于学习点云内部特征，以及一个\emph{基于特征的交叉注意}模块，用于建模点云间的一致性。这两个模块交错进行$N_t$次，以提取混合特征$\hat{\textbf{H}}^{\mathcal{P}}$和$\hat{\textbf{H}}^{\mathcal{Q}}$，用于可靠的超点匹配（见\ref{fig:overview}（左下角））。
+
+\subsection{几何自注意力.}
+%
+我们设计了一个\emph{几何自注意力}机制，以学习每个点云中超点在特征和几何空间中的全局关联性。以下，我们描述了对$\hat{\mathcal{P}}$的计算，对$\hat{\mathcal{Q}}$的计算也是相同的。给定输入特征矩阵$\textbf{X} \in \mathbb{R}^{\lvert \hat{\mathcal{P}} \vert \times d_t}$，输出特征矩阵$\textbf{Z} \in \mathbb{R}^{\lvert \hat{\mathcal{P}} \vert \times d_t}$是所有投影输入特征的加权和：
+\vspace{-5pt}
+\begin{equation}
+\textbf{z}_i = \sum_{j=1}^{\lvert \hat{\mathcal{P}} \vert} a_{i, j} (\textbf{x}_j\textbf{W}^V),
+\vspace{-5pt}
+\end{equation}
+其中，权重系数$a_{i, j}$是对注意力得分$e_{i, j}$进行行方向的softmax计算得到的，$e_{i, j}$计算如下：
+\vspace{-5pt}
+\begin{equation}
+e_{i, j} = \frac{(\textbf{x}_i\textbf{W}^Q)(\textbf{x}_j\textbf{W}^K + \textbf{r}_{i, j}\textbf{W}^R)^T}{\sqrt{d_{t}}}.
+\vspace{-5pt}
+\end{equation}
+这里，$\textbf{r}_{i, j} \in \mathbb{R}^{d_t}$是一个将在下文描述的\emph{几何结构嵌入}。$\textbf{W}^Q, \textbf{W}^K, \textbf{W}^V, \textbf{W}^R \in \mathbb{R}^{d_t \times d_t}$分别是查询、键、值和几何结构嵌入的投影矩阵。\ref{fig:geotr}显示了几何自注意力的结构和计算。
+
+我们设计了一种新颖的\emph{几何结构嵌入}，用来编码超点的变换不变的几何结构。核心思想是利用与超点计算的距离和角度，这些是在同一场景的不同点云中保持一致的。给定两个超点$\hat{\textbf{p}}_i, \hat{\textbf{p}}_j \in \hat{\mathcal{P}}$，它们的几何结构嵌入由一个\emph{成对距离嵌入}和一个\emph{三元角嵌入}组成，这些将在下面详细描述。
+
+(1) \emph{成对距离嵌入}.
+给定$\hat{\textbf{p}}_i$和$\hat{\textbf{p}}_j$之间的距离$\rho_{i, j} \hspace{1pt} {=} \hspace{1pt} \lVert \hat{\textbf{p}}_i - \hat{\textbf{p}}_j \rVert_2$，它们之间的距离嵌入$\textbf{r}^D_{i, j}$通过对$\rho_{i, j} / \sigma_d$应用正弦函数 \cite{vaswani2017attention}来计算。这里，$\sigma_d$是一个超参数，用来调整对距离变化的敏感性。
+
+(2) \emph{三元角嵌入}.
+我们用超点的三元组计算角嵌入。首先，我们选择$\hat{\textbf{p}}_i$的$k$个最近邻点$\mathcal{K}_i$。对于每个$\hat{\textbf{p}}_x \in \mathcal{K}_i$，我们计算角度$\alpha^x_{i,j} = \angle(\Delta_{x, i}, \Delta_{j, i})$，其中$\Delta_{i, j} := \hat{\textbf{p}}_i - \hat{\textbf{p}}_j$。然后，三元角嵌入$\textbf{r}^A_{i, j, x}$通过对$\alpha^x_{i,j} / \sigma_a$应用正弦函数来计算，其中$\sigma_a$控制对角度变化的敏感性。
+
+最后，通过聚合成对距离嵌入和三元角嵌入来计算几何结构嵌入$\textbf{r}_{i, j}$:
+\vspace{-5pt}
+\begin{equation}
+\textbf{r}_{i, j} = \textbf{r}^D_{i, j}\textbf{W}^D + {\max}_x\left\{\textbf{r}^A_{i, j, x}\textbf{W}^A\right\},
+\vspace{-5pt}
+\label{eq:gse}
+\end{equation}
+其中，$\textbf{W}^D, \textbf{W}^A \in \mathbb{R}^{d_t \times d_t}$分别是两种嵌入的投影矩阵。我们在这里使用最大池化来提高对由于自遮挡而导致的超点的不同最近邻的鲁棒性。\ref{fig:rge}显示了几何结构嵌入的计算。
+
+\input{figures/rge}
+
+% \vspace{-10pt}
+\subsection{基于特征的交叉注意力.}
+%
+交叉注意力是点云配准任务的典型模块~\cite{huang2021predator,wang2019deep,yu2021cofinet}，用于在两个输入点云之间进行特征交换。
+给定$\hat{\mathcal{P}}$，$\hat{\mathcal{Q}}$的自注意力特征矩阵$\textbf{X}^{\mathcal{P}}$，$\textbf{X}^{\mathcal{Q}}$，$\hat{\mathcal{P}}$的交叉注意力特征矩阵$\textbf{Z}^{\mathcal{P}}$使用$\hat{\mathcal{Q}}$的特征计算：
+\vspace{-2pt}
+\begin{equation}
+\textbf{z}^{\mathcal{P}}_i = \sum_{j=1}^{\lvert \hat{\mathcal{Q}} \rvert} a_{i, j} (\textbf{x}^{\mathcal{Q}}_j\textbf{W}^V).
+\vspace{-2pt}
+\end{equation}
+同样，$a_{i, j}$是对交叉注意力得分$e_{i, j}$进行行方向的softmax计算，而$e_{i, j}$是$\textbf{X}^{\mathcal{P}}$和$\textbf{X}^{\mathcal{Q}}$之间的特征相关性计算：
+\vspace{-2pt}
+\begin{equation}
+e_{i, j} = \frac{(\textbf{x}^{\mathcal{P}}_i\textbf{W}^Q)(\textbf{x}^{\mathcal{Q}}_j\textbf{W}^K)^T}{\sqrt{d_{t}}}.
+\vspace{-2pt}
+\end{equation}
+$\mathcal{Q}$的交叉注意力特征以相同的方式计算。
+虽然几何自注意力模块为每个单独的点云编码了变换不变的几何结构，基于特征的交叉注意力模块可以在两个点云之间建模几何一致性。
+所得到的混合特征既不变于变换，又对推理对应关系具有鲁棒性。
+
+% \vspace{-10pt}
+\subsection{超点匹配.}
+%
+为了找到超点的对应关系，我们提出了一种基于全局特征相关性的匹配方案。
+我们首先将$\hat{\textbf{H}}{}^{\mathcal{P}}$和$\hat{\textbf{H}}{}^{\mathcal{Q}}$归一化到单位超球面，并计算一个高斯相关矩阵$\textbf{S} \in \mathbb{R}^{\lvert \hat{\mathcal{P}} \rvert \times \lvert \hat{\mathcal{Q}} \rvert}$，其中$s_{i, j} = \exp(-\lVert \hat{\textbf{h}}{}^{\mathcal{P}}_i - \hat{\textbf{h}}{}^{\mathcal{Q}}_j\rVert_2^2)$。
+在实践中，点云的一些区域在几何上较不具有区分性，并且在另一个点云中有许多相似的区域。除了我们强大的混合特征外，我们还对$\textbf{S}$进行双向归一化操作 \cite{rocco2018neighbourhood,sun2021loftr}，进一步抑制模糊的匹配，得到$\bar{\textbf{S}}$：
+\vspace{-2pt}
+\begin{equation}
+\bar{s}_{i, j} = \frac{s_{i, j}}{\sum_{k=1}^{\lvert \hat{\mathcal{Q}} \rvert} s_{i, k}} \cdot \frac{s_{i, j}}{\sum_{k=1}^{\lvert \hat{\mathcal{P}} \rvert} s_{k, j}}.
+\vspace{-2pt}
+\end{equation}
+我们发现这种抑制可以有效地消除错误的匹配。
+最后，我们选择$\bar{\textbf{S}}$中最大的$N_{c}$个项作为\emph{超点对应关系}：
+% \vspace{-2pt}
+\begin{equation}
+\hat{\mathcal{C}} = \{ (\hat{\textbf{p}}_{x_i}, \hat{\textbf{q}}_{y_i}) \mid (x_i, y_i) \in \mathrm{topk}_{x, y}(\bar{s}_{x, y}) \}.
+% \vspace{-2pt}
+\end{equation}
+由于GeoTransformer的强大几何结构编码能力，我们的方法能够在低重叠情况和少量点对应关系下，最显著的是，以一种无需RANSAC的方式实现准确的配准。
+
+\subsection{点匹配模块}
+\label{sec:model-pom}
+
+得到超点对应关系后，我们使用一个简单而有效的\emph{点匹配模块}来提取点对应关系。
+在点级别，我们只使用由骨干网络学习的局部点特征。
+其原理是，一旦通过超点匹配解决了全局的模糊性，点级别的匹配主要由两个匹配点的邻域决定。
+这种设计选择提高了鲁棒性。
+
+对于每个超点对应关系$\hat{\mathcal{C}}_i = (\hat{\textbf{p}}_{x_i}, \hat{\textbf{q}}_{y_i})$，我们使用一个最优传输层 \cite{sarlin2020superglue} 来提取$\mathcal{G}^{\mathcal{P}}_{x_i}$和$\mathcal{G}^{\mathcal{Q}}_{y_i}$之间的\emph{局部稠密点对应关系}。
+具体来说，我们首先计算一个成本矩阵$\textbf{C}_i \in \mathbb{R}^{n_i \times m_i}$：
+\vspace{-2pt}
+\begin{equation}
+\textbf{C}_i = \textbf{F}^{\mathcal{P}}_{x_i} (\textbf{F}^{\mathcal{Q}}_{y_i})^T / \sqrt{\tilde{d}},
+\vspace{-2pt}
+\end{equation}
+其中$n_i = \lvert \mathcal{G}^{\mathcal{P}}_{x_i} \rvert$，$m_i = \lvert \mathcal{G}^{\mathcal{Q}}_{y_i} \rvert$。
+然后，我们将成本矩阵$\textbf{C}_i$通过追加一个新行和一个新列扩增为$\bar{\textbf{C}}_i$，新行和新列的值由一个可学习的垃圾箱参数$\alpha$填充，如文献 \cite{sarlin2020superglue} 中所述。
+然后我们利用Sinkhorn算法 \cite{sinkhorn1967concerning} 在$\bar{\textbf{C}}_i$上计算一个软分配矩阵$\bar{\textbf{Z}}_i$，然后通过丢弃最后一行和最后一列恢复为$\textbf{Z}_i$。
+我们使用$\textbf{Z}_i$作为候选匹配的置信度矩阵，并通过互相选择前$k$个进行点对应关系的提取，其中，如果一个点匹配位于它所在的行和列的$k$个最大项中，则选择该点匹配：
+\vspace{-2pt}
+\begin{equation}
+\mathcal{C}_i = \{(\mathcal{G}^{\mathcal{P}}_{x_i}(x_j), \mathcal{G}^{\mathcal{Q}}_{y_i}(y_j)) \mid (x_j, y_j) \in \mathrm{mutual\_topk}_{x, y}(z^i_{x, y})\}.
+% \vspace{-5pt}
+\end{equation}
+然后将每个超点匹配计算出的点对应关系收集到一起，形成最终的\emph{全局稠密点对应关系}：$\mathcal{C} = \bigcup_{i=1}^{N_c} \mathcal{C}_i$。
+
+\subsection{无需RANSAC的局部到全局配准}
+\label{sec:model-estimation}
+
+先前的方法通常依赖于稳健的姿态估计器来估计变换，因为假定的对应关系常常被离群值主导。
+大多数稳健估计器，如RANSAC，收敛速度较慢。
+鉴于GeoTransformer的高内点比例，我们能够实现稳健的配准，而无需依赖稳健估计器，这也大大降低了计算成本。
+
+我们设计了一个\emph{局部到全局配准}（LGR）方案。
+作为一种假设验证方法，LGR包括一个局部阶段的变换候选生成和一个全局阶段的变换选择。
+在局部阶段，我们使用其\emph{局部点对应关系}为每个超点匹配求解一个变换$\textbf{T}_i = \{\textbf{R}_i, \textbf{t}_i\}$：
+\vspace{-2pt}
+\begin{equation}
+\textbf{R}_i, \textbf{t}_i = \min_{\textbf{R}, \textbf{t}} \sum\nolimits_{(\tilde{\textbf{p}}_{x_j}, \tilde{\textbf{q}}_{y_j}) \in \mathcal{C}_i} w^i_j \lVert \textbf{R} \cdot \tilde{\textbf{p}}_{x_j} \hspace{-3pt} + \textbf{t} - \tilde{\textbf{q}}_{y_j} \rVert_2^2.
+\label{eq:weighted-svd}
+\vspace{-2pt}
+\end{equation}
+这可以使用加权SVD~\cite{besl1992method}以闭式解决。
+$\textbf{Z}_i$中每个对应关系的相应置信度得分用作权重$w^i_j$。
+由于对应关系的高质量，这个阶段获得的变换已经非常准确。
+在全局阶段，我们选择在整个\emph{全局点对应关系}中接受最多内点匹配的变换：
+\vspace{-2pt}
+\begin{equation}
+\textbf{R}, \textbf{t} = \max_{\textbf{R}_i, \textbf{t}_i} \sum\nolimits_{(\tilde{\textbf{p}}_{x_j}, \tilde{\textbf{q}}_{y_j}) \in \mathcal{C}} \llbracket \lVert \textbf{R}_i \cdot \tilde{\textbf{p}}_{x_j} \hspace{-3pt} + \textbf{t}_i - \tilde{\textbf{q}}_{y_j} \rVert_2^2 < \tau_a \rrbracket,
+\end{equation}
+其中$\llbracket \cdot \rrbracket$是Iverson括号。$\tau_a$是接受半径。
+然后，我们通过求解\ref{eq:weighted-svd}，迭代地使用存活的内点匹配重新估计变换$N_r$次。
+如\ref{sec:exp-indoor}所示，我们的方法在RANSAC的配准精度上实现了可比较的结果，但将计算时间减少了100倍以上。
+此外，与深度稳健估计器~\cite{choy2020deep,pais20203dregnet,bai2021pointdsc}不同，我们的方法是无参数的，不需要网络训练。
+
+\subsection{损失函数}
+\label{sec:model-loss}
+
+损失函数$\mathcal{L} = \mathcal{L}_{oc} + \mathcal{L}_{p}$由用于超点匹配的\emph{重叠感知圆形损失} $\mathcal{L}_{oc}$和用于点匹配的\emph{点匹配损失} $\mathcal{L}_{p}$组成。
+
+% \vspace{-10pt}
+\textbf{重叠感知圆形损失。}
+%
+现有的方法~\cite{sun2021loftr,yu2021cofinet}通常将超点匹配形式化为多标签分类问题，并采用带双重softmax~\cite{sun2021loftr}或最优传输~\cite{sarlin2020superglue,yu2021cofinet}的交叉熵损失。
+每个超点被分配（分类）给一个或多个其他超点，其中基于patch重叠计算的ground truth，很可能一个patch会与多个patch重叠。
+通过分析交叉熵损失的梯度，我们发现在多标签分类中，具有高置信度得分的正类被正梯度抑制。
+这阻碍了模型从中提取可靠的超点对应关系。
+
+为了解决这个问题，我们选择以度量学习的方式提取超点描述符。
+一个直接的解决方案是采用类似于~\cite{bai2020d3feat,huang2021predator}的圆形损失~\cite{sun2020circle}。
+然而，圆形损失忽视了正样本之间的差异，并对它们进行了等权重的处理。
+因此，它在匹配重叠相对较低的patch时遇到困难。
+出于这个原因，我们设计了一个\emph{重叠感知的圆形损失}，以使模型关注那些重叠较高的匹配。
+我们选择在$\mathcal{Q}$中至少有一个正patch的$\mathcal{P}$中的patch，以形成一组锚定patch，$\mathcal{A}$。
+如果一对patch至少有$10\%$的重叠，那么它们是正的，如果它们没有重叠，那么它们是负的。
+所有其他对都被忽略。
+对于每个锚定patch $\mathcal{G}^{\mathcal{P}}_i \in \mathcal{A}$，我们将其在$\mathcal{Q}$中的正patch集合表示为$\varepsilon^i_p$，其负patch集合表示为$\varepsilon^i_n$。
+然后在$\mathcal{P}$上定义重叠感知的圆形损失为:
+\begin{equation}
+\label{eq:overlap-aware-circle-loss}
+\mathcal{L}^{\mathcal{P}}_{oc} = \frac{1}{\lvert\mathcal{A}\rvert} \sum_{\mathclap{\mathcal{G}^{\mathcal{P}}_i \in \mathcal{A}}} \log[1 + \sum_{\mathclap{\mathcal{G}^{\mathcal{Q}}_j \in \varepsilon^i_p}} e^{\lambda^j_i\beta^{i,j}_p (d^j_i - \Delta_p)} \cdot \sum_{\mathclap{\mathcal{G}^{\mathcal{Q}}_k \in \varepsilon^i_n}} e^{\beta^{i,k}_n (\Delta_n - d^k_i)}],
+\end{equation}
+其中$d^j_i \hspace{1pt} {=} \hspace{1pt} \lVert \hat{\textbf{h}}{}^{\mathcal{P}}_i \hspace{1pt} {-} \hspace{1pt} \hat{\textbf{h}}{}^{\mathcal{Q}}_j \rVert_2$是特征空间中的距离，$\lambda_i^j = (o^j_i)^{\frac{1}{2}}$，$o^j_i$代表$\mathcal{G}^{\mathcal{P}}_i$和$\mathcal{G}^{\mathcal{Q}}_j$之间的重叠比率。
+每个样本的正权重和负权重分别为$\beta^{i,j}_p = \gamma(d^j_i - \Delta_p)$和$\beta^{i,k}_n = \gamma(\Delta_n - d^k_i)$计算。
+边缘超参数设置为$\Delta_p \hspace{1pt} {=} \hspace{1pt} 0.1$和$\Delta_n \hspace{1pt} {=} \hspace{1pt} 1.4$。
+重叠感知的圆形损失根据重叠比率重新对$\varepsilon^i_p$上的损失值进行权重计算，以便给予重叠更高的patch对更多的重要性。
+同样的，对于$\mathcal{Q}$上的损失$\mathcal{L}^{\mathcal{Q}}_{oc}$也是如此。总的损失是$\mathcal{L}_{oc} = (\mathcal{L}^{\mathcal{P}}_{oc} + \mathcal{L}^{\mathcal{Q}}_{oc}) / 2$。
+
+% \vspace{-10pt}
+\textbf{点匹配损失。}
+%
+地面真实点对应关系相对稀疏，因为它们只在下采样的点云中可用。
+我们简单地在每个超点对应关系的分配矩阵$\bar{\textbf{Z}}_i$上使用负对数似然损失~\cite{sarlin2020superglue}。
+在训练过程中，我们随机采样$N_g$个地面真实的超点对应关系$\{\hat{\mathcal{C}}^{*}_i\}$，而不是使用预测的。
+对于每个$\hat{\mathcal{C}}^{*}_i$，我们提取一组地面真实的点对应关系$\mathcal{M}_i$，匹配半径为$\tau$。两个patch中未匹配的点集合分别记为$\mathcal{I}_i$和$\mathcal{J}_i$。
+计算$\hat{\mathcal{C}}^{*}_i$的个体点匹配损失为:
+\begin{equation}
+\mathcal{L}_{p, i} = -\sum_{\mathclap{{(x, y) \in \mathcal{M}_i}}} \log \bar{z}^i_{x, y} - \sum_{x \in \mathcal{I}_i} \log \bar{z}^i_{x, m_i+1} - \sum_{y \in \mathcal{J}_i} \log \bar{z}^i_{n_i+1, y},
+\end{equation}
+通过对所有采样的超点匹配进行个体损失的平均，计算最终的损失: $\mathcal{L}_p = \frac{1}{N_g} \sum^{N_g}_{i=1} \mathcal{L}_{p, i}$。
+ 

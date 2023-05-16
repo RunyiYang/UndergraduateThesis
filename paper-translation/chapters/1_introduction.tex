@@ -1,0 +1,48 @@
+%%
+% The BIThesis Template for Bachelor Paper Translation
+%
+% 北京理工大学毕业设计（论文） —— 使用 XeLaTeX 编译
+%
+% Copyright 2020-2023 BITNP
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Feng Kaiyu.
+%
+% Compile with: xelatex -> biber -> xelatex -> xelatex
+%%
+
+% 第一章节
+
+\chapter{引言}
+我们研究了用于点云配准的精确对应关系的提取问题。近期的进步主要由基于学习的，基于对应关系的方法主导~\cite{deng2018ppfnet,gojcic2019perfect,choy2019fully,bai2020d3feat,huang2021predator,yu2021cofinet}。这些方法训练神经网络从两个输入的点云中提取点对应关系，然后基于此使用稳健的估计器，例如RANSAC，计算对齐变换。大多数基于对应关系的方法依赖于关键点的检测~\cite{choy2019fully,bai2020d3feat,ao2021spinnet,huang2021predator}。然而，在两个点云中，特别是当它们的重叠区域很小时，检测可重复的关键点是具有挑战性的。这通常导致在推测的对应关系中的内点比率较低。
+
+受到近期图像匹配进展的启发~\cite{rocco2018neighbourhood,zhou2021patch2pix,sun2021loftr}，无关键点方法~\cite{yu2021cofinet}将输入的点云下采样成超点，并通过检查它们的局部邻域（区块）是否重叠进行匹配。这种超点（区块）匹配然后传播到单独的点，产生密集的点对应关系。因此，密集点对应关系的准确性高度依赖于超点匹配的准确性。
+
+超点匹配是稀疏和松散的。其优点是它将严格的点匹配降低到松散的区块重叠，从而放宽了可重复性的要求。同时，区块重叠比基于距离的点匹配更可靠和更有信息量，这对于学习对应关系是一个重要的约束。另一方面，超点匹配需要捕获更多的全局上下文。
+
+为此，Transformer~\cite{vaswani2017attention}已被采用~\cite{wang2019deep,yu2021cofinet}以在点云配准中编码上下文信息。然而，普通的Transformer忽视了点云的几何结构，这使得学习的特征在几何上不够区分，并导致大量的异常匹配。尽管我们可以注入位置嵌入~\cite{zhao2021point,yang2019modeling}，但基于坐标的编码是变换不变的，这在配准给定任意姿态的点云时是有问题的。
+
+我们主张，为配准任务学习的点Transformer应该使用点云的几何结构，以便提取变换不变的几何特征。我们提出了针对3D点云的Geometric Transformer（简称GeoTransformer），它仅编码点对的距离和点三元组的角度。
+
+对于一个超点，我们通过在所有其他超点之间的距离和角度的基础上几何地“定位”它来学习一个非局部表示。自注意力机制被用来权衡那些锚定超点的重要性。由于距离和角度对刚性变换是不变的，GeoTransformer有效地学习点云的几何结构，即使在低重叠的情况下也能进行高度稳健的超点匹配。
+
+受益于高质量的超点匹配，我们的方法利用最优传输层获得高内点比率的密集点对应关系，以及高度稳健和精确的配准，而无需依赖RANSAC。因此，我们方法的配准部分运行非常快，例如，对于具有5K对应关系的两个点云，只需要0.01秒，比RANSAC快100倍。在室内和室外的基准测试上的大量实验都证明了GeoTransformer的效果。我们的方法在3DLoMatch基准测试上将内点比率提高了17到30个百分点，将配准召回率提高了超过7个点。
+
+我们的主要贡献包括：
+\begin{itemize}
+  \vspace{-8pt}
+  \item 一个快速和精确的点云配准方法，它既不需要关键点，也不需要RANSAC。
+  \vspace{-8pt}
+  \item 一个几何变换器，它学习了点云的变换不变的几何表示，用于稳健的超点匹配。
+  \vspace{-30pt}
+  \item 一个重叠感知的圆损失，它根据区块重叠比率重新调整每个超点匹配的损失，以获得更好的收敛性。
+\end{itemize}

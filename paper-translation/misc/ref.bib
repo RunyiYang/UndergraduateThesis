@@ -1,38 +1,14 @@
-%%
-% The BIThesis Template for Bachelor Paper Translation
-%
-% 北京理工大学毕业设计（论文） —— 使用 XeLaTeX 编译
-%
-% Copyright 2020-2023 BITNP
-%
-% This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License, either version 1.3
-% of this license or (at your option) any later version.
-% The latest version of this license is in
-%   http://www.latex-project.org/lppl.txt
-% and version 1.3 or later is part of all distributions of LaTeX
-% version 2005/12/01 or later.
-%
-% This work has the LPPL maintenance status `maintained'.
-%
-% The Current Maintainer of this work is Feng Kaiyu.
-%
-% Compile with: xelatex -> biber -> xelatex -> xelatex
-%%
-
-@String(PAMI = {IEEE Trans. Pattern Anal. Mach. Intell.})
+G@String(PAMI = {IEEE Trans. Pattern Anal. Mach. Intell.})
 @String(IJCV = {Int. J. Comput. Vis.})
 @String(CVPR= {IEEE Conf. Comput. Vis. Pattern Recog.})
 @String(ICCV= {Int. Conf. Comput. Vis.})
 @String(ECCV= {Eur. Conf. Comput. Vis.})
-@String(ICRA= {Int. Conf. Robot. Auto.})
 @String(NIPS= {Adv. Neural Inform. Process. Syst.})
 @String(ICPR = {Int. Conf. Pattern Recog.})
 @String(BMVC= {Brit. Mach. Vis. Conf.})
 @String(TOG= {ACM Trans. Graph.})
-@String(TRO = {IEEE Trans. Robot.})
 @String(TIP  = {IEEE Trans. Image Process.})
-@String(TVCG = {IEEE Trans. Vis. Comput. Graph.})
+@String(TVCG  = {IEEE Trans. Vis. Comput. Graph.})
 @String(TMM  = {IEEE Trans. Multimedia})
 @String(ACMMM= {ACM Int. Conf. Multimedia})
 @String(ICME = {Int. Conf. Multimedia and Expo})
@@ -54,8 +30,7 @@
 @String(CGF  = {Comput. Graph. Forum})
 @String(CVM = {Computational Visual Media})
 
-@String(TRO = {TRO})
-@String(ICRA= {ICRA})
+
 @String(PAMI  = {IEEE TPAMI})
 @String(IJCV  = {IJCV})
 @String(CVPR  = {CVPR})
@@ -80,29 +55,341 @@
 @String(AAAI = {AAAI})
 @String(CVPRW= {CVPRW})
 @String(CSVT = {IEEE TCSVT})
-@String(threeDOR = {3DOR})
-@String(MICCAI = {MICCAI})
-@String(SPIE = {SPIE})
 
-@INPROCEEDINGS{matrix,
-  author={Buch, Anders Glent and Yang, Yang and Krüger, Norbert and Petersen, Henrik Gordon},
-  booktitle=CVPR, 
-  title={In Search of Inliers: 3D Correspondence by Local and Global Voting}, 
-  year={2014},
-  volume={},
-  number={},
-  pages={2075-2082},
-  doi={10.1109/CVPR.2014.266}}
+@String(ICRA = {ICRA})
+@String(NAACL = {NAACL})
 
-@ARTICLE{paulj1992method,
-  author={Besl, P.J. and McKay, Neil D.},
-  journal=PAMI, 
-  title={A method for registration of 3-D shapes}, 
+
+
+@inproceedings{aoki2019pointnetlk,
+  title={Pointnetlk: Robust \& efficient point cloud registration using pointnet},
+  author={Aoki, Yasuhiro and Goforth, Hunter and Srivatsan, Rangaprasad Arun and Lucey, Simon},
+  booktitle=CVPR,
+  pages={7163--7172},
+  year={2019}
+}
+
+@inproceedings{bai2020d3feat,
+  title={D3feat: Joint learning of dense detection and description of 3d local features},
+  author={Bai, Xuyang and Luo, Zixin and Zhou, Lei and Fu, Hongbo and Quan, Long and Tai, Chiew-Lan},
+  booktitle=CVPR,
+  pages={6359--6367},
+  year={2020}
+}
+
+@inproceedings{bai2021pointdsc,
+  title={PointDSC: Robust Point Cloud Registration using Deep Spatial Consistency},
+  author={Bai, Xuyang and Luo, Zixin and Zhou, Lei and Chen, Hongkai and Li, Lei and Hu, Zeyu and Fu, Hongbo and Tai, Chiew-Lan},
+  booktitle=CVPR,
+  pages={15859--15869},
+  year={2021}
+}
+
+@inproceedings{choy2020deep,
+  title={Deep global registration},
+  author={Choy, Christopher and Dong, Wei and Koltun, Vladlen},
+  booktitle=CVPR,
+  pages={2514--2523},
+  year={2020}
+}
+
+@inproceedings{choy2019fully,
+  title={Fully convolutional geometric features},
+  author={Choy, Christopher and Park, Jaesik and Koltun, Vladlen},
+  booktitle=CVPR,
+  pages={8958--8966},
+  year={2019}
+}
+
+@inproceedings{deng2018ppf,
+  title={Ppf-foldnet: Unsupervised learning of rotation invariant 3d local descriptors},
+  author={Deng, Haowen and Birdal, Tolga and Ilic, Slobodan},
+  booktitle=ECCV,
+  pages={602--618},
+  year={2018}
+}
+
+@inproceedings{deng2018ppfnet,
+  title={Ppfnet: Global context aware local features for robust 3d point matching},
+  author={Deng, Haowen and Birdal, Tolga and Ilic, Slobodan},
+  booktitle=CVPR,
+  pages={195--205},
+  year={2018}
+}
+
+@inproceedings{gojcic2019perfect,
+  title={The perfect match: 3d point cloud matching with smoothed densities},
+  author={Gojcic, Zan and Zhou, Caifa and Wegner, Jan D and Wieser, Andreas},
+  booktitle=CVPR,
+  pages={5545--5554},
+  year={2019}
+}
+
+@inproceedings{huang2020feature,
+  title={Feature-metric registration: A fast semi-supervised approach for robust point cloud registration without correspondences},
+  author={Huang, Xiaoshui and Mei, Guofeng and Zhang, Jian},
+  booktitle=CVPR,
+  pages={11366--11374},
+  year={2020}
+}
+
+@inproceedings{wang2019prnet,
+  title={PRNet: self-supervised learning for partial-to-partial registration},
+  author={Wang, Yue and Solomon, Justin},
+  booktitle=NIPS,
+  pages={8814--8826},
+  year={2019}
+}
+
+@inproceedings{fu2021robust,
+  title={Robust Point Cloud Registration Framework Based on Deep Graph Matching},
+  author={Fu, Kexue and Liu, Shaolei and Luo, Xiaoyuan and Wang, Manning},
+  booktitle=CVPR,
+  pages={8893--8902},
+  year={2021}
+}
+
+@inproceedings{huang2021predator,
+  title={PREDATOR: Registration of 3D Point Clouds with Low Overlap},
+  author={Huang, Shengyu and Gojcic, Zan and Usvyatsov, Mikhail and Wieser, Andreas and Schindler, Konrad},
+  booktitle=CVPR,
+  pages={4267--4276},
+  year={2021}
+}
+
+@inproceedings{lu2021hregnet,
+  title={HRegNet: A Hierarchical Network for Large-scale Outdoor LiDAR Point Cloud Registration},
+  author={Lu, Fan and Chen, Guang and Liu, Yinlong and Zhang, Lijun and Qu, Sanqing and Liu, Shu and Gu, Rongqi},
+  booktitle=ICCV,
+  pages={16014--16023},
+  year={2021}
+}
+
+@inproceedings{pais20203dregnet,
+  title={3dregnet: A deep neural network for 3d point registration},
+  author={Pais, G Dias and Ramalingam, Srikumar and Govindu, Venu Madhav and Nascimento, Jacinto C and Chellappa, Rama and Miraldo, Pedro},
+  booktitle=CVPR,
+  pages={7193--7203},
+  year={2020}
+}
+
+@inproceedings{lee2021deep,
+  title={Deep Hough Voting for Robust Global Registration},
+  author={Lee, Junha and Kim, Seungwook and Cho, Minsu and Park, Jaesik},
+  booktitle=ICCV,
+  pages={15994--16003},
+  year={2021}
+}
+
+@inproceedings{cao2021pcam,
+  title={PCAM: Product of Cross-Attention Matrices for Rigid Registration of Point Clouds},
+  author={Cao, Anh-Quan and Puy, Gilles and Boulch, Alexandre and Marlet, Renaud},
+  booktitle=ICCV,
+  pages={13229--13238},
+  year={2021}
+}
+
+@inproceedings{wang2019deep,
+  title={Deep closest point: Learning representations for point cloud registration},
+  author={Wang, Yue and Solomon, Justin M},
+  booktitle=ICCV,
+  pages={3523--3532},
+  year={2019}
+}
+
+@inproceedings{xu2021omnet,
+  title={OMNet: Learning Overlapping Mask for Partial-to-Partial Point Cloud Registration},
+  author={Xu, Hao and Liu, Shuaicheng and Wang, Guangfu and Liu, Guanghui and Zeng, Bing},
+  booktitle=ICCV,
+  year={2021},
+  pages={3132-3141}
+}
+
+@inproceedings{yew20183dfeat,
+  title={3dfeat-net: Weakly supervised local 3d features for point cloud registration},
+  author={Yew, Zi Jian and Lee, Gim Hee},
+  booktitle=ECCV,
+  pages={607--623},
+  year={2018}
+}
+
+@inproceedings{yew2020rpm,
+  title={Rpm-net: Robust point matching using learned features},
+  author={Yew, Zi Jian and Lee, Gim Hee},
+  booktitle=CVPR,
+  pages={11824--11833},
+  year={2020}
+}
+
+@inproceedings{zeng20173dmatch,
+  title={3dmatch: Learning local geometric descriptors from rgb-d reconstructions},
+  author={Zeng, Andy and Song, Shuran and Nie{\ss}ner, Matthias and Fisher, Matthew and Xiao, Jianxiong and Funkhouser, Thomas},
+  booktitle=CVPR,
+  pages={1802--1811},
+  year={2017}
+}
+
+@article{wang2021you,
+  title={You Only Hypothesize Once: Point Cloud Registration with Rotation-equivariant Descriptors},
+  author={Wang, Haiping and Liu, Yuan and Dong, Zhen and Wang, Wenping and Yang, Bisheng},
+  journal={arXiv preprint arXiv:2109.00182},
+  year={2021}
+}
+
+@inproceedings{ao2021spinnet,
+  title={SpinNet: Learning a General Surface Descriptor for 3D Point Cloud Registration},
+  author={Ao, Sheng and Hu, Qingyong and Yang, Bo and Markham, Andrew and Guo, Yulan},
+  booktitle=CVPR,
+  pages={11753--11762},
+  year={2021}
+}
+
+@article{paszke2019pytorch,
+  title={Pytorch: An imperative style, high-performance deep learning library},
+  author={Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and others},
+  journal=NIPS,
+  volume={32},
+  pages={8026--8037},
+  year={2019}
+}
+
+@article{zhou2018open3d,
+  title={Open3D: A modern library for 3D data processing},
+  author={Zhou, Qian-Yi and Park, Jaesik and Koltun, Vladlen},
+  journal={arXiv preprint arXiv:1801.09847},
+  year={2018}
+}
+
+@article{gower1975generalized,
+  title={Generalized procrustes analysis},
+  author={Gower, John C},
+  journal={Psychometrika},
+  volume={40},
+  number={1},
+  pages={33--51},
+  year={1975},
+  publisher={Springer}
+}
+
+@inproceedings{besl1992method,
+  title={Method for registration of 3-D shapes},
+  author={Besl, Paul J and McKay, Neil D},
+  booktitle={Sensor fusion IV: control paradigms and data structures},
+  volume={1611},
+  pages={586--606},
   year={1992},
-  volume={14},
-  number={2},
-  pages={239-256},
-  doi={10.1109/34.121791}}
+  organization={International Society for Optics and Photonics}
+}
+
+@article{fischler1981random,
+  title={Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography},
+  author={Fischler, Martin A and Bolles, Robert C},
+  journal={Communications of the ACM},
+  volume={24},
+  number={6},
+  pages={381--395},
+  year={1981},
+  publisher={ACM New York, NY, USA}
+}
+
+@inproceedings{geiger2012we,
+  title={Are we ready for autonomous driving? the kitti vision benchmark suite},
+  author={Geiger, Andreas and Lenz, Philip and Urtasun, Raquel},
+  booktitle=CVPR,
+  pages={3354--3361},
+  year={2012},
+  organization={IEEE}
+}
+
+@inproceedings{wu2018group,
+  title={Group normalization},
+  author={Wu, Yuxin and He, Kaiming},
+  booktitle=ECCV,
+  pages={3--19},
+  year={2018}
+}
+
+@inproceedings{thomas2019kpconv,
+  title={Kpconv: Flexible and deformable convolution for point clouds},
+  author={Thomas, Hugues and Qi, Charles R and Deschaud, Jean-Emmanuel and Marcotegui, Beatriz and Goulette, Fran{\c{c}}ois and Guibas, Leonidas J},
+  booktitle=ICCV,
+  pages={6411--6420},
+  year={2019}
+}
+
+@article{wang2019dynamic,
+  title={Dynamic graph cnn for learning on point clouds},
+  author={Wang, Yue and Sun, Yongbin and Liu, Ziwei and Sarma, Sanjay E and Bronstein, Michael M and Solomon, Justin M},
+  journal=TOG,
+  volume={38},
+  number={5},
+  pages={1--12},
+  year={2019},
+  publisher={ACM New York, NY, USA}
+}
+
+@inproceedings{li2018so,
+  title={So-net: Self-organizing network for point cloud analysis},
+  author={Li, Jiaxin and Chen, Ben M and Lee, Gim Hee},
+  booktitle=CVPR,
+  pages={9397--9406},
+  year={2018}
+}
+
+@inproceedings{vaswani2017attention,
+  title={Attention is all you need},
+  author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  booktitle=NIPS,
+  pages={5998--6008},
+  year={2017}
+}
+
+@inproceedings{shaw2018self,
+  title={Self-Attention with Relative Position Representations},
+  author={Shaw, Peter and Uszkoreit, Jakob and Vaswani, Ashish},
+  booktitle=NAACL,
+  pages={464--468},
+  year={2018}
+}
+
+@article{wu2021rethinking,
+  title={Rethinking and Improving Relative Position Encoding for Vision Transformer},
+  author={Wu, Kan and Peng, Houwen and Chen, Minghao and Fu, Jianlong and Chao, Hongyang},
+  journal={arXiv preprint arXiv:2107.14222},
+  year={2021}
+}
+
+@inproceedings{dosovitskiy2020image,
+  title={An image is worth 16x16 words: Transformers for image recognition at scale},
+  author={Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and Gelly, Sylvain and others},
+  journal=ICLR,
+  year={2021}
+}
+
+@inproceedings{wang2020axial,
+  title={Axial-deeplab: Stand-alone axial-attention for panoptic segmentation},
+  author={Wang, Huiyu and Zhu, Yukun and Green, Bradley and Adam, Hartwig and Yuille, Alan and Chen, Liang-Chieh},
+  booktitle=ECCV,
+  pages={108--126},
+  year={2020},
+  organization={Springer}
+}
+
+@inproceedings{zhao2021point,
+  title={Point transformer},
+  author={Zhao, Hengshuang and Jiang, Li and Jia, Jiaya and Torr, Philip HS and Koltun, Vladlen},
+  booktitle=ICCV,
+  pages={16259--16268},
+  year={2021}
+}
+
+@inproceedings{yang2019modeling,
+  title={Modeling point clouds with self-attention and gumbel subset sampling},
+  author={Yang, Jiancheng and Zhang, Qiang and Ni, Bingbing and Li, Linguo and Liu, Jinxian and Zhou, Mengdie and Tian, Qi},
+  booktitle=CVPR,
+  pages={3323--3332},
+  year={2019}
+}
 
 @inproceedings{rusu2009fast,
   title={Fast point feature histograms (FPFH) for 3D registration},
@@ -119,653 +406,134 @@
   booktitle=CVPR,
   pages={998--1005},
   year={2010},
-  organization={Ieee}
-}
-
-@article{bustos2017guaranteed,
-  title={Guaranteed outlier removal for point cloud registration with correspondences},
-  author={Bustos, Alvaro Parra and Chin, Tat-Jun},
-  journal=PAMI,
-  volume={40},
-  number={12},
-  pages={2868--2882},
-  year={2017},
-  publisher={IEEE}
-}
-
-@article{parra2019practical,
-  title={A Practical Maximum Clique Algorithm for Matching with Pairwise Constraints},
-  author={Parra, {\'A}lvaro and Chin, Tat-Jun and Neumann, Frank and Friedrich, Tobias and Katzmann, Maximilian},
-  journal={arXiv preprint arXiv:1902.01534},
-  year={2019}
-}
-
-@inproceedings{shi2021robin,
-  title={ROBIN: a graph-theoretic approach to reject outliers in robust estimation using invariants},
-  author={Shi, Jingnan and Yang, Heng and Carlone, Luca},
-  booktitle=ICRA,
-  pages={13820--13827},
-  year={2021},
   organization={IEEE}
 }
 
-@article{leordeanu2005spectral,
-  title={A spectral technique for correspondence problems using pairwise constraints},
-  author={Leordeanu, Marius and Hebert, Martial},
-  year={2005},
-  publisher={Carnegie Mellon University},
+@inproceedings{raposo2017using,
+  title={Using 2 point+ normal sets for fast registration of point clouds with small overlap},
+  author={Raposo, Carolina and Barreto, Joao P},
+  booktitle=ICRA,
+  pages={5652--5658},
+  year={2017},
+  organization={IEEE}
 }
-@inproceedings{choi2015robust,
-  title={Robust reconstruction of indoor scenes},
-  author={Choi, Sungjoon and Zhou, Qian-Yi and Koltun, Vladlen},
+
+% Stereo Matching
+
+@inproceedings{lin2017feature,
+  title={Feature pyramid networks for object detection},
+  author={Lin, Tsung-Yi and Doll{\'a}r, Piotr and Girshick, Ross and He, Kaiming and Hariharan, Bharath and Belongie, Serge},
   booktitle=CVPR,
-  pages={5556--5565},
-  year={2015}
-}
-
-
-@INPROCEEDINGS{DHVR, 
-    title={Deep Hough Voting for Robust Global Registration},
-    author={Junha Lee and Seungwook Kim and Minsu Cho and Jaesik Park},
-    booktitle=ICCV,
-    year={2021}
-}
-
-@inproceedings{GCRansac,
-	author = {Barath, Daniel and Matas, Jiri},
-	title = {Graph-cut RANSAC},
-	booktitle = CVPR,
-	year = {2018},
-}
-@inproceedings{NGRansac,
-  title={Neural-Guided RANSAC: Learning Where to Sample Model Hypotheses},
-  author={Brachmann, Eric and Rother, Carsten},
-  booktitle=ICCV,
-  year={2019}
-}
-@inproceedings{LORansac,
-  title={Locally Optimized RANSAC},
-  author={Ondrej Chum and Jiri Matas and Josef Kittler},
-  booktitle={DAGM-Symposium},
-  year={2003}
-}
-@article{yang2020graduated,
-  title={Graduated non-convexity for robust spatial perception: From non-minimal solvers to global outlier rejection},
-  author={Yang, Heng and Antonante, Pasquale and Tzoumas, Vasileios and Carlone, Luca},
-  journal=RAL,
-  volume={5},
-  number={2},
-  pages={1127--1134},
-  year={2020},
-  publisher={IEEE}
-}
-
-@article{lowe2004distinctive,
-  title={Distinctive image features from scale-invariant keypoints},
-  author={Lowe, David G},
-  journal=IJCV,
-  volume={60},
-  number={2},
-  pages={91--110},
-  year={2004},
-  publisher={Springer}
-}
-@inproceedings{VoteNet,
-  title={Deep hough voting for 3d object detection in point clouds},
-  author={Qi, Charles R and Litany, Or and He, Kaiming and Guibas, Leonidas J},
-  booktitle=ICCV,
-  pages={9277--9286},
-  year={2019}
-}
-
-@inproceedings{BRNet,
-  title={Back-tracing Representative Points for Voting-based 3D Object Detection in Point Clouds},
-  author={Cheng, Bowen and Sheng, Lu and Shi, Shaoshuai and Yang, Ming and Xu, Dong},
-  booktitle=CVPR,
-  pages={8963--8972},
-  year={2021}
-}
-
-@inproceedings{HVPR,
-  title={HVPR: Hybrid Voxel-Point Representation for Single-stage 3D Object Detection},
-  author={Noh, Jongyoun and Lee, Sanghoon and Ham, Bumsub},
-  booktitle=CVPR,
-  pages={14605--14614},
-  year={2021}
-}
-
-@InProceedings{MultiX,
-author="Barath, Daniel
-and Matas, Jiri",
-editor="Ferrari, Vittorio
-and Hebert, Martial
-and Sminchisescu, Cristian
-and Weiss, Yair",
-title="Multi-class Model Fitting by Energy Minimization and Mode-Seeking",
-booktitle=ECCV,
-year="2018",
-publisher="Springer International Publishing",
-address="Cham",
-pages="229--245",
-isbn="978-3-030-01270-0"
-}
-
-@inproceedings{CONSAC,
-  title={CONSAC: Robust Multi-Model Fitting by Conditional Sample Consensus},
-  author={Kluger, Florian and Brachmann, Eric and Ackermann, Hanno and Rother, Carsten and Yang, Michael Ying and Rosenhahn, Bodo},
-  booktitle=CVPR,
-  year={2020}
-}
-
-@article{PEARL,
-  title={Energy-based geometric multi-model fitting},
-  author={Isack, Hossam and Boykov, Yuri},
-  journal=IJCV,
-  volume={97},
-  number={2},
-  pages={123--147},
-  year={2012},
-  publisher={Springer}
-}
-@article{RPA,
-author = {Magri, Luca and Fusiello, Andrea},
-doi = {10.5244/c.29.20},
-file = {:D\:/OneDrive - sjtu.edu.cn/Mendeley/Magri, Fusiello - 2015 - Robust Multiple Model Fitting with Preference Analysis and Low-rank Approximation.pdf:pdf},
-mendeley-groups = {multimodel},
-pages = {20.1--20.12},
-title = {Robust Multiple Model Fitting with Preference Analysis and Low-rank Approximation},
-year = {2015},
-journal = BMVC
-}
-@inproceedings{MCT,
-  title={Fitting multiple heterogeneous models by multi-class cascaded t-linkage},
-  author={Magri, Luca and Fusiello, Andrea},
-  booktitle=CVPR,
-  pages={7460--7468},
-  year={2019}
-}
-
-@inproceedings{MultiBodySync,
-  title={Multibodysync: Multi-body segmentation and motion estimation via 3d scan synchronization},
-  author={Huang, Jiahui and Wang, He and Birdal, Tolga and Sung, Minhyuk and Arrigoni, Federica and Hu, Shi-Min and Guibas, Leonidas J},
-  booktitle=CVPR,
-  pages={7108--7118},
-  year={2021}
-}
-@article{Tlinkage,
-author = {Magri, Luca and Fusiello, Andrea},
-doi = {10.1109/CVPR.2014.505},
-file = {:D\:/OneDrive - sjtu.edu.cn/Mendeley/Magri, Fusiello - 2014 - T-linkage A continuous relaxation of J-linkage for multi-model fitting.pdf:pdf},
-isbn = {9781479951178},
-issn = {10636919},
-journal = CVPR,
-mendeley-groups = {multimodel},
-pages = {3954--3961},
-title = {T-linkage: A continuous relaxation of J-linkage for multi-model fitting},
-year = {2014}
-}
-@inproceedings{Coverage,
-  title={Multiple model fitting as a set coverage problem},
-  author={Magri, Luca and Fusiello, Andrea},
-  booktitle=CVPR,
-  pages={3318--3326},
-  year={2016}
-}
-@inproceedings{ProgressiveX,
-  title={Progressive-X: Efficient, anytime, multi-model fitting algorithm},
-  author={Barath, Daniel and Matas, Jiri},
-  booktitle=ICCV,
-  pages={3780--3788},
-  year={2019}
-}
-
-@article{ProgressiveX2,
-  title={Progressive-X+: Clustering in the Consensus Space},
-  author={Barath, Daniel and Rozumny, Denys and Eichhardt, Ivan and Hajder, Levente and Matas, Jiri},
-  journal={arXiv preprint arXiv:2103.13875},
-  year={2021}
-}
-@article{RPMNet,
-archivePrefix = {arXiv},
-arxivId = {2003.13479},
-author = {Yew, Zi Jian and Lee, Gim Hee},
-eprint = {2003.13479},
-file = {:D\:/OneDrive - sjtu.edu.cn/Mendeley/Yew, Lee - 2020 - RPM-Net Robust Point Matching using Learned Features(2).pdf:pdf},
-title = {RPM-Net: Robust Point Matching using Learned Features},
-journal = CVPR,
-url = {http://arxiv.org/abs/2003.13479},
-year = {2020}
-}
-
-@inproceedings{SpinNet,
-  title={SpinNet: Learning a General Surface Descriptor for 3D Point Cloud Registration},
-  author={Ao, Sheng and Hu, Qingyong and Yang, Bo and Markham, Andrew and Guo, Yulan},
-  booktitle=CVPR,
-  pages={11753--11762},
-  year={2021}
-}
-
-@article{DGR,
-archivePrefix = {arXiv},
-arxivId = {2004.11540},
-author = {Choy, Christopher and Dong, Wei and Koltun, Vladlen},
-doi = {10.1109/cvpr42600.2020.00259},
-eprint = {2004.11540},
-pages = {2511--2520},
-title = {Deep Global Registration},
-url = {http://arxiv.org/abs/2004.11540},
-journal = CVPR,
-year = {2020}
-}
-@article{3DSmoothNet,
-archivePrefix = {arXiv},
-arxivId = {arXiv:1811.06879v3},
-author = {Gojcic, Zan and Zhou, Caifa and Wegner, Jan D. and Wieser, Andreas},
-doi = {10.1109/CVPR.2019.00569},
-eprint = {arXiv:1811.06879v3},
-isbn = {9781728132938},
-issn = {10636919},
-journal = CVPR,
-keywords = {3D from Multiview and Sensors,Categorization,Recognition: Detection,Representation Learning,Retrieval,Scene Analysis and Under},
-pages = {5540--5549},
-title = {The perfect match: 3D point cloud matching with smoothed densities},
-volume = {2019-June},
-year = {2019}
-}
-@article{D3Feat,
-archivePrefix = {arXiv},
-arxivId = {2003.03164},
-author = {Bai, Xuyang and Luo, Zixin and Zhou, Lei and Fu, Hongbo and Quan, Long and Tai, Chiew-Lan},
-eprint = {2003.03164},
-title = {D3Feat: Joint Learning of Dense Detection and Description of 3D Local Features},
-url = {http://arxiv.org/abs/2003.03164},
-journal = CVPR,
-year = {2020}
-}
-@article{PPFNET2,
-archivePrefix = {arXiv},
-arxivId = {1904.04281},
-author = {Deng, Haowen and Birdal, Tolga and Ilic, Slobodan},
-doi = {10.1109/CVPR.2019.00336},
-eprint = {1904.04281},
-file = {:D\:/OneDrive - sjtu.edu.cn/Mendeley/Deng, Birdal, Ilic - 2019 - 3D local features for direct pairwise registration.pdf:pdf},
-isbn = {9781728132938},
-issn = {10636919},
-journal = CVPR,
-keywords = {3D from Multiview and Sensors,Categorization,Recognition: Detection,Retrieval,Robotics + Driving},
-pages = {3239--3248},
-title = {3D local features for direct pairwise registration},
-volume = {2019-June},
-year = {2019}
-}
-
-@inproceedings{PREDATOR,
-  title={PREDATOR: Registration of 3D Point Clouds with Low Overlap},
-  author={Huang, Shengyu and Gojcic, Zan and Usvyatsov, Mikhail and Wieser, Andreas and Schindler, Konrad},
-  booktitle=CVPR,
-  pages={4267--4276},
-  year={2021}
-}
-@article{TEASER,
-  title={Teaser: Fast and certifiable point cloud registration},
-  author={Yang, Heng and Shi, Jingnan and Carlone, Luca},
-  journal=TRO,
-  volume={37},
-  number={2},
-  pages={314--333},
-  year={2020},
-  publisher={IEEE}
-}
-@article{3DMatch,
-
-archivePrefix = {arXiv},
-arxivId = {1603.08182},
-author = {Zeng, Andy and Song, Shuran and Niessner, Matthias and Fisher, Matthew and Xiao, Jianxiong and Funkhouser, Thomas},
-doi = {10.1109/CVPR.2017.29},
-eprint = {1603.08182},
-file = {:D\:/OneDrive - sjtu.edu.cn/Mendeley/Zeng et al. - 2017 - 3DMatch Learning local geometric descriptors from RGB-D reconstructions.pdf:pdf},
-isbn = {9781538604571},
-journal = CVPR,
-pages = {199--208},
-title = {3DMatch: Learning local geometric descriptors from RGB-D reconstructions},
-volume = {2017-Janua},
-year = {2017}
-}
-@article{PPFNet,
-
-archivePrefix = {arXiv},
-arxivId = {1802.02669},
-author = {Deng, Haowen and Birdal, Tolga and Ilic, Slobodan},
-doi = {10.1109/CVPR.2018.00028},
-eprint = {1802.02669},
-file = {:D\:/OneDrive - sjtu.edu.cn/Mendeley/Deng, Birdal, Ilic - 2018 - PPFNet Global Context Aware Local Features for Robust 3D Point Matching.pdf:pdf},
-isbn = {9781538664209},
-issn = {10636919},
-journal = CVPR,
-pages = {195--205},
-title = {PPFNet: Global Context Aware Local Features for Robust 3D Point Matching},
-year = {2018}
-}
-
-@inproceedings{PPFFoldNet,
-  title={Ppf-foldnet: Unsupervised learning of rotation invariant 3d local descriptors},
-  author={Deng, Haowen and Birdal, Tolga and Ilic, Slobodan},
-  booktitle=ECCV,
-  pages={602--618},
-  year={2018}
-}
-
-@inproceedings{FCGF,
-  title={Fully convolutional geometric features},
-  author={Choy, Christopher and Park, Jaesik and Koltun, Vladlen},
-  booktitle=ICCV,
-  pages={8958--8966},
-  year={2019}
-}
-
-@inproceedings{3DRegNet,
-  title={3dregnet: A deep neural network for 3d point registration},
-  author={Pais, G Dias and Ramalingam, Srikumar and Govindu, Venu Madhav and Nascimento, Jacinto C and Chellappa, Rama and Miraldo, Pedro},
-  booktitle=CVPR,
-  pages={7193--7203},
-  year={2020}
-}
-@article{PointDSC,
-  title={PointDSC: Robust Point Cloud Registration using Deep Spatial Consistency},
-  author={Xuyang Bai and Zixin Luo and Lei Zhou and Hongkai Chen and Lei Li and Zeyu Hu and Hongbo Fu and Chiew-Lan Tai},
-  journal=CVPR,
-  year={2021}
-}
-@InProceedings{PRNet,
-  title={PRNet: Self-Supervised Learning for Partial-to-Partial Registration},
-  author={Wang, Yue and Solomon, Justin M.},
-  booktitle = NIPS,
-  year={2019}
-}
-
-@inproceedings{DCP,
-  title={Deep closest point: Learning representations for point cloud registration},
-  author={Wang, Yue and Solomon, Justin M},
-  booktitle=ICCV,
-  pages={3523--3532},
-  year={2019}
-}
-
-@InProceedings{FMR,
-    author = {Huang, Xiaoshui and Mei, Guofeng and Zhang, Jian},
-    title = {Feature-Metric Registration: A Fast Semi-Supervised Approach for Robust Point Cloud Registration Without Correspondences},
-    booktitle = CVPR,
-    month = {June},
-    year = {2020}
-}
-@article{FGR,
-
-archivePrefix = {arXiv},
-arxivId = {1612.02155},
-author = {Zhou, Qian-Yi and Park, Jaesik and Koltun, Vladlen},
-doi = {10.1007/978-3-319-46475-6},
-eprint = {1612.02155},
-isbn = {978-3-319-46474-9},
-issn = {0302-9743},
-journal = ECCV,
-keywords = {deep learning,style transfer,super-resolution},
-number = {August},
-pages = {694--711},
-pmid = {4520227},
-title = {Fast Global Registration},
-url = {http://arxiv.org/abs/1612.02155%0Ahttp://link.springer.com/10.1007/978-3-319-46475-6%0Ahttp://arxiv.org/abs/1612.02155},
-volume = {9906},
-year = {2016}
-}
-
-@inproceedings{ScanNet,
-  title={Scannet: Richly-annotated 3d reconstructions of indoor scenes},
-  author={Dai, Angela and Chang, Angel X and Savva, Manolis and Halber, Maciej and Funkhouser, Thomas and Nie{\ss}ner, Matthias},
-  booktitle=CVPR,
-  pages={5828--5839},
+  pages={2117--2125},
   year={2017}
 }
 
-@inproceedings{ShapeNet,
-  title={Shrec16 track: largescale 3d shape retrieval from shapenet core55},
-  author={Savva, Manolis and Yu, Fisher and Su, Hao and Aono, M and Chen, B and Cohen-Or, D and Deng, W and Su, Hang and Bai, Song and Bai, Xiang and others},
-  booktitle=threeDOR,
-  volume={10},
-  year={2016}
+@article{rocco2018neighbourhood,
+  title={Neighbourhood Consensus Networks},
+  author={Rocco, Ignacio and Cimpoi, Mircea and Arandjelovi{\'c}, Relja and Torii, Akihiko and Pajdla, Tomas and Sivic, Josef},
+  journal=NIPS,
+  volume={31},
+  pages={1651--1662},
+  year={2018}
 }
 
-@article{pointnet2,
-
-archivePrefix = {arXiv},
-arxivId = {1706.02413},
-author = {Qi, Charles R. and Yi, Li and Su, Hao and Guibas, Leonidas J.},
-eprint = {1706.02413},
-file = {:D\:/OneDrive - sjtu.edu.cn/Mendeley/Qi et al. - 2017 - PointNet Deep hierarchical feature learning on point sets in a metric space.pdf:pdf},
-issn = {10495258},
-journal = NIPS,
-pages = {5100--5109},
-title = {PointNet++: Deep hierarchical feature learning on point sets in a metric space},
-volume = {2017-Decem},
-year = {2017}
+@article{tyszkiewicz2020disk,
+  title={DISK: Learning local features with policy gradient},
+  author={Tyszkiewicz, Micha{\l} J and Fua, Pascal and Trulls, Eduard},
+  journal={arXiv preprint arXiv:2006.13566},
+  year={2020}
 }
 
-@article{RANSAC,
-  title={Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography},
-  author={Fischler, Martin A and Bolles, Robert C},
-  journal={Communications of the ACM},
-  volume={24},
-  number={6},
-  pages={381--395},
-  year={1981},
-  publisher={ACM New York, NY, USA}
-}
-@inproceedings{PointNetLK,
-  title={Pointnetlk: Robust \& efficient point cloud registration using pointnet},
-  author={Aoki, Yasuhiro and Goforth, Hunter and Srivatsan, Rangaprasad Arun and Lucey, Simon},
+@inproceedings{sun2021loftr,
+  title={LoFTR: Detector-free local feature matching with transformers},
+  author={Sun, Jiaming and Shen, Zehong and Wang, Yuang and Bao, Hujun and Zhou, Xiaowei},
   booktitle=CVPR,
-  pages={7163--7172},
-  year={2019}
+  pages={8922--8931},
+  year={2021}
 }
-@article{PyTorch,
-  title={Automatic differentiation in PyTorch},
-  author={Paszke, Adam and Gross, Sam and Chintala, Soumith and Chanan, Gregory and Yang, Edward and DeVito, Zachary and Lin, Zeming and Desmaison, Alban and Antiga, Luca and Lerer, Adam},
-  year={2017}
-}
-@article{Open3D,
-    author    = {Qian-Yi Zhou and Jaesik Park and Vladlen Koltun},
-    title     = {Open3D:A Modern Library for 3D Data Processing},
-    journal   = {arXiv:1801.09847},
-    year      = {2018},
-}
-@inproceedings{ModelNet40,
-  title={3d shapenets: A deep representation for volumetric shapes},
-  author={Wu, Zhirong and Song, Shuran and Khosla, Aditya and Yu, Fisher and Zhang, Linguang and Tang, Xiaoou and Xiao, Jianxiong},
+
+@inproceedings{li2020correspondence,
+  title={Correspondence networks with adaptive neighbourhood consensus},
+  author={Li, Shuda and Han, Kai and Costain, Theo W and Howard-Jenkins, Henry and Prisacariu, Victor},
   booktitle=CVPR,
-  pages={1912--1920},
+  pages={10196--10205},
+  year={2020}
+}
+
+@article{li2020dual,
+  title={Dual-resolution correspondence networks},
+  author={Li, Xinghui and Han, Kai and Li, Shuda and Prisacariu, Victor},
+  journal=NIPS,
+  volume={33},
+  year={2020}
+}
+
+@inproceedings{lee2021patchmatch,
+  title={PatchMatch-Based Neighborhood Consensus for Semantic Correspondence},
+  author={Lee, Jae Yong and DeGol, Joseph and Fragoso, Victor and Sinha, Sudipta N},
+  booktitle=CVPR,
+  pages={13153--13163},
+  year={2021}
+}
+
+@inproceedings{sarlin2020superglue,
+  title={Superglue: Learning feature matching with graph neural networks},
+  author={Sarlin, Paul-Edouard and DeTone, Daniel and Malisiewicz, Tomasz and Rabinovich, Andrew},
+  booktitle=CVPR,
+  pages={4938--4947},
+  year={2020}
+}
+
+@inproceedings{zhou2021patch2pix,
+  title={Patch2pix: Epipolar-guided pixel-level correspondences},
+  author={Zhou, Qunjie and Sattler, Torsten and Leal-Taixe, Laura},
+  booktitle=CVPR,
+  pages={4669--4678},
+  year={2021}
+}
+
+% Loss Funcion
+
+@inproceedings{sun2020circle,
+  title={Circle loss: A unified perspective of pair similarity optimization},
+  author={Sun, Yifan and Cheng, Changmao and Zhang, Yuhan and Zhang, Chi and Zheng, Liang and Wang, Zhongdao and Wei, Yichen},
+  booktitle=CVPR,
+  pages={6398--6407},
+  year={2020}
+}
+
+@inproceedings{kingma2014adam,
+  title={Adam: A method for stochastic optimization},
+  author={Kingma, Diederik P and Ba, Jimmy},
+  journal=ICLR,
   year={2015}
 }
 
-@ARTICLE{SVD,
-  author={Arun, K.S. and Huang, T.S. and Blostein, S. D.},
-  journal=PAMI, 
-  title={Least-Squares Fitting of Two 3-D Point Sets}, 
-  year={1987},
-  volume={PAMI-9},
-  number={5},
-  pages={698-700},
-  doi={10.1109/TPAMI.1987.4767965}
-  }
-@article{hungarian,
-  title={The Hungarian method for the assignment problem},
-  author={Kuhn, HaroldW},
-  journal={Naval research logistics quarterly},
-  volume={2},
-  number={1-2},
-  pages={83--97},
-  year={1955},
-  publisher={Wiley Online Library}
-}
-@InProceedings{Jlinakge,
-author={Toldo, Roberto and Fusiello, Andrea},
-editor={Forsyth, David and Torr, Philip and Zisserman, Andrew},
-title={Robust Multiple Structures Estimation with J-Linkage},
-booktitle=ECCV,
-year={2008},
-publisher={Springer Berlin Heidelberg},
-address={Berlin, Heidelberg},
-pages={537--547},
-abstract={This paper tackles the problem of fitting multiple instances of a model to data corrupted by noise and outliers. The proposed solution is based on random sampling and conceptual data representation. Each point is represented with the characteristic function of the set of random models that fit the point. A tailored agglomerative clustering, called J-linkage, is used to group points belonging to the same model. The method does not require prior specification of the number of models, nor it necessitate parameters tuning. Experimental results demonstrate the superior performances of the algorithm.},
-isbn={978-3-540-88682-2}
-}
-@article{reviewof3dourlierremovingjiaqiYang,
-archivePrefix = {arXiv},
-arxivId = {1907.02890},
-author = {Yang, Jiaqi and Xian, Ke and Wang, Peng and Zhang, Yanning},
-doi = {10.1109/tpami.2019.2960234},
-eprint = {1907.02890},
-file = {:D\:/OneDrive - sjtu.edu.cn/Mendeley/Yang et al. - 2019 - A Performance Evaluation of Correspondence Grouping Methods for 3D Rigid Data Matching.pdf:pdf},
-issn = {0162-8828},
-journal = PAMI,
-number = {8},
-pages = {1--1},
-title = {A Performance Evaluation of Correspondence Grouping Methods for 3D Rigid Data Matching},
-volume = {14},
-year = {2019}
+% Sinkhorn
+
+@article{sinkhorn1967concerning,
+  title={Concerning nonnegative matrices and doubly stochastic matrices},
+  author={Sinkhorn, Richard and Knopp, Paul},
+  journal={Pacific Journal of Mathematics},
+  volume={21},
+  number={2},
+  pages={343--348},
+  year={1967},
+  publisher={Mathematical Sciences Publishers}
 }
 
-@article{3DBoNet,
-  title={Learning object bounding boxes for 3d instance segmentation on point clouds},
-  author={Yang, Bo and Wang, Jianan and Clark, Ronald and Hu, Qingyong and Wang, Sen and Markham, Andrew and Trigoni, Niki},
-  journal={arXiv preprint arXiv:1906.01140},
-  year={2019}
-}
+% Point Cloud Object Detection
 
-@inproceedings{SGPN,
-  title={Sgpn: Similarity group proposal network for 3d point cloud instance segmentation},
-  author={Wang, Weiyue and Yu, Ronald and Huang, Qiangui and Neumann, Ulrich},
-  booktitle=CVPR,
-  pages={2569--2578},
-  year={2018}
-}
-@inproceedings{Occuseg,
-  title={Occuseg: Occupancy-aware 3d instance segmentation},
-  author={Han, Lei and Zheng, Tian and Xu, Lan and Fang, Lu},
-  booktitle=CVPR,
-  pages={2940--2949},
-  year={2020}
-}
-
-@inproceedings{PointGroup,
-  title={Pointgroup: Dual-set point grouping for 3d instance segmentation},
-  author={Jiang, Li and Zhao, Hengshuang and Shi, Shaoshuai and Liu, Shu and Fu, Chi-Wing and Jia, Jiaya},
-  booktitle=CVPR,
-  pages={4867--4876},
-  year={2020}
-}
-
-@inproceedings{DyCo3D,
-  title={DyCo3D: Robust Instance Segmentation of 3D Point Clouds through Dynamic Convolution},
-  author={He, Tong and Shen, Chunhua and van den Hengel, Anton},
-  booktitle=CVPR,
-  pages={354--363},
+@article{liu2021group,
+  title={Group-Free 3D Object Detection via Transformers},
+  author={Liu, Ze and Zhang, Zheng and Cao, Yue and Hu, Han and Tong, Xin},
+  journal={arXiv preprint arXiv:2104.00678},
   year={2021}
 }
 
-@inproceedings{SSTNet,
-  title={Instance Segmentation in 3D Scenes using Semantic Superpoint Tree Networks},
-  author={Liang, Zhihao and Li, Zhihao and Xu, Songcen and Tan, Mingkui and Jia, Kui},
-  booktitle=ICCV,
-  pages={2783--2792},
+@article{yu2021cofinet,
+  title={CoFiNet: Reliable Coarse-to-ﬁne Correspondences for Robust Point Cloud Registration},
+  author={Hao Yu and Fu Li and Mahdi Saleh and Benjamin Busam and Slobodan Ilic},
+  journal={arXiv preprint arXiv:2110.14076},
   year={2021}
 }
-
-@article{GICN,
-  title={Learning gaussian instance segmentation in point clouds},
-  author={Liu, Shih-Hung and Yu, Shang-Yi and Wu, Shao-Chi and Chen, Hwann-Tzong and Liu, Tyng-Luh},
-  journal={arXiv preprint arXiv:2007.09860},
-  year={2020}
-}
-@article{Meanshift,
-  title={Mean shift: A robust approach toward feature space analysis},
-  author={Comaniciu, Dorin and Meer, Peter},
-  journal=PAMI,
-  volume={24},
-  number={5},
-  pages={603--619},
-  year={2002},
-  publisher={IEEE}
-}
-@inproceedings{ASIS,
-  title={Associatively segmenting instances and semantics in point clouds},
-  author={Wang, Xinlong and Liu, Shu and Shen, Xiaoyong and Shen, Chunhua and Jia, Jiaya},
-  booktitle=CVPR,
-  pages={4096--4105},
-  year={2019}
-}
-@inproceedings{Unet,
-  title={U-net: Convolutional networks for biomedical image segmentation},
-  author={Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
-  booktitle=MICCAI,
-  pages={234--241},
-  year={2015},
-  organization={Springer}
-}
-@inproceedings{3dmanifold,
-  title={3d semantic segmentation with submanifold sparse convolutional networks},
-  author={Graham, Benjamin and Engelcke, Martin and Van Der Maaten, Laurens},
-  booktitle=CVPR,
-  pages={9224--9232},
-  year={2018}
-}
-
-@inproceedings{Scan2cad,
-  title={Scan2cad: Learning cad model alignment in rgb-d scans},
-  author={Avetisyan, Armen and Dahnert, Manuel and Dai, Angela and Savva, Manolis and Chang, Angel X and Niessner, Matthias},
-  booktitle=CVPR,
-  pages={2614--2623},
-  year={2019}
-}
-
-@article{3DHarris,
-  title={Harris 3D: a robust extension of the Harris operator for interest point detection on 3D meshes},
-  author={Sipiran, Ivan and Bustos, Benjamin},
-  journal={The Visual Computer},
-  volume={27},
-  number={11},
-  pages={963--976},
-  year={2011},
-  publisher={Springer}
-}
-
-@inproceedings{avetisyan2019end,
-  title={End-to-end cad model retrieval and 9dof alignment in 3d scans},
-  author={Avetisyan, Armen and Dai, Angela and Niessner, Matthias},
-  booktitle=ICCV,
-  pages={2551--2560},
-  year={2019}
-}
-
-@inproceedings{wang2019normalized,
-  title={Normalized object coordinate space for category-level 6d object pose and size estimation},
-  author={Wang, He and Sridhar, Srinath and Huang, Jingwei and Valentin, Julien and Song, Shuran and Guibas, Leonidas J},
-  booktitle=CVPR,
-  pages={2642--2651},
-  year={2019}
-}
-
-@inproceedings{Scenecad,
-  title={Scenecad: Predicting object alignments and layouts in rgb-d scans},
-  author={Avetisyan, Armen and Khanova, Tatiana and Choy, Christopher and Dash, Denver and Dai, Angela and Niessner, Matthias},
-  booktitle=ECCV,
-  pages={596--612},
-  year={2020},
-  organization={Springer}
-}
-
-@inproceedings{HAIS,
-  title={Hierarchical aggregation for 3d instance segmentation},
-  author={Chen, Shaoyu and Fang, Jiemin and Zhang, Qian and Liu, Wenyu and Wang, Xinggang},
-  booktitle=ICCV,
-  pages={15467--15476},
-  year={2021}
-  }

@@ -1,0 +1,14 @@
+%!TEX root = ../geotrans.tex
+
+\begin{figure*}[t]
+  \begin{overpic}[width=1.0\linewidth]{figures/images/gallery.pdf}
+  \end{overpic}
+
+  \caption{基于自注意力和几何自注意力的模型的配准结果。在列（e）和（f）中，我们使用 t-SNE 可视化了这些补丁的特征。在第一行，几何自注意力通过基于它们与更显著区域（例如椅子）之间的几何关系，帮助找到结构较弱的墙壁上的内点匹配。在接下来的行中，几何自注意力通过基于它们与床或沙发之间的几何关系，帮助拒绝了类似的平面或角落补丁之间的异常匹配。
+  }
+  \label{fig:gallery}
+
+\end{figure*}
+
+% (a) input point clouds. (b) ground truth registrations. (c, d): registration results of both models. (e), (f): patch correspondences from both models. (g), (h) point correspondences from both models.
+

@@ -27,7 +27,7 @@
 %% 
 \RequirePackage{expl3,l3keys2e}
 \ProvidesExplClass{bithesis}
-{2023-04-07}{3.5.1}{BIT Thesis Templates}
+{2023-05-01}{3.5.4}{BIT Thesis Templates}
 \int_new:N \g__bithesis_thesis_type_int
 \int_new:N \g__bithesis_head_zihao_int
 \bool_new:N \g__bithesis_twoside_bool
@@ -37,6 +37,27 @@
 \tl_new:N \g__bithesis_label_divide_char_tl
 \seq_new:N \l__bithesis_right_seq
 \seq_new:N \l__bithesis_left_seq
+\cs_new:Npn \__bithesis_hide:n #1 {
+  \g__bithesis_const_substitute_symbol_tl
+}
+
+\cs_new:Npn \__bithesis_secret_info:nn #1 #2 {
+  \bool_if:nTF \g__bithesis_blind_mode_bool {
+    #2
+  } {
+    #1
+  }
+}
+
+\cs_new:Npn \__bithesis_secret_info:N #1 {
+  \__bithesis_secret_info:nn {#1} {\tl_map_function:NN #1 \__bithesis_hide:n }
+}
+\cs_new:Npn \__bithesis_secret_info:n #1 {
+  \__bithesis_secret_info:nn {#1} {\tl_map_function:NN {#1} \__bithesis_hide:n }
+}
+
+\cs_generate_variant:Nn \__bithesis_secret_info:n {x}
+
 \cs_new:Npn \__bithesis_get_const:N #1 {
   \__bithesis_if_thesis_english:TF {
     \use:c {c__bithesis_label_ #1 _en_tl}
@@ -103,7 +124,7 @@
   {
     {code} {代码},
     {udc} {UDC分类号：},
-    {classification} {中国分类号：},
+    {classification} {中图分类号：},
     {classified_level} {密级},
     {type} {种类},
   }
@@ -219,8 +240,8 @@
     {conclusion} {结\label_space: 论} {Conclusions},
     {appendix} {附\label_space: 录} {Appendices},
     {ack} {致\label_space: 谢} {Acknowledgement},
-    {figure} {插\quad 图} {Illustrations},
-    {table} {表\quad 格} {Tables},
+    {figure} {插\label_space: 图} {Illustrations},
+    {table} {表\label_space: 格} {Tables},
     {appendix_prefix} {附录} {Appendix},
     {reference} {参考文献} {References},
     {university} {北京理工大学} {Beijing~Institute~of~Technology},
@@ -229,6 +250,20 @@
     % TODO: Not so sure about the translation.
     {resume} {作者简介} {Author~Biography},
     {symbols} {主要符号对照表} {Nomenclature},
+    {algo} {算法} {Algorithm},
+    {them} {定理} {Theorem},
+    {lem} {引理} {Lemma},
+    {prop} {命题} {Proposition},
+    {cor} {推论} {Corollary},
+    {axi} {公理} {Axiom},
+    {defn} {定义} {Definition},
+    {conj} {猜想} {Conjecture},
+    {exmp} {例} {Example},
+    {case} {情形} {Case},
+    {rem} {注} {Remark},
+    {fig} {图} {Figure},
+    {tab} {表} {Table},
+    {equ} {式} {Equation},
   }
   {\__bithesis_define_label:nnn #1}
 \clist_const:Nn \c__bithesis_bachelor_thesis_header_clist
@@ -253,6 +288,7 @@
   TOC .meta:nn = { bithesis / TOC } {#1},
   appendices .meta:nn = { bithesis / appendices } {#1},
   publications .meta:nn = { bithesis / publications } {#1},
+  const .meta:nn = { bithesis / const } {#1},
 }
 \keys_define:nn { bithesis / option }
 {
@@ -301,6 +337,8 @@
     underlineThickness .initial:n = {1pt},
     underlineOffset .dim_set:N = \l__bithesis_cover_underline_offset_dim,
     underlineOffset .initial:n = { -10pt },
+    hideCoverInPeerReview .bool_set:N = \l__bithesis_style_hide_cover_in_peer_review_bool,
+    hideCoverInPeerReview .initial:n = {false},
   }
 \keys_define:nn { bithesis / info }
   {
@@ -330,7 +368,7 @@
     keywordsEn .initial:n = {Polyurethane,Shape Memory,Textiles (example)},
     translationTitle .tl_set:N = \l__bithesis_value_trans_title_tl,
     translationOriginTitle .tl_set:N = \l__bithesis_value_trans_origin_title_tl,
-    % 中国分类号，研究生学位论文使用
+    % 中图分类号，研究生学位论文使用
     classification .tl_set:N = \l__bithesis_value_classification_tl,
     classification .initial:n = {TQ~028.1（示例）},
     % UDC 分类号，研究生学位论文使用
@@ -343,7 +381,7 @@
     degreeEn .tl_set:N = \l__bithesis_value_degree_en_tl,
     degreeEn .initial:n = {Doctor~of~Engineering~(example)},
     institute .tl_set:N = \l__bithesis_value_institute_tl,
-    institute .initial:n = {\c__bithesis_label_university_tl},
+    institute .initial:n = {\tl_use:N \c__bithesis_label_university_tl},
     defenseDate .tl_set:N = \l__bithesis_value_defense_date_tl,
     defenseDate .initial:n = {2019年6月（示例）},
     authorEn .tl_set:N = \l__bithesis_value_author_en_tl,
@@ -365,7 +403,73 @@
   }
 \keys_define:nn { bithesis / misc }
   {
+    % 表格字体大小，默认为 5 号字体。
+    tabularFontSize .tl_set:N = \l__bithesis_misc_tabular_font_size_tl,
+    tabularFontSize .initial:n = {5},
     arialFont .tl_set:N = \l__bithesis_misc_arial_font_path_tl,
+    autoref / algo .tl_set:N = \algoautorefname,
+    autoref / algo .initial:n = {\g__bithesis_const_autoref_algo_tl},
+    autoref / them .tl_set:N = \themautorefname,
+    autoref / them .initial:n = {\g__bithesis_const_autoref_them_tl},
+    autoref / lem .tl_set:N = \lemautorefname,
+    autoref / lem .initial:n = {\g__bithesis_const_autoref_lem_tl},
+    autoref / prop .tl_set:N = \propautorefname,
+    autoref / prop .initial:n = {\g__bithesis_const_autoref_prop_tl},
+    autoref / cor .tl_set:N = \corautorefname,
+    autoref / cor .initial:n = {\g__bithesis_const_autoref_cor_tl},
+    autoref / axi .tl_set:N = \axiautorefname,
+    autoref / axi .initial:n = {\g__bithesis_const_autoref_axi_tl},
+    autoref / defn .tl_set:N = \defnautorefname,
+    autoref / defn .initial:n = {\g__bithesis_const_autoref_defn_tl},
+    autoref / conj .tl_set:N = \conjautorefname,
+    autoref / conj .initial:n = {\g__bithesis_const_autoref_conj_tl},
+    autoref / exmp .tl_set:N = \exmpautorefname,
+    autoref / exmp .initial:n = {\g__bithesis_const_autoref_exmp_tl},
+    autoref / case .tl_set:N = \caseautorefname,
+    autoref / case .initial:n = {\g__bithesis_const_autoref_case_tl},
+    autoref / rem .tl_set:N = \remautorefname,
+    autoref / rem .initial:n = {\g__bithesis_const_autoref_rem_tl},
+    hideLinks .bool_set:N = \l__bithesis_misc_hide_links_bool,
+    hideLinks .initial:n = {true},
+    autoref / figure .tl_set:N = \figureautorefname,
+    autoref / figure .initial:n = {\g__bithesis_const_autoref_fig_tl},
+    autoref / table .tl_set:N = \tableautorefname,
+    autoref / table .initial:n = {\g__bithesis_const_autoref_tab_tl},
+    autoref / equ .tl_set:N = \equationautorefname,
+    autoref / equ .initial:n = {\g__bithesis_const_autoref_equ_tl},
+  }
+\keys_define:nn { bithesis / const }
+  {
+    autoref / algo .tl_set:N = \g__bithesis_const_autoref_algo_tl,
+    autoref / algo .initial:n = {\__bithesis_get_const:N {algo}},
+    autoref / them .tl_set:N = \g__bithesis_const_autoref_them_tl,
+    autoref / them .initial:n = {\__bithesis_get_const:N {them}},
+    autoref / lem .tl_set:N = \g__bithesis_const_autoref_lem_tl,
+    autoref / lem .initial:n = {\__bithesis_get_const:N {lem}},
+    autoref / prop .tl_set:N = \g__bithesis_const_autoref_prop_tl,
+    autoref / prop .initial:n = {\__bithesis_get_const:N {prop}},
+    autoref / cor .tl_set:N = \g__bithesis_const_autoref_cor_tl,
+    autoref / cor .initial:n = {\__bithesis_get_const:N {cor}},
+    autoref / axi .tl_set:N = \g__bithesis_const_autoref_axi_tl,
+    autoref / axi .initial:n = {\__bithesis_get_const:N {axi}},
+    autoref / defn .tl_set:N = \g__bithesis_const_autoref_defn_tl,
+    autoref / defn .initial:n = {\__bithesis_get_const:N {defn}},
+    autoref / conj .tl_set:N = \g__bithesis_const_autoref_conj_tl,
+    autoref / conj .initial:n = {\__bithesis_get_const:N {conj}},
+    autoref / exmp .tl_set:N = \g__bithesis_const_autoref_exmp_tl,
+    autoref / exmp .initial:n = {\__bithesis_get_const:N {exmp}},
+    autoref / case .tl_set:N = \g__bithesis_const_autoref_case_tl,
+    autoref / case .initial:n = {\__bithesis_get_const:N {case}},
+    autoref / rem .tl_set:N = \g__bithesis_const_autoref_rem_tl,
+    autoref / rem .initial:n = {\__bithesis_get_const:N {rem}},
+    autoref / figure .tl_set:N = \g__bithesis_const_autoref_fig_tl,
+    autoref / figure .initial:n =  {\__bithesis_get_const:N {fig}},
+    autoref / table .tl_set:N = \g__bithesis_const_autoref_tab_tl,
+    autoref / table .initial:n =  {\__bithesis_get_const:N {tab}},
+    autoref / equ .tl_set:N = \g__bithesis_const_autoref_equ_tl,
+    autoref / equ .initial:n = {\__bithesis_get_const:N {equ}},
+    style / substituteSymbol .tl_set:N = \g__bithesis_const_substitute_symbol_tl,
+    style / substituteSymbol .initial:n = {*},
   }
 
 \keys_define:nn { bithesis / style }
@@ -438,6 +542,9 @@
 \__bithesis_if_thesis_english:T {
   \PassOptionsToClass{scheme=plain}{ctexbook}
 }
+\bool_if:NT \g__bithesis_blind_mode_bool {
+  \bool_set_false:N \g__bithesis_twoside_bool
+}
 \bool_if:NTF \g__bithesis_twoside_bool {} {
   \PassOptionsToClass{oneside}{ctexbook}
 }
@@ -460,9 +567,9 @@
 \RequirePackage{multirow}
 \RequirePackage{tikz}
 \RequirePackage{etoolbox}
-\RequirePackage[hidelinks,bookmarksnumbered]{hyperref}
+\RequirePackage[bookmarksnumbered]{hyperref}
 \RequirePackage{xcolor}
-\RequirePackage{caption}
+\RequirePackage[strut=off]{caption}
 \RequirePackage{array}
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
@@ -505,7 +612,7 @@
   }
 }
 \__bithesis_if_bachelor_thesis:T {
-  \setlength{\intextsep}{2\baselineskip plus 0.2\baselineskip minus 0.2\baselineskip}
+  \setlength{\intextsep}{1.80\baselineskip plus 0.2\baselineskip minus 0.2\baselineskip}
 }
 \setmainfont{Times~New~Roman}
 \setromanfont{Times~New~Roman}
@@ -561,6 +668,12 @@
 \ctex_at_end_preamble:n {
   % 在导言区末尾加载数学字体。
   \__bithesis_load_font:
+
+  % misc / hideLinks 选项
+  \bool_if:NT \l__bithesis_misc_hide_links_bool
+    {
+      \hypersetup { hidelinks }
+    }
 
   \__bithesis_if_thesis_english:TF {
     \__bithesis_if_thesis_int_type:nT {3} {
@@ -771,11 +884,11 @@
         \arabic{subsubsection}
       }
     },
-    format={\l__bithesis_title_font_cs:n \bfseries \raggedright \zihao{-4}},
+    format={\l__bithesis_title_font_cs:n \raggedright \zihao{-4}},
     nameformat = {},
     titleformat = {},
-    beforeskip=28bp plus 1ex minus .2ex,
-    afterskip=24bp plus .2ex,
+    beforeskip=14bp plus 1ex minus .2ex,
+    afterskip=14bp plus .2ex,
     fixskip=true,
   }
 }
@@ -786,18 +899,28 @@
   \titlecontents{chapter}[0pt]{\songti \zihao{4}}
   {\thecontentslabel\hspace{\ccwd}}{}
   {\hspace{.5em}\titlerule*{.}\contentspage}
+  % section 标题为宋体小四号。缩进为两个字符宽度。
+  \titlecontents{section}[2\ccwd]{\songti \zihao{-4}}
+  {\thecontentslabel\hspace{\ccwd}}{}
+  {\hspace{.5em}\titlerule*{.}\contentspage}
+  % subsection 标题为宋体小四号。缩进为四个字符宽度。
+  \titlecontents{subsection}[4\ccwd]{\songti \zihao{-4}}
+  {\thecontentslabel\hspace{\ccwd}}{}
+  {\hspace{.5em}\titlerule*{.}\contentspage}
 } {
   % 对于其他，定义各章标题为宋体小四号。
   \titlecontents{chapter}[0pt]{\songti \zihao{-4}}
   {\thecontentslabel\hspace{\ccwd}}{}
   {\hspace{.5em}\titlerule*{.}\contentspage}
+  % section 标题为宋体小四号。
+  \titlecontents{section}[1\ccwd]{\songti \zihao{-4}}
+  {\thecontentslabel\hspace{\ccwd}}{}
+  {\hspace{.5em}\titlerule*{.}\contentspage}
+  % subsection 标题为宋体小四号。
+  \titlecontents{subsection}[2\ccwd]{\songti \zihao{-4}}
+  {\thecontentslabel\hspace{\ccwd}}{}
+  {\hspace{.5em}\titlerule*{.}\contentspage}
 }
-\titlecontents{section}[1\ccwd]{\songti \zihao{-4}}
-{\thecontentslabel\hspace{\ccwd}}{}
-{\hspace{.5em}\titlerule*{.}\contentspage}
-\titlecontents{subsection}[2\ccwd]{\songti \zihao{-4}}
-{\thecontentslabel\hspace{\ccwd}}{}
-{\hspace{.5em}\titlerule*{.}\contentspage}
 \titlecontents{figure}[0pt]{\songti\zihao{-4}}
     {\figurename~\thecontentslabel\quad}{\hspace*{-1.5cm}}
     {\hspace{.5em}\titlerule*{.}\contentspage}
@@ -818,7 +941,19 @@
       numbering = false,
     }
   }
+  \setstretch{1.53}
   \pagestyle{BIThesis}
+
+  % 表格内容默认使用五号字。
+  %
+  % 由于这种方式会影响所有的表格，
+  % 所以我们尽可能延迟这种影响。
+  %
+  % 不过，在目前的代码实现中没有在封面
+  % 之类的地方使用表格，所以目前即使放在
+  % preamble 中也不会有影响。
+  \AtBeginEnvironment{tabular}{\zihao{\l__bithesis_misc_tabular_font_size_tl}}
+  \AtBeginEnvironment{tabular*}{\zihao{\l__bithesis_misc_tabular_font_size_tl}}
 }
 \RenewDocumentCommand \mainmatter {} {
   % 另起一个空页，以便于后续的章节标题编号。
@@ -855,7 +990,23 @@
   }
 }
 \setlength{\abovecaptionskip}{11pt}
-\setlength{\belowcaptionskip}{9pt}
+\__bithesis_if_bachelor_thesis:TF {
+  \__bithesis_if_thesis_english:TF {
+    \setlength{\belowcaptionskip}{9pt}
+  } {
+    % 为了满足 “前后一行空白的问题”，需要删除 Caption 下方的间距。
+    % 详见 `caption` 宏包手册和
+    % https://github.com/CTeX-org/forum/issues/86
+    %
+    % 这里实际的 skip 在 15pt 左右，但是全部移除会导致当图片置于页面顶部时，
+    % 图片与上方的间距过小，因此这里只移除 5pt。
+    % 当然，这样会导致文本间的图片的 Caption 下方的间距微微大于一行。
+    \captionsetup{belowskip=-5pt}
+  }
+} {
+  % 而研究生模板不存在这个问题。
+  \setlength{\belowcaptionskip}{9pt}
+}
 \__bithesis_if_graduate:TF {
   \tl_set:Nn \g__bithesis_label_divide_char_tl {.}
 } {
@@ -865,12 +1016,13 @@
 \captionsetup[figure]{font=small,labelsep=space}
 
 \cs_set:Npn \thetable {\thechapter\g__bithesis_label_divide_char_tl\arabic{table}}
-\captionsetup[table]{font=small,labelsep=space,skip=2pt}
+\captionsetup[table]{font=small,labelsep=space}
 
 \cs_set:Npn \theequation {\thechapter\g__bithesis_label_divide_char_tl\arabic{equation}}
 
 \cs_set:Npn \thelstlisting {\thechapter\g__bithesis_label_divide_char_tl\arabic{lstlisting}}
 \cs_set:Npn \lstlistingname {\c__bithesis_label_code_tl}
+\captionsetup[listing]{font=small,labelsep=space}
 \tolerance=1
 \emergencystretch=\maxdimen
 \hyphenpenalty=10000
@@ -901,19 +1053,19 @@
 \cs_set:Npn \listfigurename {\__bithesis_get_const:N {figure}}
 \cs_set:Npn \listtablename {\__bithesis_get_const:N {table}}
 \theoremstyle{plain}
-  \newtheorem{algo}{算法}[chapter]
-  \newtheorem{them}{定理}[chapter]
-  \newtheorem{lem}[them]{引理}
-  \newtheorem{prop}[them]{命题}
-  \newtheorem{cor}[them]{推论}
-  \newtheorem{axi}[them]{公理}
+  \newtheorem{algo}{\__bithesis_get_const:N {algo}}[chapter]
+  \newtheorem{them}{\__bithesis_get_const:N {them}}[chapter]
+  \newtheorem{lem}{\__bithesis_get_const:N {lem}}[chapter]
+  \newtheorem{prop}{\__bithesis_get_const:N {prop}}[chapter]
+  \newtheorem{cor}{\__bithesis_get_const:N {cor}}[chapter]
+  \newtheorem{axi}{\__bithesis_get_const:N {axi}}[chapter]
 \theoremstyle{definition}
-  \newtheorem{defn}{定义}[chapter]
-  \newtheorem{conj}{猜想}[chapter]
-  \newtheorem{exmp}{例}[chapter]
-  \newtheorem{case}{情形}
+  \newtheorem{defn}{\__bithesis_get_const:N {defn}}[chapter]
+  \newtheorem{conj}{\__bithesis_get_const:N {conj}}[chapter]
+  \newtheorem{exmp}{\__bithesis_get_const:N {exmp}}[chapter]
+  \newtheorem{case}{\__bithesis_get_const:N {case}}
 \theoremstyle{remark}
-  \newtheorem{rem}{注}
+  \newtheorem{rem}{\__bithesis_get_const:N {rem}}
   \renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
 \cs_new:Npn \__bithesis_dunderline:nnn #1#2#3 {
   {\setbox0=\hbox{#3}\ooalign{\copy0\cr\rule[\dimexpr#1-#2\relax]{\wd0}{#2}}}
@@ -1020,7 +1172,7 @@
     {\heiti\zihao{-2} \l__bithesis_value_title_tl}
     \vskip 60mm
     % 黑体 小三
-    {\heiti \zihao{-3} \l__bithesis_value_author_tl}
+    {\heiti \zihao{-3} \__bithesis_secret_info:nn{\l__bithesis_value_author_tl}{\g__bithesis_const_substitute_symbol_tl~\g__bithesis_const_substitute_symbol_tl~\g__bithesis_const_substitute_symbol_tl}}
     \vskip 10mm
     % 黑体 小三
     {\heiti \zihao{-3} \l__bithesis_cover_date_tl}
@@ -1040,7 +1192,7 @@
             {\l__bithesis_value_title_tl}{\l__bithesis_value_vertical_title_tl}
         }
           \vfill
-        {\heiti\zihao{3}\l__bithesis_value_author_tl}
+        {\heiti\zihao{3}\__bithesis_secret_info:nn{\l__bithesis_value_author_tl}{\g__bithesis_const_substitute_symbol_tl\quad\g__bithesis_const_substitute_symbol_tl\quad\g__bithesis_const_substitute_symbol_tl}}
           \vfill
         {\heiti\zihao{3}\c__bithesis_label_university_tl}
       \end{center}
@@ -1091,10 +1243,10 @@
 
         % 渲染信息。
         \clist_set:Nn \l__bithesis_input_clist {
-            {\c__bithesis_graduate_label_author_tl} {\l__bithesis_value_author_tl},
+            {\c__bithesis_graduate_label_author_tl} {\__bithesis_secret_info:nn{\l__bithesis_value_author_tl}{\g__bithesis_const_substitute_symbol_tl\g__bithesis_const_substitute_symbol_tl\g__bithesis_const_substitute_symbol_tl}},
             {\c__bithesis_graduate_label_school_tl} {\l__bithesis_value_school_tl},
-            {\c__bithesis_graduate_label_supervisor_tl} {\l__bithesis_value_supervisor_tl},
-            {\c__bithesis_graduate_label_chairman_tl} {\l__bithesis_value_chairman_tl},
+            {\c__bithesis_graduate_label_supervisor_tl} {\__bithesis_secret_info:x{\l__bithesis_value_supervisor_tl}},
+            {\c__bithesis_graduate_label_chairman_tl} {\__bithesis_secret_info:x{\l__bithesis_value_chairman_tl}},
             {\c__bithesis_graduate_label_degree_tl} {\l__bithesis_value_degree_tl},
             {\c__bithesis_graduate_label_major_tl} {\l__bithesis_value_major_tl},
             {\c__bithesis_graduate_label_institute_tl} {\l__bithesis_value_institute_tl},
@@ -1142,10 +1294,10 @@
 
       % 渲染信息。
       \clist_set:Nn \l__bithesis_input_clist {
-          {\c__bithesis_graduate_label_author_en_tl} {\l__bithesis_value_author_en_tl},
+          {\c__bithesis_graduate_label_author_en_tl} {\__bithesis_secret_info:x{\l__bithesis_value_author_en_tl}},
           {\c__bithesis_graduate_label_school_en_tl} {\l__bithesis_value_school_en_tl},
-          {\c__bithesis_graduate_label_supervisor_en_tl} {\l__bithesis_value_supervisor_en_tl},
-          {\c__bithesis_graduate_label_chairman_en_tl} {\l__bithesis_value_chairman_en_tl},
+          {\c__bithesis_graduate_label_supervisor_en_tl} {\__bithesis_secret_info:x{\l__bithesis_value_supervisor_en_tl}},
+          {\c__bithesis_graduate_label_chairman_en_tl} {\__bithesis_secret_info:x{\l__bithesis_value_chairman_en_tl}},
           {\c__bithesis_graduate_label_degree_en_tl} {\l__bithesis_value_degree_en_tl},
           {\c__bithesis_graduate_label_major_en_tl} {\l__bithesis_value_major_en_tl},
           {\c__bithesis_graduate_label_institute_en_tl} {\l__bithesis_value_institute_en_tl},
@@ -1184,11 +1336,11 @@
           \heiti\zihao{3}
           \c__bithesis_graduate_label_originality_tl
         }
-      \end{center}~\par
+      \end{center}
 
       % 本部分字号为四号。
       \zihao{4}
-      \c__bithesis_graduate_label_originality_clause_tl
+      \qquad\c__bithesis_graduate_label_originality_clause_tl
 
       \vspace{17mm}
 
@@ -1205,9 +1357,9 @@
           \heiti\zihao{3}
           \c__bithesis_graduate_label_authorization_tl
         }
-      \end{center}~\par
+      \end{center}
 
-      \c__bithesis_graduate_label_authorization_clause_tl
+      \qquad\c__bithesis_graduate_label_authorization_clause_tl
 
       \vspace*{15mm}
 
@@ -1241,9 +1393,17 @@
           { \hbox:n { } \thispagestyle { empty } \newpage }
       }
   }
+\DeclareDocumentCommand \SecretInfo { m o }
+  {
+    \IfValueTF {#2} {
+      \__bithesis_secret_info:nn {#1} {#2}
+    } {
+      \__bithesis_secret_info:x {#1}
+    }
+  }
 \DeclareDocumentCommand \MakeCover {}
   {
-    \begin{blindPeerReview}
+    \begin{blindPeerReview}[\l__bithesis_style_hide_cover_in_peer_review_bool]
     \group_begin:
 
     \int_case:nn {\g__bithesis_thesis_type_int}
@@ -1293,11 +1453,11 @@
             \clist_set:Nn \l__bithesis_input_clist {
               {\c__bithesis_label_school_tl} {\l__bithesis_value_school_tl},
               {\c__bithesis_label_major_tl} {\l__bithesis_value_major_tl},
-              {\c__bithesis_label_class_tl} {\l__bithesis_value_class_tl},
-              {\c__bithesis_label_author_tl} {\l__bithesis_value_author_tl},
-              {\c__bithesis_label_student_id_tl} {\l__bithesis_value_student_id_tl},
-              {\c__bithesis_label_supervisor_tl} {\l__bithesis_value_supervisor_tl},
-              {\c__bithesis_label_co_supervisor_tl} {\l__bithesis_value_external_supervisor_tl},
+              {\c__bithesis_label_class_tl} {\__bithesis_secret_info:N \l__bithesis_value_class_tl},
+              {\c__bithesis_label_author_tl} {\__bithesis_secret_info:N \l__bithesis_value_author_tl},
+              {\c__bithesis_label_student_id_tl} {\__bithesis_secret_info:N \l__bithesis_value_student_id_tl},
+              {\c__bithesis_label_supervisor_tl} {\__bithesis_secret_info:N \l__bithesis_value_supervisor_tl},
+              {\c__bithesis_label_co_supervisor_tl} {\__bithesis_secret_info:N \l__bithesis_value_external_supervisor_tl},
             }
 
             \zihao{3}
@@ -1390,11 +1550,11 @@
             \clist_set:Nn \l__bithesis_input_clist {
               {\c__bithesis_label_school_tl} {\l__bithesis_value_school_tl},
               {\c__bithesis_label_major_tl} {\l__bithesis_value_major_tl},
-              {\c__bithesis_label_class_tl} {\l__bithesis_value_class_tl},
-              {\c__bithesis_label_author_tl} {\l__bithesis_value_author_tl},
-              {\c__bithesis_label_student_id_tl} {\l__bithesis_value_student_id_tl},
-              {\c__bithesis_label_supervisor_tl} {\l__bithesis_value_supervisor_tl},
-              {\c__bithesis_label_co_supervisor_tl} {\l__bithesis_value_external_supervisor_tl},
+              {\c__bithesis_label_class_tl} {\__bithesis_secret_info:N \l__bithesis_value_class_tl},
+              {\c__bithesis_label_author_tl} {\__bithesis_secret_info:N \l__bithesis_value_author_tl},
+              {\c__bithesis_label_student_id_tl} {\__bithesis_secret_info:N \l__bithesis_value_student_id_tl},
+              {\c__bithesis_label_supervisor_tl} {\__bithesis_secret_info:N \l__bithesis_value_supervisor_tl},
+              {\c__bithesis_label_co_supervisor_tl} {\__bithesis_secret_info:N \l__bithesis_value_external_supervisor_tl},
             }
 
             \__bithesis_render_cover_entry:n \l__bithesis_input_clist
@@ -1481,7 +1641,7 @@
 \NewDocumentCommand \MakeOriginality {}
   {
     \group_begin:
-      \begin{blindPeerReview}
+    \begin{blindPeerReview}[\l__bithesis_style_hide_cover_in_peer_review_bool]
       \int_case:nn {\g__bithesis_thesis_type_int}
       {
         {1}
@@ -1583,13 +1743,13 @@
   }
 \NewDocumentCommand \MakePaperBack {}
   {
-    \begin{blindPeerReview}
+    \begin{blindPeerReview}[\l__bithesis_style_hide_cover_in_peer_review_bool]
       \make_paper_back:
     \end{blindPeerReview}
   }
 \NewDocumentCommand \MakeTitle {}
   {
-    \begin{blindPeerReview}
+    \begin{blindPeerReview}[\l__bithesis_style_hide_cover_in_peer_review_bool]
       \__bithesis_make_chinese_title_page:
       \__bithesis_make_english_title_page:
     \end{blindPeerReview}
@@ -2001,6 +2161,8 @@
         \DeclareDelimFormat[bib,biblist]{finalnamedelim}{}
         % 如果自己不是第一个作者，不修改此项的话，会在最开始有逗号。
         \DeclareDelimFormat{multinamedelim}{}
+        % 如果覆盖的是英文作者，不修改此项的话，会在最开始有空格。
+        \DeclareDelimFormat{bibnamedelimd}{}
       }
 
       % ===== 上方定义与「参考文献」部分相同
@@ -2110,7 +2272,8 @@
       labelsep=0.5cm,
       leftmargin=3cm,
       itemindent=0cm,
-      itemsep=0cm
+      % 不再在两项之间增加额外的间距（1.5 倍的行间距已经够宽了）（未来可以提供一个接口以供用户手动设置间距）
+      itemsep=-0.5ex,
     ]
     \cs_set:Npn \makelabel ##1 {##1\hfil}
   }
