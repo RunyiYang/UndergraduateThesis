@@ -54,8 +54,8 @@ G_{ij} = s_{ij}^2, s_{ij} = \min( \frac{d_{ij}}{d'_{ij}}, \frac{d'_{ij}}{d_{ij}}
 
 对应关系的兼容性向量可以被视为该对应关系的特征表示或“特征”。属于同一刚性变换的对应关系具有相似的特征。因此，基于这些兼容性向量，我们可以将对应关系聚类为与来自不同实例的内点相关的不同组。
 
-\subsubsection{快速对应关系聚类.}
-我们以自底向上的方式聚类对应关系，这比现有方法采用的谱聚类\cite{parra2019practical}\cite{shi2021robin}要快得多。一开始，每个对应关系被视为一个独立的组。然后，我们反复合并距离最小的两个组，直到两个组之间的最小距离大于给定值（$min dist thresh$）。定义组之间距离的方式产生了不同风格的算法。我们遵循\cite{Tlinkage}来定义距离。设$\mathbf{p}_i, \mathbf{p}_j$为两个组$i$和$j$的表示向量，组距离定义为
+\subsection{快速对应关系聚类.}
+我们以自底向上的方式聚类对应关系，这比现有方法采用的谱聚类\cite{parra2019practical}\cite{shi2021robin}要快得多。一开始，每个对应关系被视为一个独立的组。然后，我们反复合并距离最小的两个组，直到两个组之间的最小距离大于给定值（$min\_dist\_thresh$）。定义组之间距离的方式产生了不同风格的算法。我们遵循\cite{Tlinkage}来定义距离。设$\mathbf{p}_i, \mathbf{p}_j$为两个组$i$和$j$的表示向量，组距离定义为
 \begin{equation}
 d(\mathbf{p}_i, \mathbf{p}_j)= 1-\frac{\langle \mathbf{p}_i,\mathbf{p}_j\rangle}{\parallel \mathbf{p}_i\parallel ^2+\parallel \mathbf{p}_j\parallel ^2-\langle \mathbf{p}_i,\mathbf{p}_j\rangle}.
 \end{equation}
@@ -63,7 +63,7 @@ d(\mathbf{p}_i, \mathbf{p}_j)= 1-\frac{\langle \mathbf{p}_i,\mathbf{p}_j\rangle}
 $\mathbf{p}_i \leftarrow \min (\mathbf{p}_i, \mathbf{p}_j),$ 其中 $\min(\cdot)$ 表示取两个向量每个维度的最小值。
 在聚类开始时，一个组（只包含一个对应关系）的表示向量设置为该对应关系的兼容性向量。
 
-\subsubsection{递归簇细化.}
+\subsection{递归簇细化.}
 \label{sec:cluster_refinement}
 在凝聚聚类之后，我们通过重复以下步骤来进一步优化结果，直到没有变化发生。
 
@@ -71,7 +71,7 @@ $\mathbf{p}_i \leftarrow \min (\mathbf{p}_i, \mathbf{p}_j),$ 其中 $\min(\cdot)
 
 步骤2. 合并相似的变换。这一步将在下一节中解释。
 
-步骤3. 为每个对应关系重新分配簇标签。将每个对应关系分配给对齐误差最小的变换。如果在所有变换中最小的对齐误差大于 $inlier_thresh$，则将对应关系标记为异常值。
+步骤3. 为每个对应关系重新分配簇标签。将每个对应关系分配给对齐误差最小的变换。如果在所有变换中最小的对齐误差大于 $inlier\_thresh$，则将对应关系标记为异常值。
 
 在迭代过程中，对应关系变得越来越集中，因此我们可以在步骤1中调整 $\alpha$ 以增加异常值拒绝的强度。我们在每次迭代中更新 $\alpha$ 的策略如下：
 \begin{equation}
@@ -80,16 +80,16 @@ $\mathbf{p}_i \leftarrow \min (\mathbf{p}_i, \mathbf{p}_j),$ 其中 $\min(\cdot)
 \end{equation}
 其中 $n$ 表示第 $n^{th}$ 次迭代，$N$ 是对应关系的数量，$\left[ \cdot \right]$ 是四舍五入运算。在我们的实验中，我们设置 $\alpha_0 = 3$ 和 $\theta = 3$。细化过程通常在我们的实验中在三次迭代内收敛，因此效率也非常高。
 
-\subsubsection{合并重复变换.}
+\subsection{合并重复变换.}
 有时来自不同簇的相似变换会生成，这意味着它们可能属于同一个实例。在这种情况下，我们需要合并它们。
-给定两个估计的变换 $(\mathbf{R}1, \mathbf{t}1)$ 和 $(\mathbf{R}2, \mathbf{t}2)$，我们计算每个对应关系的对齐误差，即 $e{ki} = |\mathbf{y}{i}-(\mathbf{R}k \mathbf{x}{i} + \mathbf{t}k)|^2, (k = 1,2)$。接下来，我们设置 $p{ki} = 1$ 如果 $e{ki} < inlier_thresh$，否则 $p{ki}=0$。因此，我们为两个变换获得两个二进制集 $P_1, P_2$。合并两个变换的条件是
+给定两个估计的变换 $(\mathbf{R}_1, \mathbf{t}_1)$ 和 $(\mathbf{R}_2, \mathbf{t}_2)$，我们计算每个对应关系的对齐误差，即 $e{ki} = |\mathbf{y}{i}-(\mathbf{R}k \mathbf{x}_{i} + \mathbf{t}_k)|^2, (k = 1,2)$。接下来，我们设置 $p_{ki} = 1$ 如果 $e_{ki} < inlier\_thresh$，否则 $p_{ki}=0$。因此，我们为两个变换获得两个二进制集 $P_1, P_2$。合并两个变换的条件是
 \begin{equation}
 IOU = |P_1 \cap P_2|/|P_1 \cup P_2| \geq 80%.
 \label{eq:iou}
 \end{equation}
 如果满足这个条件，我们将放弃一个异常值较多的变换（$p_{ki} = 0$）。然后我们根据在所有变换中对齐误差最小的一个重新为每个对应关系分配簇标签。
 
-\subsubsection{从簇中提取变换.}
+\subsection{从簇中提取变换.}
 在聚类之后，我们需要从这些对应关系簇中提取刚性变换。由于我们不知道目标点云中真实实例的数量，因此我们需要自动选择那些内点簇。我们首先选择内点簇的元素数量大于阈值（在我们的实验中为 $10$）并从这些簇中估计变换。接下来，我们根据其内点数量按降序对变换进行排序。一个变换拥有的内点越多，它与真实实例相关联的可能性就越高。最后，我们检查内点数量在变换之间的降低比例，以及第一个变换（具有最多内点）之间的比例，通过
 \begin{equation}
     \gamma_k = \#I_{k}/\#I_{0},\,\, k = 1,2,\ldots
@@ -97,15 +97,16 @@ IOU = |P_1 \cap P_2|/|P_1 \cup P_2| \geq 80%.
 
 其中 $\#I_k$ 表示第 $k^{th}$ 变换的内点数量。如果 $\gamma_k <= \gamma_{thresh}$，我们忽略所有在 $k$ 之后的变换。$\gamma_{thresh}$ 可以更改以在召回和精确度之间进行权衡。
 
-\subsubsection{处理大量对应关系.}
+\subsection{处理大量对应关系.}
 % TODO down_sample and cluster
 % 1.unsample
 % 为什么要downsample，downsample为什么可行
 当输入对应关系的数量很大时，计算距离不变矩阵和聚类对应关系可能会变得昂贵。我们通过添加下采样和上采样过程来解决这个问题。在构建距离不变矩阵之前进行下采样过程，通过随机抽样固定数量的对应关系（在我们的实现中为 $1024$）进行进一步处理。在选定对应关系聚类之后进行上采样过程，将所有对应关系分配给现有簇。分配是通过选择对齐误差最小的变换来完成的，如第 \ref{sec:cluster_refinement} 节中的步骤3所述。
 
-\subsection{训练过程}
+\subsection{训练细节.}
+我们使用 Pytorch\cite{PyTorch} 实现我们的算法。T-linkage 和 Progressive-X 是纯 CPU 算法，而 CONSAC 是基于 GPU 的学习方法。我们在与 T-linkage 和 Progressive-X 相同的 CPU（Apple M2 Max 32GB）上运行我们的算法，并在与 CONSAC 相同的 GPU（GTX A100）上运行。我们的方法有三个参数，其中在我们的实验中设置为 $min\_dist\_thresh=0.2$, $inlier\_thresh=0.3$ and $\gamma\_thresh=0.5$。所有点云都在 $0.05m$ 体素大小中进行下采样。正如补充材料中的消融研究所示，我们的方法对参数变化不敏感。
 
-\subsection{推理过程}
+由于一对一配准中使用的指标不能用于多实例设置，我们从检索任务中采用三个评估指标：MHR（Mean Hit Recall），MHP（Mean Hit Precision），MHF1（Mean Hit F1）。详情请见第\ref{sec:multiinstance_eval}节。
 
 \section{基于深度学习的多实例点云配准}
 \subsection{对比学习}
@@ -113,12 +114,5 @@ IOU = |P_1 \cap P_2|/|P_1 \cup P_2| \geq 80%.
 \subsection{损失函数}
 \subsection{训练过程}
 \subsection{推理过程}
-
-\section{实验结果与分析}
-\subsection{数据集与硬件细节}
-\subsection{整体配准效果}
-\subsection{配准量化结果}
-\subsection{配准可视化结果}
-\subsection{消融实验}
 
 \section{小结}
