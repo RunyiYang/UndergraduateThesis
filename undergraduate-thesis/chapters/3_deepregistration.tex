@@ -29,6 +29,8 @@
 
 在本次任务中，我们使用ModelNet40、ShapeNet、Scan2CAD组成多实例点云配准仿真数据集进行训练和测试。所以，我们对这3个数据集和多实例点云配准数据集进行了详细的介绍。
 
+\label{sec:dataset}
+
 \subsection{ModelNet40}
 ModelNet 是一个用于三维物体识别和检索的大规模数据集。它包含两个子集：ModelNet10 和 ModelNet40。ModelNet10 包含 10 个类别的 4,899 个模型，而 ModelNet40 包含 40 个类别的 12,311 个模型。ModelNet 数据集中的模型主要是合成的 CAD 模型，并以网格 (mesh) 的形式呈现。本文主要使用 ModelNet40 数据集。 
 
@@ -60,7 +62,7 @@ Scan2CAD 数据集是一个用于场景理解和CAD模型对齐的大规模数�
 Scan2CAD 数据集中的扫描数据包含了多种室内场景，如住宅、办公室和公共场所等。这些场景包括了各种物体，如家具、装饰品和建筑元素。与此同时，CAD模型包含了各种详细的几何和拓扑结构。部分可视化结果如图\ref{fig:ShapeNet&Scan2CAD} (b) 所示。
 
 \subsection{多实例点云配准仿真数据集}
-数据集：我们在合成数据集和真实数据集上进行实验。我们的合成数据集是从ModelNet40构建的，它包括来自40个类别的12311个网格化CAD模型。为了构建我们的合成数据集，对于每个模型，我们从中均匀地下采样1024个点以形成源点云，然后将其旋转和平移5-10次以生成多个实例。这些实例与噪声点混合，形成如图3所示的目标点云。沿每个轴的旋转在[0,180°]内均匀采样，平移在[0,5]内。我们为合成数据集生成的输入对应关系是通过将真实对应关系与异常值混合而生成的。我们将每个实例的内点比率控制在约2\%。我们使用12311个模型生成了12311个这样的合成源-目标点云对。我们使用9843对进行训练，2468对进行测试。我们在训练集中随机留出10\%的对作为验证集。
+我们的合成数据集是从ModelNet40构建的，它包括来自40个类别的12311个网格化CAD模型。为了构建我们的合成数据集，对于每个模型，我们从中均匀地下采样1024个点以形成源点云，然后将其旋转和平移5-10次以生成多个实例。这些实例与噪声点混合，形成如图3所示的目标点云。沿每个轴的旋转在[0,180°]内均匀采样，平移在[0,5]内。我们为合成数据集生成的输入对应关系是通过将真实对应关系与异常值混合而生成的。我们将每个实例的内点比率控制在约2\%。我们使用12311个模型生成了12311个这样的合成源-目标点云对。我们使用9843对进行训练，2468对进行测试。我们在训练集中随机留出10\%的对作为验证集。
 
 \subsection{多实例点云配准真实数据集}
 我们的真实数据集是 Scan2CAD ，它利用 ShapeNet 和 ScanNet 构建而成。此数据集使用 ShapeNet 中的 CAD 模型替换真实扫描场景中的点云，并提供精确的注释，包括模型类别、旋转和平移等。数据集提供了 1506 个带注释的场景，每个场景至少包含一个实例类别。因此，我们充分利用这些注释，并将包含多种实例的场景分割成多个源-目标点云对，用于多实例注册。通过这种方式，我们得到了 2184 对点云，其中大多数点云在目标点云中包含 2-5 个相同类别的实例。我们按照 7:1:2 的比例将样本划分为训练集、验证集和测试集。我们使用微调的 FCGF\cite{FCGF2019} 生成局部特征并通过特征匹配生成假设的对应关系。
@@ -301,7 +303,7 @@ CNN 已成功应用于广泛的任务，包括图像分类、目标检测、语�
 
 
 \section{基于深度学习的点云配准方法}
-本节主要阐述主要的基于深度学习的点云配准方法作为基准线，主要阐述PointNet\cite{qi2017pointnet, qi2017pointnet++}系列框架、Predator\cite{huang2021predator}描述子和TEASER\cite{yang2020teaser}配准方法。
+本节主要阐述主要的基于深度学习的点云配准方法作为基准线，主要阐述PointNet\cite{qi2017pointnet, qi2017pointnet++}系列框架、PREDATOR\cite{huang2021predator}描述子和TEASER\cite{yang2020teaser}配准方法。
 
 \subsection{PointNet \& PointNet++}
 \begin{figure}
@@ -383,26 +385,25 @@ PointNet++\cite{qi2017pointnet++}则在PointNet上做了改进。前文提到的
     \includegraphics[width=0.45\linewidth]{images/pnpp_group.pdf}
     \caption{多尺度特征融合方法示意图}
     \label{fig:pnpp_grouping}
-    \vspace{-25mm}
 \end{figure}
 
 对 MSG 方法，具体操作是对不同半径的子区域进行特征提取后进行特征堆叠，特征提取过程还是采用了PointNet，所以对于不同的子区域进行参数计算的时候，使用了不同的网络，计算量过大。对于 MRG 方法来说，使用两个PointNet网络对连续的两层分别做特征提取与聚合，然后再进行特征拼接，可以大大减少参数计算量。
 
 由于PointNet系列网络架构的经典性和鲁棒性，后面的点云处理工作都会借鉴PointNet系列的架构和方法，比如Geometric Transformer\cite{qin2022geometric}，采用了PointNet相同的端到端架构，实现了高质量的点云配准；还有PPFNet\cite{deng2018ppf}、PPF-FoldingNet\cite{deng2018ppfnet}、CapsuleNet\cite{sabour2017dynamic}等经典网络，都对该系列进行了借鉴。
 
-\subsection{Predator}
+\subsection{PREDATOR}
 
 \begin{figure}
     \vspace{-5mm}
     \centering
-    \includegraphics[width=\linewidth]{images/Predator.pdf}
+    \includegraphics[width=\linewidth]{images/PREDATOR.pdf}
     \caption{
         PREDATOR 的网络结构。体素化的点云 P 和 Q 被送入编码器，它提取出超点 P′ 和 Q′ 及其潜在特征 $\boldsymbol{X_{P'}}$ 和 $\boldsymbol{X_{Q'}}$。重叠注意力模块在一系列自我（GNN）和交叉注意力（Cross Attention）块中，更新特征的共同语境信息，并将它们投影到重叠度 $\boldsymbol{o_{P'}}$、$\boldsymbol{o_{Q'}}$ 和交叉重叠度 $\boldsymbol{\tilde{o}{P'}}$、$\boldsymbol{\tilde{o}{Q'}}$ 的得分。最后，解码器将条件特征和重叠度得分转换为每点特征描述符 $\boldsymbol{F_{P}}$、$\boldsymbol{F_{Q}}$，重叠度得分 $\boldsymbol{o_{P}}$、$\boldsymbol{o_{Q}}$，以及匹配度得分 $\boldsymbol{m_{P}}$、$\boldsymbol{m_{Q}}$。}
     \label{fig:predator}
     \vspace{-5mm}
 \end{figure}
 
-Predator\cite{huang2021predator}是一种低重叠度的三维点云配准方法，如图\ref{fig:predator}所示，Predator的架构可以分解为三个主要模块：
+PREDATOR\cite{huang2021predator}是一种低重叠度的三维点云配准方法，如图\ref{fig:predator}所示，PREDATOR的架构可以分解为三个主要模块：
 
 1. 将两个点云编码为更小的超点集合和相关的潜在特征编码，权重共享；
 
@@ -447,7 +448,7 @@ Predator\cite{huang2021predator}是一种低重叠度的三维点云配准方法
     \centering
     \includegraphics[width=0.6\linewidth]{images/PREDATOR_results.pdf}
     \caption{
-        Predator配准示例结果。}
+        PREDATOR配准示例结果。}
     \label{fig:predator_results}
     \vspace{-5mm}
 \end{figure}
@@ -483,7 +484,7 @@ Predator\cite{huang2021predator}是一种低重叠度的三维点云配准方法
 解码器的架构将NN上采样与线性层相结合，并包括来自相应编码器层的跳跃连接。我们有意将重叠得分和匹配性分开，以便解开一个点是好的/坏的匹配候选的原因：原则上，一个点可以被明确地匹配，但位于重叠区域之外，或者它可以位于重叠区域，但具有模糊的描述符。经验上，我们发现网络学习预测高匹配性主要是在重叠区域的点，这可能反映出用于训练的真实对应关系，总是在重叠区域内。结果如图 \ref{fig:predator_results} 所示。
 
 \subsubsection{损失函数}
-Predator采用端到端的训练，使用三种与地面真实对应关系相关的损失作为监督。
+PREDATOR采用端到端的训练，使用三种与地面真实对应关系相关的损失作为监督。
 
 环形损失：为了监督点特征描述符，我们遵循[3]并使用环形损失[34]，这是更常见的三元损失的一种变体。考虑一对重叠点云P和Q，这次与地面真实变换对齐。我们首先提取P中的点$\boldsymbol{p_i} \in \boldsymbol{P_p} \subset \boldsymbol{P}$，该点在Q中至少有一个（可能是多个）对应点，其中对应点集$\boldsymbol{E_p(p_i)}$定义为Q中在$\boldsymbol{p_i}$周围半径$r_p$内的点。同样，Q中所有在半径$r_s$（较大）之外的点形成负面集$\boldsymbol{E_n(p_i)}$。然后从$\boldsymbol{P_p}$中随机抽取$n_p$个点计算环形损失：
 \begin{equation}
@@ -519,11 +520,5 @@ Predator采用端到端的训练，使用三种与地面真实对应关系相关
 \end{cases}
 \end{equation}
 
-\section{实验结果与分析}
-本文
-\subsection{PointNet}
-\subsection{PointNet++}
-\subsection{Predator}
-
 \section{小结}
-本章我们简要介绍了本文所使用的数据集，和点云配准评价指标。然后围绕基于深度学习的点云配准层层递进，由深度学习的基础知识介绍到了目前最常用的深度学习点云处理模型PointNet, PointNet++和Predator。后面，我们会使用预训练的PointNet和Predator作为点云特征提取器，对于描述子进行后处理。
+本章我们简要介绍了本文所使用的数据集，和点云配准评价指标。然后围绕基于深度学习的点云配准层层递进，由深度学习的基础知识介绍到了目前最常用的深度学习点云处理模型PointNet, PointNet++和PREDATOR。后面，我们会使用预训练的PointNet和PREDATOR作为点云特征提取器，对于描述子进行后处理。
