@@ -70,7 +70,7 @@
 \subsection{多模型拟合}
 多实例配准也可以通过多模型拟合来实现，其目的是根据多个模型生成的数据点来进行建模。例如在点云中拟合多个平面 \cite{barath2018multi} ，在运动分割中估计基本矩阵 \cite{hartley1997defense} ，在多实例点云配准中计算刚性变换 \cite{tang2022multi} 等。但是由于一个实例的正常值构成所有其他实例的离群值，所以多模型拟合比单模型拟合更具挑战性。
 
-现有的多模型拟合方法大致可以分为两类。第一类按顺序拟合模型 \cite{barath2019progressive,barath2021progressive,kanazawa2004detection,kluger2020consac} ，通过重复采样和筛选模型来进行建模。比如，Progressive-X \cite{barath2019progressive} 和Progressive-X+ \cite{barath2021progressive} 使用了表现更好的Graph-cut RANSAC \cite{barath2018graph} 作为采样方法来生成假设。CONSAC \cite{kluger2020consac} 首次将深度模型引入多模型拟合中，使用类似PointNet \cite{qi2017pointnet} 的网络来引导采样。通过重复采样来恢复单个实例，从输入中删除正常值和，以顺序的方式来检测实例。
+现有的多模型拟合方法大致可以分为两类。第一类按顺序拟合模型 \cite{barath2019progressive,barath2021progressive,kanazawa2004detection,kluger2020consac} ，通过重复采样和筛选模型来进行建模。比如，Progressive-X \cite{barath2019progressive} 和Progressive-X+ \cite{barath2021progressive} 使用了表现更好的Graph-cut RANSAC \cite{barath2018graph} 作为采样方法来生成假设。CONSAC \cite{kluger2020consac} 首次将深度模型引入多模型拟合中，使用类似PointNet \cite{qi2017pointnet} 的网络来引导采样。通过重复采样来恢复单个实例，从输入中删除异常值，以顺序的方式来检测实例。
 
 第二类模型同时拟合多个模型 \cite{tang2022multi,toldo2008robust,magri2016multiple,magri2014t,magri2015robust} 。许多基于偏好分析的方法 \cite{toldo2008robust,magri2015robust} 最初对一系列假设进行采样，然后根据假设的残差对输入点进行聚类。ECC \cite{tang2022multi} 利用点云刚性变换空间一致性 \cite{leordeanu2005spectral} 和以自下而上的方式基于距离不变矩阵对对应关系进行聚类。PointCLM \cite{yuan2022pointclm} 使用了一种新的深层表示方法来与空间一致性相结合，得到了更好的结果。
 

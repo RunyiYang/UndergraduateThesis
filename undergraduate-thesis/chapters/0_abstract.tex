@@ -19,11 +19,11 @@
 
 % 中英文摘要章节
 \begin{abstract}
-    三维点云配准是点云处理中的一项基本任务，其在机械臂、自动驾驶、自主运动机器人、即时定位与地图构（Simultaneous Localization and Mapping，SLAM）等众多基于视觉方法的应用中起着关键的作用。随着人工智能、元宇宙、自动驾驶等技术的兴起，将深度学习应用于点云配准的工作已经日趋成熟。目前大多数点云配准任务研究主要集中在成对配准上。然而，在实际应用中，目标场景可能包含多个重复实例，我们需要估计模板点云与目标点云中这些重复实例之间的多个刚性变换，也就是多实例点云配准。
+    三维点云配准是点云处理中的一项基本任务，其在机械臂、自动驾驶、自主运动机器人、即时定位与地图构建（Simultaneous Localization and Mapping，SLAM）等众多基于视觉方法的应用中起着关键的作用。随着人工智能、元宇宙、自动驾驶等技术的兴起，将深度学习应用于点云配准的工作已经日趋成熟。目前大多数点云配准任务研究主要集中在成对配准上。然而，在实际应用中，目标场景可能包含多个重复实例，我们需要估计模板点云与目标点云中这些重复实例之间的多个刚性变换，也就是多实例点云配准。
 
-    本文针对三维点云配准问题，特别是多实例点云配准，进行了深入研究。我们调研并整理了多实例点云配准的国内外研究现状，并总结了前人研究的优势和劣势。现有解决方案需要对大量假设进行采样以检测可能的实例并拒绝异常值，当实例和异常值的数量增加时，其鲁棒性和效率会显着降低。我们建议根据距离不变矩阵将噪声对应集直接分组到不同的簇中。通过聚类自动识别实例和异常值，达到稳健且快速表现。
+    本文针对三维点云配准问题，特别是多实例点云配准，进行了深入研究。我们调研并整理了多实例点云配准的国内外研究现状，并总结了前人研究的优势和劣势。现有解决方案需要对大量假设进行采样以检测可能的实例并排除异常值，当实例和异常值的数量增加时，其鲁棒性和效率会显着降低。我们建议根据距离不变矩阵将噪声对应集直接分组到不同的簇中。通过聚类自动识别实例和异常值，达到稳健且快速表现。
     
-    基于这一研究背景，我们提出了提出了新的多实例点云配准架构，高效对应聚类的多实例点云配准 (ECC) 。分析聚类方法的点云配准，发现对于描述子的依赖性高，离群点比例高的时候效果会大大下降，所以我们提出了基于深度学习的多实例点云配准 (DMR)，首先利用对比学习来学习输入推定对应关系的分布良好的深度表示。然后基于这些表示，我们提出了异常值修剪策略和聚类策略，以有效地删除异常值并将剩余的对应关系分配给正确的实例，达到了更好的效果。
+    基于这一研究背景，我们提出了新的多实例点云配准架构，高效对应聚类的多实例点云配准 (ECC) 。分析聚类方法的点云配准，发现对于描述子的依赖性高，离群点比例高的时候效果会大大下降，所以我们提出了基于深度学习和聚类优化的多实例点云配准 (DMR)，首先利用对比学习来学习输入推定对应关系的分布良好的深度表示。然后基于这些表示，我们提出了异常值修剪策略和聚类策略，以有效地删除异常值并将剩余的对应关系分配给正确的实例，达到了更好的效果。
     
     综上所述，我们的研究表明，基于深度学习的多实例点云配准方法在处理复杂的多实例点云配准问题上具有优秀的性能，提供了新的研究思路和方法。
     
@@ -35,7 +35,7 @@
 
     This paper conducts in-depth research on the problem of three-dimensional point cloud registration, especially multi-instance point cloud registration. We have surveyed and summarized the domestic and international research status of multi-instance point cloud registration and summarized the advantages and disadvantages of previous studies. Existing solutions require sampling a large number of hypotheses to detect possible instances and reject outliers, and their robustness and efficiency degrade significantly when the number of instances and outliers increases. We propose to directly group the noisy correspondence set into different clusters based on a distance invariance matrix. Through clustering, instances and outliers are automatically identified, achieving robust and fast performance.
     
-    Based on this research background, we propose a new multi-instance point cloud registration framework, Efficient Correspondence Clustering for Multi-instance Point Cloud Registration (ECC). After analyzing the point cloud registration of the clustering method, we find that the effect will drop significantly when it has high dependency on the descriptor and a high proportion of outliers. Therefore, we propose Deep Learning-based Multi-instance Point Cloud Registration (DMR), which first uses contrastive learning to learn a good deep representation of the input estimation correspondence. Then, based on these representations, we propose an outlier pruning strategy and a clustering strategy to effectively remove outliers and allocate the remaining correspondences to the correct instances, achieving better results.
+    Based on this research background, we propose a new multi-instance point cloud registration framework, \textbf{E}fficient \textbf{C}orrespondence \textbf{C}lustering for Multi-instance Point Cloud Registration (\textbf{ECC}). After analyzing the point cloud registration of the clustering method, we find that the effect will drop significantly when it has high dependency on the descriptor and a high proportion of outliers. Therefore, we propose \textbf{D}eep Learning and Cluster Opimisation based \textbf{M}ulti-instance Point Cloud \textbf{R}egistration (\textbf{DMR}), which first uses contrastive learning to learn a good deep representation of the input estimation correspondence. Then, based on these representations, we propose an outlier pruning strategy and a clustering strategy to effectively remove outliers and allocate the remaining correspondences to the correct instances, achieving better results.
     
     In conclusion, our research shows that the deep learning-based multi-instance point cloud registration method has excellent performance in dealing with complex multi-instance point cloud registration problems and provides new research ideas and methods.
 \end{abstractEn}

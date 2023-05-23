@@ -94,7 +94,7 @@
 
 对于正规旋转矩阵，我们可以使用群的定义来进行更精准的定义。
 \begin{equation}
-    SO(n) = \{\boldsymbol{R} \in \boldsymbol{R}^{n \times n} | \boldsymbol{R}^T\boldsymbol{R} = \boldsymbol{I}, \det (R) = 1\}
+    SO(n) = \{\boldsymbol{R} \in \mathbb{R}^{n \times n} | \boldsymbol{R}^T\boldsymbol{R} = \boldsymbol{I}, \det (R) = 1\}
 \end{equation}
 其中，$SO(n)$是特殊正交群 (Special Orthogonal Group)，这个集合由$n$维空间的旋转矩阵组成。$SO(n)$是一个群，因为它满足群的四个条件：封闭性、结合律、单位元和逆元。$SO(n)$的单位元是 $\boldsymbol{I}$，逆元是 $\boldsymbol{R}^T$。$SO(n)$的元素称为正规旋转矩阵。通过旋转矩阵可以直接描述相机的旋转。
 
@@ -146,11 +146,11 @@
 \begin{equation}
     \boldsymbol{u} := [\phi, \theta, \psi]^T
 \end{equation}
-将欧拉角向量映射到其对应的旋转矩阵的函数，$\boldsymbol{R}_{ijk} : \boldsymbol{R}^3 \to SO(3)$，定义为
+将欧拉角向量映射到其对应的旋转矩阵的函数，$\boldsymbol{R}_{ijk} : \mathbb{R}^3 \to SO(3)$，定义为
 \begin{equation}
     \boldsymbol{R}_{ijk}(\phi, \theta, \psi) := \boldsymbol{R}_i(\phi)\boldsymbol{R}_j(\theta)\boldsymbol{R}_k(\psi)
 \end{equation}
-与一般情况相同，如果 $\boldsymbol{z} \in R^3$ 是世界坐标系中的一个向量，$\boldsymbol{z}_0 \in R^3$ 是以体固定坐标表示的相同向量，那么以下关系成立：
+与一般情况相同，如果 $\boldsymbol{z} \in \mathbb{R}^3$ 是世界坐标系中的一个向量，$\boldsymbol{z}_0 \in \mathbb{R}^3$ 是以体固定坐标表示的相同向量，那么以下关系成立：
 \begin{align}
     \boldsymbol{z}_0 = \boldsymbol{R}_{ijk}(\boldsymbol{u}) \boldsymbol{z} \\
     \boldsymbol{z} = \boldsymbol{R}_{ijk}(\boldsymbol{u})^T \boldsymbol{z}_0
@@ -176,7 +176,7 @@
 \begin{equation}
     \boldsymbol{q} = q_0 + q_1 i + q_2 j + q_3 k
 \end{equation}
-其中，$q_0, q_1, q_2, q_3 \in R$，$i, j, k$ 是四元数的三个虚数单位，满足如下关系：
+其中，$q_0, q_1, q_2, q_3 \in mathbb{R}$，$i, j, k$ 是四元数的三个虚数单位，满足如下关系：
 \begin{equation}
     \left\{
     \begin{aligned}
@@ -335,7 +335,7 @@ f(\boldsymbol{p}_i, \boldsymbol{T}) = d_e
 \hat{\boldsymbol{T}} = \boldsymbol{T} - (\boldsymbol{J}^T \boldsymbol{J} + \lambda \boldsymbol{I})^{-1} \boldsymbol{J}^T f
 \label{eq:LM}
 \end{equation}
-通过链式法则计算雅可比矩阵：
+通过链式法则计算雅可比矩阵 (Jacobian Matrix)：
 \begin{equation}
 \boldsymbol{J} = \frac{\partial f}{\partial \boldsymbol{T}} = \frac{\partial f}{\partial \boldsymbol{p}_i} \frac{\partial \boldsymbol{p}_i}{\partial \boldsymbol{T}}
 \end{equation}
