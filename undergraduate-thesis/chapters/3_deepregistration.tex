@@ -2,7 +2,7 @@
 本章将结合深度学习，对点云配准进行研究。首先介绍深度学习中点云配准常用的公开数据集，然后介绍点云配准的评价指标并推广到多实例点云配准，最后介绍点云配准相关的深度学习技术。
 
 \section{标准数据集}
-本节将介绍用于点云配准的标准数据集。在评估不同指标的性能时，我们需要用到不同的公开数据集。点云配准任务的数据集大致可以分为仿真数据集和真实数据集。仿真数据集中的物体对象是完整的三维模型，比如ModelNet40\cite{sunmodelnet40} 。而真实数据集中，因为存在遮挡、测量误差、相干光干扰、背景影响等问题，往往会存在缺失、噪声、过密/稀疏等问题，比如Scan2CAD\cite{avetisyan2019scan2cad} 和ShapeNet\cite{chang2015shapenet} 。下表 \ref{tab:PointCloudDatasets} 列出了常用的点云配准数据集。
+本节将介绍用于点云配准的标准数据集。在评估不同指标的性能时，本文需要用到不同的公开数据集。点云配准任务的数据集大致可以分为仿真数据集和真实数据集。仿真数据集中的物体对象是完整的三维模型，比如ModelNet40\cite{sunmodelnet40} 。而真实数据集中，因为存在遮挡、测量误差、相干光干扰、背景影响等问题，往往会存在缺失、噪声、过密/稀疏等问题，比如Scan2CAD\cite{avetisyan2019scan2cad} 和ShapeNet\cite{chang2015shapenet} 。下表 \ref{tab:PointCloudDatasets} 列出了常用的点云配准数据集。
 \begin{table}[h!]
     \centering
     \vspace{-1.0cm}
@@ -12,22 +12,22 @@
     \begin{tabular}{l|ccccccc}
     \hline
     \textbf{数据集名称} & \textbf{年份} & \textbf{场景数量} & \textbf{类别数量} & \textbf{训练集} & \textbf{测试集} & \textbf{类型} & \textbf{数据结构} \\ \hline
-    McGill Benchmark \cite{siddiqi2008retrieving} & 2008 & 456 & 19 & 304 & 152 & 仿真场景 & 三角网格 \\ \hline
-    Sydney Urban Objects \cite{de2013unsupervised} & 2013 & 588 & 14 & - & - & 真实场景 & 点云 \\ \hline
-    ModelNet10 \cite{wu20153d} & 2015 & 4899 & 10 & 3991 & 605 & 仿真场景 & 三角网格 \\ \hline
-    ModelNet40 \cite{sunmodelnet40} & 2015 & 12311 & 40 & 9843 & 2468 & 仿真场景 & 三角网格 \\ \hline
-    ShapeNet \cite{chang2015shapenet} & 2015 & 51190 & 55 & - & - & 仿真场景 & 三角网格 \\ \hline
-    ScanNet \cite{dai2017scannet} & 2017 & 12283 & 17 & 9677 & 2606 & 真实场景 & RGB-D \\ \hline
-    ScanObjectNN \cite{uy2019revisiting} & 2016 & 2902 & 15 & 2321 & 581 & 真实场景 & 三角网格 \\ \hline
-    S3DIS \cite{armeni20163d} & 2017 & 271 & 13 & - & - & 真实场景 & 点云 \\ \hline
-    7Scenes \cite{shotton2013scene} & 2013 & 7 & 1 & 26000 & 17000 & 真实场景 & RGB-D \\ \hline
+    McGill Benchmark \cite{siddiqi2008retrieving} & 2008 & 456 & 19 & 304 & 152 & 仿真场景 & 三角网格 \\ 
+    Sydney Urban Objects \cite{de2013unsupervised} & 2013 & 588 & 14 & - & - & 真实场景 & 点云 \\ 
+    ModelNet10 \cite{wu20153d} & 2015 & 4899 & 10 & 3991 & 605 & 仿真场景 & 三角网格 \\ 
+    ModelNet40 \cite{sunmodelnet40} & 2015 & 12311 & 40 & 9843 & 2468 & 仿真场景 & 三角网格 \\ 
+    ShapeNet \cite{chang2015shapenet} & 2015 & 51190 & 55 & - & - & 仿真场景 & 三角网格 \\ 
+    ScanNet \cite{dai2017scannet} & 2017 & 12283 & 17 & 9677 & 2606 & 真实场景 & RGB-D \\ 
+    ScanObjectNN \cite{uy2019revisiting} & 2016 & 2902 & 15 & 2321 & 581 & 真实场景 & 三角网格 \\ 
+    S3DIS \cite{armeni20163d} & 2017 & 271 & 13 & - & - & 真实场景 & 点云 \\ 
+    7Scenes \cite{shotton2013scene} & 2013 & 7 & 1 & 26000 & 17000 & 真实场景 & RGB-D \\ 
     Scan2CAD \cite{avetisyan2019scan2cad} & 2019 & 1512 & 1 & 1209 & 303 & 真实场景 & 点云 \\ \hline
     \end{tabular}
     }
     \vspace{-1.0cm}
 \end{table}
 
-在本次任务中，我们使用ModelNet40、ShapeNet、Scan2CAD组成多实例点云配准仿真数据集进行训练和测试。所以，我们对这3个数据集和多实例点云配准数据集进行了详细的介绍。
+在本次任务中，本文使用ModelNet40、ShapeNet、Scan2CAD组成多实例点云配准仿真数据集进行训练和测试。所以，本文对这3个数据集和多实例点云配准数据集进行了详细的介绍。
 
 \label{sec:dataset}
 
@@ -62,10 +62,10 @@ Scan2CAD 数据集是一个用于场景理解和CAD模型对齐的大规模数�
 Scan2CAD 数据集中的扫描数据包含了多种室内场景，如住宅、办公室和公共场所等。这些场景包括了各种物体，如家具、装饰品和建筑元素。与此同时，CAD模型包含了各种详细的几何和拓扑结构。部分可视化结果如图 \ref{fig:ShapeNet&Scan2CAD} (b) 所示。
 
 \subsection{多实例点云配准仿真数据集}
-我们的合成数据集是从ModelNet40构建的，它包括来自40个类别的12311个网格化 CAD 模型。为了构建我们的合成数据集，对于每个模型，我们从中均匀地下采样1024个点以形成源点云，然后将其旋转和平移5-10次以生成多个实例。这些实例与噪声点混合，形成如图3所示的目标点云。沿每个轴的旋转在 [0,180°] 内均匀采样，平移在[0,5]内。我们为合成数据集生成的输入对应关系是通过将真实对应关系与异常值混合而生成的。我们将每个实例的内点比率控制在约2\%。我们使用12311个模型生成了12311个这样的合成源点云-目标点云对。我们使用9843对进行训练，2468对进行测试。我们在训练集中随机留出10\%的对作为验证集。
+本文的合成数据集是从ModelNet40构建的，它包括来自40个类别的12311个网格化 CAD 模型。为了构建本文的合成数据集，对于每个模型，本文从中均匀地下采样1024个点以形成源点云，然后将其旋转和平移5-10次以生成多个实例。这些实例与噪声点混合，形成如图3所示的目标点云。沿每个轴的旋转在 [0,180°] 内均匀采样，平移在[0,5]内。本文为合成数据集生成的输入对应关系是通过将真实对应关系与异常值混合而生成的。本文将每个实例的内点比率控制在约2\%。本文使用12311个模型生成了12311个这样的合成源点云-目标点云对。本文使用9843对进行训练，2468对进行测试。本文在训练集中随机留出10\%的对作为验证集。
 
 \subsection{多实例点云配准真实数据集}
-我们的真实数据集是 Scan2CAD ，它利用 ShapeNet 和 ScanNet 构建而成。此数据集使用 ShapeNet 中的 CAD 模型替换真实扫描场景中的点云，并提供精确的注释，包括模型类别、旋转和平移等。数据集提供了 1506 个带注释的场景，每个场景至少包含一个实例类别。因此，我们充分利用这些注释，并将包含多种实例的场景分割成多个源-目标点云对，用于多实例配准。通过这种方式，我们得到了 2184 对点云，其中大多数点云在目标点云中包含 2-5 个相同类别的实例。我们按照 7:1:2 的比例将样本划分为训练集、验证集和测试集。我们使用微调的 FCGF\cite{FCGF2019} 生成局部特征并通过特征匹配生成假设的对应关系。
+本文的真实数据集是 Scan2CAD ，它利用 ShapeNet 和 ScanNet 构建而成。此数据集使用 ShapeNet 中的 CAD 模型替换真实扫描场景中的点云，并提供精确的注释，包括模型类别、旋转和平移等。数据集提供了 1506 个带注释的场景，每个场景至少包含一个实例类别。因此，本文充分利用这些注释，并将包含多种实例的场景分割成多个源-目标点云对，用于多实例配准。通过这种方式，本文得到了 2184 对点云，其中大多数点云在目标点云中包含 2-5 个相同类别的实例。本文按照 7:1:2 的比例将样本划分为训练集、验证集和测试集。本文使用微调的 FCGF\cite{FCGF2019} 生成局部特征并通过特征匹配生成假设的对应关系。
 \begin{table}[h]
     \centering
     \vspace{-1.0cm}
@@ -104,7 +104,7 @@ Scan2CAD 数据集中的扫描数据包含了多种室内场景，如住宅、�
     \vspace{-1.0cm}
 \end{table}
 
-这里，我们主要关注如何通过特征匹配生成假设的对应关系。我们使用 FCGF 作为特征提取器，参数设置如表 \ref{tab:fcgf} 所示。FCGF 网络在 3DMatch 数据集上预训练，然后使用表 \ref{tab:fcgf_finetune} 中的参数设置进行微调。微调过的 FCGF 提取 L2归一化的局部特征 $F_{local}^X = \{f_{local}^{x_i} \in \mathbb{R}^{32} | i = 1, \dots, |X|\}$，用于源点云 $X$ 和 $F_{local}^Y = \{f_{local}^{y_i} \in \mathbb{R}^{32} | i = 1, \dots, |Y|\}$，用于目标点云 $Y$，其中 $|X|$ 和 $|Y|$ 分别表示源点云和目标点云中的点数。给定目标点云 $Y$ 中的每个点 $y_j$，我们找到满足 $i = \arg\max_i \langle f_{local}^{y_j}, f_{local}^{x_i} \rangle$ 的源点云 $X$ 中的点 $x_i$ 以构建对应关系 $(x_i, y_j)$，其中 $\langle f_{local}^{y_j}, f_{local}^{x_i} \rangle$ 是两点特征之间的余弦相似度。这样，我们获得 $|Y|$ 个对应关系，我们将余弦相似度 $\langle f_{local}^{x_i}, f_{local}^{y_j} \rangle$ 定义为对应关系 $(x_i, y_j)$ 的显著性得分。我们选择显著性得分最大的 $K$ 个对应关系，然后将这些 $K$ 个对应关系随机下采样为 $N$ 个对应关系作为输入的假设对应关系。这里，我们将 $K$ 设置为 10000，以使输入对应关系尽可能覆盖更多实例。
+这里，本文主要关注如何通过特征匹配生成假设的对应关系。本文使用 FCGF 作为特征提取器，参数设置如表 \ref{tab:fcgf} 所示。FCGF 网络在 3DMatch 数据集上预训练，然后使用表 \ref{tab:fcgf_finetune} 中的参数设置进行微调。微调过的 FCGF 提取 L2归一化的局部特征 $F_{local}^X = \{f_{local}^{x_i} \in \mathbb{R}^{32} | i = 1, \dots, |X|\}$，用于源点云 $X$ 和 $F_{local}^Y = \{f_{local}^{y_i} \in \mathbb{R}^{32} | i = 1, \dots, |Y|\}$，用于目标点云 $Y$，其中 $|X|$ 和 $|Y|$ 分别表示源点云和目标点云中的点数。给定目标点云 $Y$ 中的每个点 $y_j$，本文找到满足 $i = \arg\max_i \langle f_{local}^{y_j}, f_{local}^{x_i} \rangle$ 的源点云 $X$ 中的点 $x_i$ 以构建对应关系 $(x_i, y_j)$，其中 $\langle f_{local}^{y_j}, f_{local}^{x_i} \rangle$ 是两点特征之间的余弦相似度。这样，本文获得 $|Y|$ 个对应关系，本文将余弦相似度 $\langle f_{local}^{x_i}, f_{local}^{y_j} \rangle$ 定义为对应关系 $(x_i, y_j)$ 的显著性得分。本文选择显著性得分最大的 $K$ 个对应关系，然后将这些 $K$ 个对应关系随机下采样为 $N$ 个对应关系作为输入的假设对应关系。这里，本文将 $K$ 设置为 10000，以使输入对应关系尽可能覆盖更多实例。
 \section{点云配准评价指标}
 对于配准任务，评估指标可以主要分为两类，一类是用于特征提取与匹配的评价指标，另一类是用于配准结果运动参数评价的指标。
 \subsection{基于特征提取与匹配的评价指标}
@@ -137,14 +137,14 @@ R_{fa} = \frac{1}{n} \sum_{s=1}^{n} \mathbbm{1} \left( \frac{1}{|\boldsymbol{\om
 \end{equation}
 
 \subsubsection{相对旋转误差}
-我们定义相对旋转误差 (Relative Rotation Error) 为真实变换 $\boldsymbol{T}^*_{s}$ 和估计变换 $\boldsymbol{\hat{T}}_{s}$ 之间的旋转误差。计算公式为：
+本文定义相对旋转误差 (Relative Rotation Error) 为真实变换 $\boldsymbol{T}^*_{s}$ 和估计变换 $\boldsymbol{\hat{T}}_{s}$ 之间的旋转误差。计算公式为：
 \begin{equation}
     \text{RRE}_s = \arccos \left(\frac{\operatorname{tr}(\boldsymbol{\hat{R}}_{s} \boldsymbol{R}^*_s) - 1}{2}\right),
 \end{equation}
 其中 $\operatorname{tr}$ 表示矩阵的迹 (对角线元素之和) ，$\boldsymbol{\hat{R}}_{s}$ 和 $\boldsymbol{R}^*_s$ 分别表示估计变换和真实变换的旋转矩阵。
 
 \subsubsection{相对平移误差}
-我们定义相对平移误差 (Relative Transition Error) 为真实变换 $\boldsymbol{T}^*_s$ 和估计变换 $\boldsymbol{\hat{T}}_{s}$ 之间的平移误差。计算公式为：
+本文定义相对平移误差 (Relative Transition Error) 为真实变换 $\boldsymbol{T}^*_s$ 和估计变换 $\boldsymbol{\hat{T}}_{s}$ 之间的平移误差。计算公式为：
 \begin{equation}
     \text{RTE}_s = \lVert \boldsymbol{t}^*_s - \boldsymbol{\hat{t}}_{s} \rVert,
 \end{equation}
@@ -152,12 +152,12 @@ R_{fa} = \frac{1}{n} \sum_{s=1}^{n} \mathbbm{1} \left( \frac{1}{|\boldsymbol{\om
 
 \subsection{多实例点云配准评价指标}
 \label{sec:multiinstance_eval}
-用于评估多实例点云配准性能的三个指标分别是平均命中召回率、平均命中精度和平均命中 F1 分数。
+用于评估多实例点云配准性能的三个指标分别是平均命中召回率、平均命中精度和平均命中 F1 分数。其中 $K$ 为真实位姿的个数，$M$ 为估计位姿的个数。
 
 \subsubsection{平均命中召回率 (Mean Hit Recall)}
 平均命中召回率衡量了正确恢复的点云对数占所有点云对数的比例。平均命中召回率 (Mean Hit Recall) 在两个已配准的点云之间的定义如下：
 \begin{equation}
-    \text{MHR} = \frac{1}{S} \sum_{s=1}^{S} \boldsymbol{I}_s
+    \text{MHR} = \frac{1}{K} \sum_{s=1}^{S} \boldsymbol{I}_s
 \end{equation}
 其中 $\boldsymbol{I}_s = {0, 1}$ 表示一个真实估计对是否为“命中”。具体而言，
 \begin{equation}
@@ -169,7 +169,7 @@ R_{fa} = \frac{1}{n} \sum_{s=1}^{n} \mathbbm{1} \left( \frac{1}{|\boldsymbol{\om
 两个已配准的点云之间的平均命中精确度定义如下：
 
 \begin{equation}
-\text{MHP} = \frac{1}{\boldsymbol{M}} \sum_{s=1}^{S} \boldsymbol{I}_s
+\text{MHP} = \frac{1}{M} \sum_{s=1}^{S} \boldsymbol{I}_s
 \end{equation}
 通过对所有点云对的 \text{MHP} 求平均值，得到最终的平均命中精确度。
 
@@ -196,7 +196,7 @@ R_{fa} = \frac{1}{n} \sum_{s=1}^{n} \mathbbm{1} \left( \frac{1}{|\boldsymbol{\om
 
 在上述方程中，$L(\boldsymbol{W})$ 表示总损失，$L_i(\boldsymbol{W})$ 表示第 $i^{th}$ 个样本的损失，$\boldsymbol{W}^{(l)}$ 表示第 $l$ 层的权重，$L$ 是总层数，$\lambda$ 是正则化参数，$\lVert \cdot \rVert^2$ 表示平方 Frobenius 范数。
 
-为了方便设计、训练和部署深度学习模型，开发了几种深度学习框架，包括TensorFlow\cite{abadi2016tensorflow} 、PyTorch\cite{paszke2019pytorch} 、PaddlePaddle\cite{ma2019paddlepaddle} 和 MXNet\cite{chen2015mxnet} 。这些框架提供了神经网络层、优化算法和其他实用工具的高效实现，使设计、训练和部署深度学习模型变得更加容易。此外，它们还支持使用 GPU  (torch.cuda) 或专用加速器 (如 TPU) 进行硬件加速，以加快训练过程。
+为了方便设计、训练和部署深度学习模型，开发了几种深度学习框架，包括TensorFlow、PyTorch、PaddlePaddle 和 MXNet。这些框架提供了神经网络层、优化算法和其他实用工具的高效实现，使设计、训练和部署深度学习模型变得更加容易。此外，它们还支持使用 GPU  (torch.cuda) 或专用加速器 (如 TPU) 进行硬件加速，以加快训练过程。
 \subsection{多层感知机}
 多层感知器 (Multilayer Perceptron, MLP) 是一种广泛应用于各种机器学习任务的前馈神经网络\cite{lecun2015deep}。MLP 的基本结构包括输入层、一个或多个隐藏层和输出层。每一层由若干个神经元组成，相邻层的神经元之间通过权重连接。通常，MLP 采用全连接结构，即每个神经元都与上一层和下一层的所有神经元连接。
 
@@ -210,13 +210,13 @@ R_{fa} = \frac{1}{n} \sum_{s=1}^{n} \mathbbm{1} \left( \frac{1}{|\boldsymbol{\om
 
 其中 $\boldsymbol{b} \in \mathbb{R}^{m}$ 是偏置向量，$f$ 是激活函数。在实际应用中，激活函数通常为非线性函数，如 Sigmoid、ReLU 或 Tanh。这些非线性激活函数使得 MLP 能够捕捉复杂的非线性关系。
 
-现在我们考虑一个具有 $L$ 个隐藏层的 MLP，设第 $l$ 层的权重矩阵为 $\boldsymbol{W}^{(l)} \in \mathbb{R}^{n_l \times n_{l-1}}$，偏置向量为 $\boldsymbol{b}^{(l)} \in \mathbb{R}^{n_l}$，激活函数为 $f^{(l)}$。前向传播过程可表示为：
+现在本文考虑一个具有 $L$ 个隐藏层的 MLP，设第 $l$ 层的权重矩阵为 $\boldsymbol{W}^{(l)} \in \mathbb{R}^{n_l \times n_{l-1}}$，偏置向量为 $\boldsymbol{b}^{(l)} \in \mathbb{R}^{n_l}$，激活函数为 $f^{(l)}$。前向传播过程可表示为：
 
 \begin{equation}
 \boldsymbol{a}^{(l)} = f^{(l)}(\boldsymbol{W}^{(l)}\boldsymbol{a}^{(l-1)} + \boldsymbol{b}^{(l)}),
 \end{equation}
 
-其中 $\boldsymbol{a}^{(0)} = \boldsymbol{x}$，$\boldsymbol{a}^{(L)} = \boldsymbol{y}$。对于损失函数 $L(\boldsymbol{y}, \boldsymbol{t})$，其中 $\boldsymbol{t}$ 是目标输出，我们使用梯度下降方法优化权重和偏置：
+其中 $\boldsymbol{a}^{(0)} = \boldsymbol{x}$，$\boldsymbol{a}^{(L)} = \boldsymbol{y}$。对于损失函数 $L(\boldsymbol{y}, \boldsymbol{t})$，其中 $\boldsymbol{t}$ 是目标输出，本文使用梯度下降方法优化权重和偏置：
 
 \begin{equation}
 \boldsymbol{W}^{(l)} \leftarrow \boldsymbol{W}^{(l)} - \alpha \frac{\partial L}{\partial \boldsymbol{W}^{(l)}}, \\
@@ -227,7 +227,7 @@ R_{fa} = \frac{1}{n} \sum_{s=1}^{n} \mathbbm{1} \left( \frac{1}{|\boldsymbol{\om
 
 其中 $\alpha$ 是学习率。
 
-为了计算梯度，我们使用反向传播算法。首先，计算输出层关于损失函数的梯度：
+为了计算梯度，本文使用反向传播算法。首先，计算输出层关于损失函数的梯度：
 
 \begin{equation}
 \boldsymbol{\delta}^{(L)} = \frac{\partial L}{\partial \boldsymbol{a}^{(L)}} \odot f'^{(L)}(\boldsymbol{W}^{(L)}\boldsymbol{a}^{(L-1)} + \boldsymbol{b}^{(L)}),
@@ -235,13 +235,13 @@ R_{fa} = \frac{1}{n} \sum_{s=1}^{n} \mathbbm{1} \left( \frac{1}{|\boldsymbol{\om
 
 其中 $\odot$ 表示哈达玛积 (元素对应相乘) ，$f'^{(L)}$ 是激活函数的导数。
 
-然后，我们从输出层向输入层反向计算梯度：
+然后，本文从输出层向输入层反向计算梯度：
 
 \begin{equation}
 \boldsymbol{\delta}^{(l)} = \left( \boldsymbol{W}^{(l+1)} \right)^T \boldsymbol{\delta}^{(l+1)} \odot f'^{(l)}(\boldsymbol{W}^{(l)}\boldsymbol{a}^{(l-1)} + \boldsymbol{b}^{(l)}).
 \end{equation}
 
-最后，我们计算损失函数关于权重和偏置的梯度：
+最后，本文计算损失函数关于权重和偏置的梯度：
 
 \begin{equation}
 \frac{\partial L}{\partial \boldsymbol{W}^{(l)}} = \boldsymbol{\delta}^{(l)} \left( \boldsymbol{a}^{(l-1)} \right)^T, \\
@@ -250,9 +250,9 @@ R_{fa} = \frac{1}{n} \sum_{s=1}^{n} \mathbbm{1} \left( \frac{1}{|\boldsymbol{\om
 \frac{\partial L}{\partial \boldsymbol{b}^{(l)}} = \boldsymbol{\delta}^{(l)}.
 \end{equation}
 
-在实际应用中，为了提高训练速度和泛化能力，我们通常采用 mini-batch 随机梯度下降或其变体 (如 Adam、RMSprop 等) 进行训练。此外，我们还可以使用正则化技术 (如 L1、L2正则化、Dropout 等) 防止过拟合。在深度学习框架 (如 TensorFlow、PyTorch、PaddlePaddle 和 MXNet 等) 的支持下，我们可以方便地实现和训练 MLP 模型\cite{lecun2015deep}。
+在实际应用中，为了提高训练速度和泛化能力，本文通常采用 mini-batch 随机梯度下降或其变体 (如 Adam、RMSprop 等) 进行训练。此外，本文还可以使用正则化技术 (如 L1、L2正则化、Dropout 等) 防止过拟合。在深度学习框架 (如 TensorFlow、PyTorch、PaddlePaddle 和 MXNet 等) 的支持下，本文可以方便地实现和训练 MLP 模型\cite{lecun2015deep}。
 
-MLP 是深度学习领域的一个基本概念，尽管现在有许多更复杂的神经网络结构 (如卷积神经网络、循环神经网络和 Transformer 等) 已经在各种任务上表现出更好的性能，但 MLP 仍然是一个重要的基础知识。通过学习 MLP 的基本原理，我们可以更好地理解神经网络的工作原理，从而有助于设计更复杂的模型和解决更高级的问题。
+MLP 是深度学习领域的一个基本概念，尽管现在有许多更复杂的神经网络结构 (如卷积神经网络、循环神经网络和 Transformer 等) 已经在各种任务上表现出更好的性能，但 MLP 仍然是一个重要的基础知识。通过学习 MLP 的基本原理，本文可以更好地理解神经网络的工作原理，从而有助于设计更复杂的模型和解决更高级的问题。
 
 在实际应用中，MLP 可以处理各种类型的数据，如图像、文本、语音和其他结构化或非结构化数据。由于 MLP 可以近似任意连续函数，因此具有很强的表达能力。然而，MLP 也存在一些局限性。首先，MLP 的参数数量随着层数和每层神经元数量的增加而快速增长，这可能导致过拟合和计算效率低下的问题。其次，MLP 对输入数据的缩放和平移具有较强的敏感性，因此需要对输入数据进行预处理，如归一化。此外，MLP 并不能直接处理变长输入数据和序列数据，需要采用其他神经网络结构，如循环神经网络 (RNN) 。
 
@@ -315,7 +315,7 @@ CNN 已成功应用于广泛的任务，包括图像分类、目标检测、语�
 \end{figure}
 
 \subsubsection{PointNet 网络结构简述}
-点云处理任务中，我们首先可以朴素地想到直接用多层感知机\cite{lecun2015deep} 对作为点云的输入，但是这样的方法对于$N$个点云来说，需要$N \times 3$大小的输入维度，点云数量多时，对于多层感知机过于庞大。所以PointNet提出，对于输入点云，采用共享权值的MLP进行特征提取
+点云处理任务中，本文首先可以朴素地想到直接用多层感知机\cite{lecun2015deep} 对作为点云的输入，但是这样的方法对于$N$个点云来说，需要$N \times 3$大小的输入维度，点云数量多时，对于多层感知机过于庞大。所以PointNet提出，对于输入点云，采用共享权值的MLP进行特征提取
 \begin{equation}
     \boldsymbol{f_p}_i = f(\theta; \boldsymbol{p}_i)
 \end{equation}
@@ -336,7 +336,7 @@ PointNet++\cite{qi2017pointnet++} 则在 PointNet 上做了改进。前文提到
 
 这个方法是受到CNN的启发，在3D点集中找到具有相似结构的子区域，和对应的区域特征embedding，提出了Sampling和Grouping来整合局部邻域的点云，提取局部特征，代码如\ref{lst:pythonfile}。其中，\texttt{farthest point sample}为本段的核心算法，即最远端采样算法来实现从$N$个点中抽取采样$N'$个点。
 
-最远端采样算法 (FPS)的流程如下：
+最远端采样算法 (FPS)的流程如下：\\
 1. 用蒙特卡洛方法筛取初始点，即第0次采样点； \\
 2. 计算未采样点与已采样点之间的欧几里得或者推土机距离，将距离最大的点加入已采样点集； \\
 3. 更新距离函数，重复1-3，直到获得了目标数量的采样点； \\
@@ -410,18 +410,18 @@ PREDATOR\cite{huang2021predator} 是一种低重叠度的三维点云配准方�
 
 3. 将相互调节的瓶颈表示解码为点对点描述符以及精化的每点重叠和匹配度得分。
 
-\subsubsection{特征编码}使用大小为 V 的体素网格滤波器对原始点云进行下采样，使得 $\boldsymbol{P}$ 和 $\boldsymbol{Q}$ 具有相当均匀的点密度。在共享编码器中，一系列类似于ResNet的块和跨步卷积将原始点聚合到超点 $\boldsymbol{P' \in R^{N' \times 3}}$ 和 $\boldsymbol{Q' \in R^{M' \times 3}}$，以及相关特征 $\boldsymbol{X_{P'} \in R^{N' \times b}}$ 和 $\boldsymbol{X_{Q'} \in R^{M' \times b}}$。需要注意的是，超点对应于固定的接收场，因此它们的数量取决于输入点云的空间范围，并且对于两个输入可能是不同的。
+\subsubsection{特征编码}使用大小为 V 的体素网格滤波器对原始点云进行下采样，使得 $\boldsymbol{P}$ 和 $\boldsymbol{Q}$ 具有相当均匀的点密度。在共享编码器中，一系列类似于ResNet的块和跨步卷积将原始点聚合到超点 $\boldsymbol{P'} \in \mathbb{R}^{N' \times 3}$ 和 $\boldsymbol{Q'} \in \mathbb{R}^{M' \times 3}$，以及相关特征 $\boldsymbol{X_{P'}} \in \mathbb{R}^{N' \times b}$ 和 $\boldsymbol{X_{Q'}} \in \mathbb{R}^{M' \times b}$。需要注意的是，超点对应于固定的接收场，因此它们的数量取决于输入点云的空间范围，并且对于两个输入可能是不同的。
 
-首先，我们使用大小为 $V$ 的体素网格滤波器对原始点云进行下采样，使得 $\boldsymbol{P}$ 和 $\boldsymbol{Q}$ 具有相当均匀的点密度。在共享编码器中，一系列类似于ResNet的块和跨步卷积将原始点聚合到超点 $\boldsymbol{P' \in R^{N' \times 3}}$ 和 $\boldsymbol{Q' \in R^{M' \times 3}}$，以及相关特征 $\boldsymbol{X_{P'} \in R^{N' \times b}}$ 和 $\boldsymbol{X_{Q'} \in R^{M' \times b}}$。需要注意的是，超点对应于固定的接收场，因此它们的数量取决于输入点云的空间范围，并且对于两个输入可能是不同的。
+首先，本文使用大小为 $V$ 的体素网格滤波器对原始点云进行下采样，使得 $\boldsymbol{P}$ 和 $\boldsymbol{Q}$ 具有相当均匀的点密度。在共享编码器中，一系列类似于ResNet的块和跨步卷积将原始点聚合到超点 $\boldsymbol{P'} \in \mathbb{R}^{N' \times 3}$ 和 $\boldsymbol{Q'} \in \mathbb{R}^{M' \times 3}$，以及相关特征 $\boldsymbol{X_{P'}} \in \mathbb{R}^{N' \times b}$ 和 $\boldsymbol{X_{Q'}} \in \mathbb{R}^{M' \times b}$。需要注意的是，超点对应于固定的接收场，因此它们的数量取决于输入点云的空间范围，并且对于两个输入可能是不同的。
 
-到目前为止，瓶颈中的特征 $\boldsymbol{X_{P'}}$ 和 $\boldsymbol{X_{Q'}}$ 编码了两个点云的几何形状和上下文。但是，$\boldsymbol{X_{P'}}$ 对点云 Q 一无所知，反之亦然。为了推理它们各自的重叠区域，需要进行一些交叉对话。我们认为，在瓶颈中的超点级别添加这种交叉对话是有意义的，就像人类操作员首先会粗略地了解整体形状以确定可能的重叠区域，然后才会在这些区域中识别出精确的特征点。
+到目前为止，瓶颈中的特征 $\boldsymbol{X_{P'}}$ 和 $\boldsymbol{X_{Q'}}$ 编码了两个点云的几何形状和上下文。但是，$\boldsymbol{X_{P'}}$ 对点云 Q 一无所知，反之亦然。为了推理它们各自的重叠区域，需要进行一些交叉对话。本文认为，在瓶颈中的超点级别添加这种交叉对话是有意义的，就像人类操作员首先会粗略地了解整体形状以确定可能的重叠区域，然后才会在这些区域中识别出精确的特征点。
 
-图卷积神经网络：在连接两个特征编码之前，我们首先使用图神经网络 (GNN) 进一步聚合并强化它们各自的上下文关系。首先，使用 k-NN 方法将 $\boldsymbol{P'}$ 中的超点链接成一个欧几里得空间图。设 $\boldsymbol{x_i \in R^b}$ 表示超点 $\boldsymbol{p'_i}$ 的特征编码，$\boldsymbol{(i, j) \in E}$ 表示超点 $\boldsymbol{p'_i}$ 和 $\boldsymbol{p'_j}$ 之间的图边。然后，编码器特征按照以下方式迭代更新：
+图卷积神经网络：在连接两个特征编码之前，本文首先使用图神经网络 (GNN) 进一步聚合并强化它们各自的上下文关系。首先，使用 k-NN 方法将 $\boldsymbol{P'}$ 中的超点链接成一个欧几里得空间图。设 $\boldsymbol{x_i \in \mathbb{R}^b}$ 表示超点 $\boldsymbol{p'_i}$ 的特征编码，$\boldsymbol{(i, j) \in E}$ 表示超点 $\boldsymbol{p'_i}$ 和 $\boldsymbol{p'_j}$ 之间的图边。然后，编码器特征按照以下方式迭代更新：
 \begin{equation}
     (k+1)\boldsymbol{x_i} = \max_{(i,j) \in E} h_{\theta} \left[ \text{cat} \left[(k)\boldsymbol{x_i}, (k)\boldsymbol{x_j} - (k)\boldsymbol{x_i} \right] \right]
 \end{equation}
 
-这个更新操作执行两次，参数 $\boldsymbol{\theta}$ 并未共享，最终的 GNN 特征 $\boldsymbol{x_{GNN_i} \in R^{d}_b}$ 如下所得：
+这个更新操作执行两次，参数 $\boldsymbol{\theta}$ 并未共享，最终的 GNN 特征 $\boldsymbol{x_{GNN_i}} \in \mathbb{R}^{d}_b$ 如下所得：
 
 \begin{equation}
 \boldsymbol{x_{GNN_i}} = h_{\theta}(\text{cat}[^{(0)}\boldsymbol{x_i}, ^{(1)}\boldsymbol{x_i}, ^{(2)}\boldsymbol{x_i}])
@@ -430,7 +430,7 @@ PREDATOR\cite{huang2021predator} 是一种低重叠度的三维点云配准方�
 
 上述描述的 GNN 是针对点云 $\boldsymbol{P'}$ 的。对于 $\boldsymbol{Q'}$ 的 GNN 是相同的。
 
-\subsubsection{交叉注意力机制}首先，将点云 $\boldsymbol{P'}$ 中的每个超点连接到 $\boldsymbol{Q'}$ 中的所有超点，形成一个二分图。受到Transformer架构的启发，我们使用向量值查询 $\boldsymbol{s_i \in R^b}$ 来根据其键 $\boldsymbol{q_j \in R^b}$ 检索其他超点的值 $\boldsymbol{v_j \in R^b}$，其中：
+\subsubsection{交叉注意力机制}首先，将点云 $\boldsymbol{P'}$ 中的每个超点连接到 $\boldsymbol{Q'}$ 中的所有超点，形成一个二分图。受到Transformer架构的启发，本文使用向量值查询 $\boldsymbol{s_i} \in \mathbb{R}^b$ 来根据其键 $\boldsymbol{q_j} \in \mathbb{R}^b$ 检索其他超点的值 $\boldsymbol{v_j} \in \mathbb{R}^b$，其中：
 
 \begin{equation}
 \begin{aligned}
@@ -456,16 +456,16 @@ PREDATOR\cite{huang2021predator} 是一种低重叠度的三维点云配准方�
 \boldsymbol{m_{i \leftarrow}} = \sum_{j:(i,j)\in E} a_{ij}\boldsymbol{v_j}
 \end{equation}
 
-其中注意力权重 $a_{ij} = \text{softmax}(\boldsymbol{s_i^T k_j}/\sqrt{b})$。也就是说，为了更新超点 $\boldsymbol{p'_i}$，将该点的查询与所有超点 $\boldsymbol{q'_j}$ 的键和值相结合。与文献一致，实际上我们使用具有四个并行注意力头的多注意力层。共同上下文特征计算为
+其中注意力权重 $a_{ij} = \text{softmax}(\boldsymbol{s_i^T k_j}/\sqrt{b})$。也就是说，为了更新超点 $\boldsymbol{p'_i}$，将该点的查询与所有超点 $\boldsymbol{q'_j}$ 的键和值相结合。与文献一致，实际上本文使用具有四个并行注意力头的多注意力层。共同上下文特征计算为
 
 \begin{equation}
-\boldsymbol{x_{CA_i}} = \boldsymbol{x_{GNN_i}} + \text{MLP}(\text{cat}[\boldsymbol{s_i}, \boldsymbol{m_{i \leftarrow}}])
+\boldsymbol{x}_{CA_i} = \boldsymbol{x}_{GNN_i} + \text{MLP}(\text{cat}[\boldsymbol{s}_i, \boldsymbol{m}_{i \leftarrow}])
 \end{equation}
 
 其中 MLP(·) 表示一个三层全连接网络，在第一二层后有实例归一化和ReLU激活函数。相同的交叉注意块也反向应用，使信息在两个方向上流动，$\boldsymbol{P'} \rightarrow \boldsymbol{Q'}$ 和 $\boldsymbol{Q'} \rightarrow \boldsymbol{P'}$。
 
 \subsubsection{瓶颈点的重叠得分}
-以上更新共同上下文信息是针对每个超点单独进行的，没有考虑每个点云内的局部上下文。因此，在交叉注意块后，我们使用另一个具有相同架构和底层图 (点云内链接) 的 GNN 显式更新局部上下文，但参数$\theta$是独立的。这产生了最终的潜在特征编码 $\boldsymbol{F_{P'} \in R^{N' \times b}}$ 和 $\boldsymbol{F_{Q'} \in R^{M' \times b}}$，现在它们是基于其他点云特征的条件。这些特征被线性投影到重叠分数 $\boldsymbol{o_{P'} \in R^{N'}}$ 和 $\boldsymbol{o_{Q'} \in R^{M'}}$，这可以被解释为一个特定超点位于重叠区域的概率。此外，可以计算超点之间的软对应关系，并从对应关系权重预测超点 $\boldsymbol{p'_i}$ 的交叉重叠分数，即其在 $\boldsymbol{Q'}$ 的对应点位于重叠区域的概率：
+以上更新共同上下文信息是针对每个超点单独进行的，没有考虑每个点云内的局部上下文。因此，在交叉注意块后，本文使用另一个具有相同架构和底层图 (点云内链接) 的 GNN 显式更新局部上下文，但参数$\theta$是独立的。这产生了最终的潜在特征编码 $\boldsymbol{F_{P'}} \in \mathbb{R}^{N' \times b}$ 和 $\boldsymbol{F_{Q'}} \in \mathbb{R}^{M' \times b}$，现在它们是基于其他点云特征的条件。这些特征被线性投影到重叠分数 $\boldsymbol{o_{P'}} \in \mathbb{R}^{N'}$ 和 $\boldsymbol{o_{Q'}} \in \mathbb{R}^{M'}$，这可以被解释为一个特定超点位于重叠区域的概率。此外，可以计算超点之间的软对应关系，并从对应关系权重预测超点 $\boldsymbol{p'_i}$ 的交叉重叠分数，即其在 $\boldsymbol{Q'}$ 的对应点位于重叠区域的概率：
 
 \begin{equation}
 \begin{aligned}
@@ -478,22 +478,22 @@ PREDATOR\cite{huang2021predator} 是一种低重叠度的三维点云配准方�
 其中 $\left<\cdot, \cdot\right>$ 是内积，$t$ 是控制软分配的温度参数。在 $t \rightarrow 0$ 的极限下，公式 \ref{eq:soft} 收敛到最近邻硬分配。
 
 \subsubsection{解码器}
-我们的解码器从条件特征 $\boldsymbol{F_{P'}}$ 开始，将其与重叠分数 $\boldsymbol{o_{P'}}$ 和 $\boldsymbol{\tilde{o}_{P'}}$ 连接，并输出每点特征描述符 $\boldsymbol{F_P \in R^{N \times 32}}$ 和每点的重叠分数和匹配性得分 $\boldsymbol{o_P, m_P \in R^N}$。匹配性可以被视为“条件显著性”，量化了给定另一个点云 $\boldsymbol{Q}$ 中的点 (或特征) 时，一个点正确匹配的可能性。
+本文的解码器从条件特征 $\boldsymbol{F_{P'}}$ 开始，将其与重叠分数 $\boldsymbol{o_{P'}}$ 和 $\boldsymbol{\tilde{o}_{P'}}$ 连接，并输出每点特征描述符 $\boldsymbol{F_P} \in \mathbb{R}^{N \times 32}$ 和每点的重叠分数和匹配性得分 $\boldsymbol{o_P, m_P} \in \mathbb{R}^N$。匹配性可以被视为“条件显著性”，量化了给定另一个点云 $\boldsymbol{Q}$ 中的点 (或特征) 时，一个点正确匹配的可能性。
 
-解码器的架构将NN上采样与线性层相结合，并包括来自相应编码器层的跳跃连接。我们有意将重叠得分和匹配性分开，以便解开一个点是好的/坏的匹配候选的原因：原则上，一个点可以被明确地匹配，但位于重叠区域之外，或者它可以位于重叠区域，但具有模糊的描述符。经验上，我们发现网络学习预测高匹配性主要是在重叠区域的点，这可能反映出用于训练的真实对应关系，总是在重叠区域内。结果如图 \ref{fig:predator_results} 所示。
+解码器的架构将NN上采样与线性层相结合，并包括来自相应编码器层的跳跃连接。本文有意将重叠得分和匹配性分开，以便解开一个点是好的/坏的匹配候选的原因：原则上，一个点可以被明确地匹配，但位于重叠区域之外，或者它可以位于重叠区域，但具有模糊的描述符。经验上，本文发现网络学习预测高匹配性主要是在重叠区域的点，这可能反映出用于训练的真实对应关系，总是在重叠区域内。结果如图 \ref{fig:predator_results} 所示。
 
 \subsubsection{损失函数}
 PREDATOR采用端到端的训练，使用三种与真实对应关系相关的损失作为监督。
 
-环形损失：为了监督点特征描述符，我们遵循 \cite{bai2020d3feat} 并使用环形损失 \cite{sun2020circle} ，这是更常见的三元损失的一种变体。考虑一对重叠点云$\boldsymbol{P}$和$\boldsymbol{Q}$，这次与真实变换对齐。我们首先提取$\boldsymbol{P}$中的点$\boldsymbol{p_i} \in \boldsymbol{P_p} \subset \boldsymbol{P}$，该点在$\boldsymbol{Q}$中至少有一个 (可能是多个) 对应点，其中对应点集$\boldsymbol{E_p(p_i)}$定义为$\boldsymbol{Q}$中在$\boldsymbol{p_i}$周围半径$r_p$内的点。同样，Q中所有在半径$r_s$ (较大) 之外的点形成负面集$\boldsymbol{E_n(p_i)}$。然后从$\boldsymbol{P_p}$中随机抽取$n_p$个点计算环形损失：
+环形损失：为了监督点特征描述符，本文遵循 \cite{bai2020d3feat} 并使用环形损失 \cite{sun2020circle} ，这是更常见的三元损失的一种变体。考虑一对重叠点云$\boldsymbol{P}$和$\boldsymbol{Q}$，这次与真实变换对齐。本文首先提取$\boldsymbol{P}$中的点$\boldsymbol{p_i} \in \boldsymbol{P_p} \subset \boldsymbol{P}$，该点在$\boldsymbol{Q}$中至少有一个 (可能是多个) 对应点，其中对应点集$\boldsymbol{E_p(p_i)}$定义为$\boldsymbol{Q}$中在$\boldsymbol{p_i}$周围半径$r_p$内的点。同样，Q中所有在半径$r_s$ (较大) 之外的点形成负面集$\boldsymbol{E_n(p_i)}$。然后从$\boldsymbol{P_p}$中随机抽取$n_p$个点计算环形损失：
 \begin{equation}
-L_P^c = \frac{1}{n_p} \sum_{i=1}^{n_p} log\left(1 + \sum_{j \in E_p} e^{\beta_j^p(d_j^i - \Delta_p)} \cdot \sum_{k \in E_n} e^{\beta_k^n(\Delta_n - d_k^i)}\right),
+L_P^c = \frac{1}{n_p} \sum_{i=1}^{n_p} log\left(1 + \sum_{j \in E_p} e^{\beta_j^p(d_j^i - \Delta_p)} \cdot \sum_{k \in E_n} e^{\beta_k^n(\Delta_n - d_k^i)}\right)
 \end{equation}
 其中$\boldsymbol{d_j^i} = ||\boldsymbol{f_{\boldsymbol{p_i}}} - \boldsymbol{f_{\boldsymbol{q_j}}}||_2$表示特征空间中的距离，$\Delta_n$和$\Delta_p$分别为负面和正面边距。权重$\beta_j^p = \gamma(d_j^i - \Delta_p)$和$\beta_k^n = \gamma(\Delta_n - d_k^i)$分别针对每个正面和负面例子确定，使用经验边距$\Delta_p := 0.1$和$\Delta_n := 1.4$以及超参数$\gamma$。以相同的方式计算反向损失$L_Q^c$，总的环形损失为$L_c = \frac{1}{2} (L_P^c + L_Q^c)$。
 
 重叠损失：重叠概率的估计被视为二元分类并使用重叠损失$L_o = \frac{1}{2} (o_Q + o_P)$进行监督，其中
 \begin{equation}
-L_P^o = \frac{1}{|P|} \sum_{i=1}^{|P|} o_{\boldsymbol{p_i}} log(o_{\boldsymbol{p_i}}) + (1 - o_{\boldsymbol{p_i}}) log(1 - o_{\boldsymbol{p_i}}).
+L_P^o = \frac{1}{|P|} \sum_{i=1}^{|P|} o_{\boldsymbol{p_i}} log(o_{\boldsymbol{p_i}}) + (1 - o_{\boldsymbol{p_i}}) log(1 - o_{\boldsymbol{p_i}})
 \end{equation}
 
 点$\boldsymbol{p_i}$的真实标签$o_{\boldsymbol{p_i}}$定义为
@@ -501,23 +501,23 @@ L_P^o = \frac{1}{|P|} \sum_{i=1}^{|P|} o_{\boldsymbol{p_i}} log(o_{\boldsymbol{p
     o_{\boldsymbol{p_i}} =
 \begin{cases}
 1, & \text{if } ||\boldsymbol{T_{Q}^{P}(p_i)} - \text{NN}(\boldsymbol{T_{Q}^{P}(p_i), Q})||_2 < r_o \\
-0, & \text{otherwise},
+0, & \text{otherwise}
 \end{cases}
 \end{equation}
 其中$r_o$为重叠阈值。反向损失$L_Q^o$以相同方式计算。正面和负面例子的贡献通过与其相对频率成反比的权重进行平衡。
 
-可匹配性损失：监督可匹配性得分更为困难，因为预先并不清楚在对应关系搜索中应该考虑哪些正确的点。我们遵循一个简单的直觉：好的关键点是那些在训练期间在给定点可以成功匹配的点，使用当前的特征描述符。因此，我们将预测视为二元分类并即时生成真实标签。再次，我们将两个对称损失求和，$L_m = \frac{1}{2} (L_P^m + L_Q^m)$，其中
+可匹配性损失：监督可匹配性得分更为困难，因为预先并不清楚在对应关系搜索中应该考虑哪些正确的点。本文遵循一个简单的直觉：好的关键点是那些在训练期间在给定点可以成功匹配的点，使用当前的特征描述符。因此，本文将预测视为二元分类并即时生成真实标签。再次，本文将两个对称损失求和，$L_m = \frac{1}{2} (L_P^m + L_Q^m)$，其中
 \begin{equation}
-L_P^m = \frac{1}{|P|} \sum_{i=1}^{|P|} m_{\boldsymbol{p_i}} log(m_{\boldsymbol{p_i}}) + (1 - m_{\boldsymbol{p_i}}) log(1 - m_{\boldsymbol{p_i}}),
+L_P^m = \frac{1}{|P|} \sum_{i=1}^{|P|} m_{\boldsymbol{p_i}} log(m_{\boldsymbol{p_i}}) + (1 - m_{\boldsymbol{p_i}}) log(1 - m_{\boldsymbol{p_i}})
 \end{equation}
 真实标签$m_{\boldsymbol{p_i}}$通过在特征空间中进行最近邻搜索NNF(·, ·)即时计算：
 \begin{equation}
 \boldsymbol{m_{\boldsymbol{p_i}}} =
 \begin{cases}
 1, & \text{if } ||\boldsymbol{T_{Q}^{P}({\boldsymbol{p_i}})} - \text{NNF}(\boldsymbol{p_i}, Q)||_2 < r_m \\
-0, & \text{otherwise}.
+0, & \text{otherwise}
 \end{cases}
 \end{equation}
 
 \section{小结}
-本章我们简要介绍了本文所使用的数据集，和点云配准评价指标。然后围绕基于深度学习的点云配准层层递进，由深度学习的基础知识介绍到了目前最常用的深度学习点云处理模型 PointNet, PointNet++和 PREDATOR。后面，我们会使用预训练的 PointNet 和 PREDATOR 作为点云特征提取器，对于描述子进行后处理。
+本章本文简要介绍了本文所使用的数据集，和点云配准评价指标。然后围绕基于深度学习的点云配准层层递进，由深度学习的基础知识介绍到了目前最常用的深度学习点云处理模型 PointNet, PointNet++和 PREDATOR。后面，本文会使用预训练的 PointNet 和 PREDATOR 作为点云特征提取器，对于描述子进行后处理。

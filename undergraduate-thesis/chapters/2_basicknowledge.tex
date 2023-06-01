@@ -69,7 +69,7 @@
 5. Point Pair Features (PPF)  \cite{deng2018ppfnet} ：描述点云中两个点之间的几何关系，PPF 是一个四元组$(\alpha, d, \theta, \phi)$，其中$\alpha$是两点之间的距离，$d$是两点的法向量之差，$\theta$是两点的法线之间的角度，$\phi$是两点的法线在两点之间连线所确定的平面上的角度。PPF特征在处理点云配准问题时具有很高的鲁棒性，因为它仅依赖于点云的几何信息。
 
 \section{刚体运动表示}
-刚体运动表示是点云配准任务的最后一个阶段的任务。对于位移来说，常用的是位移向量 (Transition) ；旋转的运动参数有不同的表示形式，如欧拉角\cite{pio1966euler} 、四元数\cite{shoemake1985animating} 、旋转矩阵\cite{horn1954doubly} 、轴角\cite{diebel2006representing} 等。下面我们进行简要介绍。
+刚体运动表示是点云配准任务的最后一个阶段的任务。对于位移来说，常用的是位移向量 (Transition) ；旋转的运动参数有不同的表示形式，如欧拉角\cite{pio1966euler} 、四元数\cite{shoemake1985animating} 、旋转矩阵\cite{horn1954doubly} 、轴角\cite{diebel2006representing} 等。下面本文进行简要介绍。
 
 \subsection{旋转矩阵}
 旋转矩阵是一种与向量相乘时旋转向量同时保持其长度的矩阵。所有 $3 \times 3$ 旋转矩阵的特殊正交群表示为 $SO(3)$。因此，如果 $\boldsymbol{R} \in SO(3)$，那么
@@ -77,8 +77,8 @@
 \det (\boldsymbol{R}) = \pm1 \quad \text{且} \quad \boldsymbol{R}^{-1} = \boldsymbol{R}^T
 \end{equation}
 
-对于满足 $\det (\boldsymbol{R}) = 1$ 的旋转矩阵，称为正规旋转；对于满足 $\det (\boldsymbol{R}) = -1$ 的旋转矩阵，称为非正规旋转。非正规旋转也称为旋转倒数，由旋转后接反演操作组成。我们将分析限制在正规旋转上，因为非正规旋转不是刚体变换。
-我们按如下方式引用旋转矩阵的元素：
+对于满足 $\det (\boldsymbol{R}) = 1$ 的旋转矩阵，称为正规旋转；对于满足 $\det (\boldsymbol{R}) = -1$ 的旋转矩阵，称为非正规旋转。非正规旋转也称为旋转倒数，由旋转后接反演操作组成。本文将分析限制在正规旋转上，因为非正规旋转不是刚体变换。
+本文按如下方式引用旋转矩阵的元素：
 \begin{align}
     \boldsymbol{R} &=
     \begin{bmatrix}
@@ -92,17 +92,17 @@
     \end{bmatrix}
 \end{align}
 
-对于正规旋转矩阵，我们可以使用群的定义来进行更精准的定义。
+对于正规旋转矩阵，本文可以使用群的定义来进行更精准的定义。
 \begin{equation}
-    SO(n) = \{\boldsymbol{R} \in \mathbb{R}^{n \times n} | \boldsymbol{R}^T\boldsymbol{R} = \boldsymbol{I}, \det (R) = 1\}
+    SO(n) = \{\boldsymbol{R} \in \mathbb{R}^{n \times n} | \boldsymbol{R}^T\boldsymbol{R} = \boldsymbol{I}, \det (\boldsymbol{R}) = 1\}
 \end{equation}
 其中，$SO(n)$是特殊正交群 (Special Orthogonal Group)，这个集合由$n$维空间的旋转矩阵组成。$SO(n)$是一个群，因为它满足群的四个条件：封闭性、结合律、单位元和逆元。$SO(n)$的单位元是 $\boldsymbol{I}$，逆元是 $\boldsymbol{R}^T$。$SO(n)$的元素称为正规旋转矩阵。通过旋转矩阵可以直接描述相机的旋转。
 
-为了描述两个坐标之间的相对旋转，我们假设某个单位正交基 $\boldsymbol{i}, \boldsymbol{j}, \boldsymbol{k}$，并且我们希望将其旋转到另一个正交基 $\boldsymbol{i}', \boldsymbol{j}', \boldsymbol{k}'$。假设对于同一个向量$\boldsymbol{a} = [a_1, a_2, a_3]^T$，在两个坐标系中的表示分别为 $\boldsymbol{a} = a_1\boldsymbol{i} + a_2\boldsymbol{j} + a_3\boldsymbol{k}$ 和 $\boldsymbol{a}' = a_1'\boldsymbol{i}' + a_2'\boldsymbol{j}' + a_3'\boldsymbol{k}'$，根据坐标的定义，有
+为了描述两个坐标之间的相对旋转，本文假设某个单位正交基 $\boldsymbol{i}, \boldsymbol{j}, \boldsymbol{k}$，并且本文希望将其旋转到另一个正交基 $\boldsymbol{i}', \boldsymbol{j}', \boldsymbol{k}'$。假设对于同一个向量$\boldsymbol{a} = [a_1, a_2, a_3]^T$，在两个坐标系中的表示分别为 $\boldsymbol{a} = a_1\boldsymbol{i} + a_2\boldsymbol{j} + a_3\boldsymbol{k}$ 和 $\boldsymbol{a}' = a_1'\boldsymbol{i}' + a_2'\boldsymbol{j}' + a_3'\boldsymbol{k}'$，根据坐标的定义，有
 \begin{equation}
     [\boldsymbol{i}, \boldsymbol{j}, \boldsymbol{k}] \boldsymbol{a} = [\boldsymbol{i}', \boldsymbol{j}', \boldsymbol{k}'] \boldsymbol{a}'
 \end{equation}
-我们对上述等式同时左成$[\boldsymbol{i}, \boldsymbol{j}, \boldsymbol{k}]^T$，我们可以通过旋转矩阵 $\boldsymbol{R}$ 来表示两个坐标系之间的旋转关系，即
+本文对上述等式同时左成$[\boldsymbol{i}, \boldsymbol{j}, \boldsymbol{k}]^T$，本文可以通过旋转矩阵 $\boldsymbol{R}$ 来表示两个坐标系之间的旋转关系，即
 \begin{equation}
     \boldsymbol{a}' = 
     \begin{bmatrix}
@@ -126,7 +126,7 @@
 \end{equation}
 
 \subsection{变换矩阵}
-在三维空间中，我们可以通过平移和旋转来描述一个刚体的变换。我们将平移和旋转组合起来，得到一个变换矩阵，用来描述一个刚体的变换。假设我们有一个刚体，它的初始位置在原点，我们将它平移到 $\boldsymbol{t}$，然后将它旋转到 $\boldsymbol{R}$，则这个刚体的变换矩阵为：
+在三维空间中，本文可以通过平移和旋转来描述一个刚体的变换。本文将平移和旋转组合起来，得到一个变换矩阵，用来描述一个刚体的变换。假设本文有一个刚体，它的初始位置在原点，本文将它平移到 $\boldsymbol{t}$，然后将它旋转到 $\boldsymbol{R}$，则这个刚体的变换矩阵为：
 \begin{equation}
     \boldsymbol{T} = 
     \begin{bmatrix}
@@ -134,17 +134,17 @@
     \boldsymbol{0}^T & 1
     \end{bmatrix}
 \end{equation}
-将向量改写为齐次形式$\widetilde{\boldsymbol{a}} = [a_1, a_2, a_3, 1]^T = [\boldsymbol{a}, 1]^T$， 那么我们可以将式 \ref{eq:rotation_translation} 重写为：
+将向量改写为齐次形式$\widetilde{\boldsymbol{a}} = [a_1, a_2, a_3, 1]^T = [\boldsymbol{a}, 1]^T$， 那么本文可以将式 \ref{eq:rotation_translation} 重写为：
 \begin{equation}
     \widetilde{\boldsymbol{a}}' = \boldsymbol{T} \widetilde{\boldsymbol{a}} = \boldsymbol{R} \boldsymbol{a} + \boldsymbol{t}
 \end{equation}  
 
-依靠变换矩阵，我们可以对多次变换的累加进行很简洁的数学表达。假设我们有一个刚体$\boldsymbol{a}$，它的初始位置在原点，我们将它经过 $\boldsymbol{T}_1, \boldsymbol{T}_2$ 两次变换，则这个刚体的最终位置为$\widetilde{\boldsymbol{a}}' = \boldsymbol{T}_1 \boldsymbol{T}_2 \widetilde{\boldsymbol{a}}$。
+依靠变换矩阵，本文可以对多次变换的累加进行很简洁的数学表达。假设本文有一个刚体$\boldsymbol{a}$，它的初始位置在原点，本文将它经过 $\boldsymbol{T}_1, \boldsymbol{T}_2$ 两次变换，则这个刚体的最终位置为$\widetilde{\boldsymbol{a}}' = \boldsymbol{T}_1 \boldsymbol{T}_2 \widetilde{\boldsymbol{a}}$。
 
 \subsection{欧拉角}
-三次坐标旋转依次可以描述任意旋转。我们考虑三次旋转，其中第一次旋转是关于 $\boldsymbol{k}$ 轴的角度 $\psi$，第二次旋转是关于 $\boldsymbol{j}$ 轴的角度 $\theta$，第三次旋转是关于 $\boldsymbol{i}$ 轴的角度 $\phi$，如图 \ref{fig:rotation} (a, b ,c)所示。为了简化符号，我们将这些角度排列成一个三维向量，称为欧拉角向量，定义为 
+三次坐标旋转依次可以描述任意旋转。本文考虑三次旋转，其中第一次旋转是关于 $\boldsymbol{k}$ 轴的角度 $\psi$，第二次旋转是关于 $\boldsymbol{j}$ 轴的角度 $\theta$，第三次旋转是关于 $\boldsymbol{i}$ 轴的角度 $\phi$，如图 \ref{fig:rotation} (a, b ,c)所示。为了简化符号，本文将这些角度排列成一个三维向量，称为欧拉角向量，定义为 
 \begin{equation}
-    \boldsymbol{u} := [\phi, \theta, \psi]^T
+    \boldsymbol{u} := [\phi, \theta, \psi]^\text{T}
 \end{equation}
 将欧拉角向量映射到其对应的旋转矩阵的函数，$\boldsymbol{R}_{ijk} : \mathbb{R}^3 \to SO(3)$，定义为
 \begin{equation}
@@ -165,18 +165,18 @@
     \vspace{-0.5cm}
 \end{figure}
 
-在自动化或者航空航天领域比较常用的欧拉角的分解方式是 $Z-Y-X$，也就是说，先绕 $z$ 轴旋转 $\psi$ 角，然后绕 $y$ 轴旋转 $\theta$ 角，最后绕 $x$ 轴旋转 $\phi$ 角。这种分解方式也被称为航空分解 (Aerospace decomposition) ，通常这种方式中的$Z-Y-X$会被称为“偏航 - 俯仰 - 旋转 (yaw - pitch - roll)”。在这种分解方式中，欧拉角向量的顺序是 $\boldsymbol{u} = [\psi, \theta, \phi]^T$，如图 \ref{fig:rotation} (d)所示。
+在自动化或者航空航天领域比较常用的欧拉角的分解方式是 $Z-Y-X$，也就是说，先绕 $z$ 轴旋转 $\psi$ 角，然后绕 $y$ 轴旋转 $\theta$ 角，最后绕 $x$ 轴旋转 $\phi$ 角。这种分解方式也被称为航空分解 (Aerospace decomposition) ，通常这种方式中的$Z-Y-X$会被称为“偏航 - 俯仰 - 旋转 (yaw - pitch - roll)”。在这种分解方式中，欧拉角向量的顺序是 $\boldsymbol{u} = [\psi, \theta, \phi]^\text{T}$，如图 \ref{fig:rotation} (d)所示。
 
 欧拉角的一个缺点是会碰到著名的万象锁问题\cite{vsenk2006rotation} ，也就是说，当 $\theta = \pm \frac{\pi}{2}$ 时，旋转矩阵 $\boldsymbol{R}_{ijk}(\boldsymbol{u})$ 的值会变成奇异的。理论上可以证明，只要想要用3个数来表达三位旋转时，基本都会碰到奇异性问题\cite{stuelpnagel1964parametrization} 。由于这种原理，欧拉角不适用于迭代和插值，在传统的SLAM中和深度学习中几乎都不会是用这种方式来进行迭代，但是欧拉角对于人机交互是友好的。
 
 \subsection{四元数}
-旋转矩阵使用了9个未知数来描述3自由度的旋转，这在数学表达上具有冗余性了；欧拉角使用了3个未知数来描述3自由度的旋转，在数学表达上是紧凑的，但是具有奇异性。因为我们找不到不带奇异性，且使用3个未知数的方法来描述3维旋转的描述方式\cite{stuelpnagel1964parametrization} 。这个性质，可以类比于用两个坐标描述地球表面 (二维流形) 上的点，我们可以使用经纬度来描述地球表面上的点，但是在极点处，经纬度的表达就会出现奇异性，即纬度为$\pm 90^{\circ}$时，经度无意义。
+旋转矩阵使用了9个未知数来描述3自由度的旋转，这在数学表达上具有冗余性了；欧拉角使用了3个未知数来描述3自由度的旋转，在数学表达上是紧凑的，但是具有奇异性。因为本文找不到不带奇异性，且使用3个未知数的方法来描述3维旋转的描述方式\cite{stuelpnagel1964parametrization} 。这个性质，可以类比于用两个坐标描述地球表面 (二维流形) 上的点，本文可以使用经纬度来描述地球表面上的点，但是在极点处，经纬度的表达就会出现奇异性，即纬度为$\pm 90^{\circ}$时，经度无意义。
 
-三位旋转是一个三维流形，因此，为了最优平衡无奇异性和数学表达的紧凑性，我们需要引入一个新的数学工具来描述3自由度的旋转，这个数学工具就是四元数。四元数是Hamilton找到的一种超复数，它在数学形式上既是紧凑的，又是非奇异的。四元数的定义如下：
+三位旋转是一个三维流形，因此，为了最优平衡无奇异性和数学表达的紧凑性，本文需要引入一个新的数学工具来描述3自由度的旋转，这个数学工具就是四元数。四元数是Hamilton找到的一种超复数，它在数学形式上既是紧凑的，又是非奇异的。四元数的定义如下：
 \begin{equation}
     \boldsymbol{q} = q_0 + q_1 i + q_2 j + q_3 k
 \end{equation}
-其中，$q_0, q_1, q_2, q_3 \in mathbb{R}$，$i, j, k$ 是四元数的三个虚数单位，满足如下关系：
+其中，$q_0, q_1, q_2, q_3 \in \mathbb{R}$，$i, j, k$ 是四元数的三个虚数单位，满足如下关系：
 \begin{equation}
     \left\{
     \begin{aligned}
@@ -190,7 +190,7 @@
 \begin{equation}
     \boldsymbol{q} = \cos \frac{\theta}{2} + \sin \frac{\theta}{2} (u_x i + u_y j + u_z k)
 \end{equation}
-同时，我们也可以从单位四元数种计算出对应的旋转轴和旋转角：
+同时，本文也可以从单位四元数种计算出对应的旋转轴和旋转角：
 \begin{equation}
     \left\{
     \begin{aligned}
@@ -200,7 +200,7 @@
     \right.
 \end{equation}
 
-因为四元数是定义在复向量空间中而非旋转流形中，并且四元数没有死锁的特性，所以在深度学习的梯度下降算法中，常常用四元数作为回归的目标。并且，因为三维流形的性质，我们在四元数中同乘一个常数，可以得到相同的旋转，即$[q_0, q_1, q_2, q_3] \iff k[q_0, q_1, q_2, q_3]$。由于这个性质，在回归任务中，我们通常回归单位四元数，即$\sum_0^3 q_i^2 = 1$。
+因为四元数是定义在复向量空间中而非旋转流形中，并且四元数没有死锁的特性，所以在深度学习的梯度下降算法中，常常用四元数作为回归的目标。并且，因为三维流形的性质，本文在四元数中同乘一个常数，可以得到相同的旋转，即$[q_0, q_1, q_2, q_3] \iff k[q_0, q_1, q_2, q_3]$。由于这个性质，在回归任务中，本文通常回归单位四元数，即$\sum_0^3 q_i^2 = 1$。
 
 {\bf 用四元数表示旋转。} 用四元数同样也可以表达对一个点的旋转，假设一个空间中的三维坐标点为$\boldsymbol{a} = [x, y, z] \in \mathbb{R}^3$。以及一个旋转轴$\boldsymbol{n}$和旋转角$\theta$，这个点绕着旋转轴旋转$\theta$角后的坐标为$\boldsymbol{a}'$，则：
 \begin{equation}
@@ -211,7 +211,7 @@
 
 \section{运动学参数估计}
 \subsection{基于奇异值分解的线性代数求解}
-奇异值分解\cite{levinson2020analysis} (Singular Value Decomposition, SVD) 是线性代数中一种重要的矩阵分解，在信号处理、计算机视觉、运动估计中有着非常广泛的运用。下面，我们对奇异值分解的线性代数部分进行简要介绍。
+奇异值分解\cite{levinson2020analysis} (Singular Value Decomposition, SVD) 是线性代数中一种重要的矩阵分解，在信号处理、计算机视觉、运动估计中有着非常广泛的运用。下面，本文对奇异值分解的线性代数部分进行简要介绍。
 
 奇异值分解对一个矩形数据矩阵 (定义为$\boldsymbol{A}$，其中$\boldsymbol{A}$是一个$n \times p$矩阵) 进行处理，其中n行代表观察值，p列代表变量。SVD定理如下：
 \begin{equation}
@@ -227,31 +227,31 @@
 
 计算SVD包括寻找$\boldsymbol{A} \boldsymbol{A}^T$和$\boldsymbol{A}^T \boldsymbol{A}$的特征值和特征向量。$\boldsymbol{A}^T \boldsymbol{A}$的特征向量构成$\boldsymbol{V}$的列，$\boldsymbol{A} \boldsymbol{A}^T$的特征向量构成$\boldsymbol{U}$的列。此外，$\boldsymbol{S}$中的奇异值是来自$\boldsymbol{A} \boldsymbol{A}^T$或$\boldsymbol{A}^T \boldsymbol{A}$的特征值的平方根。奇异值是$\boldsymbol{S}$矩阵的对角线条目，并按降序排列。奇异值总是实数。如果矩阵$\boldsymbol{A}$是实数矩阵，那么$\boldsymbol{U}$和$\boldsymbol{V}$也是实数。
 
-奇异值分解 (SVD) 在点云配准问题中也具有重要应用。点云配准是将两个或多个点云数据集合并为一个统一坐标系的过程。在这种情况下，我们的目标是找到一个最优的刚体变换，包括旋转和平移，使得两个点云之间的距离最小化。
+奇异值分解 (SVD) 在点云配准问题中也具有重要应用。点云配准是将两个或多个点云数据集合并为一个统一坐标系的过程。在这种情况下，本文的目标是找到一个最优的刚体变换，包括旋转和平移，使得两个点云之间的距离最小化。
 
-假设我们有两个点云数据集$\boldsymbol{P}$和$\boldsymbol{Q}$，每个点云包含$n$个点。我们首先计算两个点云的质心$\boldsymbol{p}_c$和$\boldsymbol{q}_c$，然后将点云平移到原点。接下来，我们计算点云$\boldsymbol{P}$和$\boldsymbol{Q}$之间的距离矩阵$\boldsymbol{H}$，其中$\boldsymbol{H}=\boldsymbol{P}^T\boldsymbol{Q}$。
+假设本文有两个点云数据集$\boldsymbol{P}$和$\boldsymbol{Q}$，每个点云包含$n$个点。本文首先计算两个点云的质心$\boldsymbol{p}_c$和$\boldsymbol{q}_c$，然后将点云平移到原点。接下来，本文计算点云$\boldsymbol{P}$和$\boldsymbol{Q}$之间的距离矩阵$\boldsymbol{H}$，其中$\boldsymbol{H}=\boldsymbol{P}^T\boldsymbol{Q}$。
 
-在这种情况下，我们可以使用SVD来求解最优的旋转矩阵$\boldsymbol{R}$，使得两个点云之间的距离最小化。具体来说，我们对距离矩阵$\boldsymbol{H}$进行奇异值分解：
+在这种情况下，本文可以使用SVD来求解最优的旋转矩阵$\boldsymbol{R}$，使得两个点云之间的距离最小化。具体来说，本文对距离矩阵$\boldsymbol{H}$进行奇异值分解：
 
 \begin{equation}
 \boldsymbol{H} = \boldsymbol{U} \boldsymbol{S} \boldsymbol{V}^T
 \end{equation}
 
-然后，我们计算旋转矩阵$\boldsymbol{R}$：
+然后，本文计算旋转矩阵$\boldsymbol{R}$：
 
 \begin{equation}
 \boldsymbol{R} = \boldsymbol{U} \boldsymbol{V}^T
 \end{equation}
 
-如果$\boldsymbol{R}$是一个不合适的旋转矩阵 (即$\det(\boldsymbol{R})\neq 1$) ，我们可以通过修改$\boldsymbol{S}$矩阵来修复它。具体而言，我们将$\boldsymbol{S}$的最小奇异值设为$-1$，然后重新计算旋转矩阵$\boldsymbol{R}$。
+如果$\boldsymbol{R}$是一个不合适的旋转矩阵 (即$\det(\boldsymbol{R})\neq 1$) ，本文可以通过修改$\boldsymbol{S}$矩阵来修复它。具体而言，本文将$\boldsymbol{S}$的最小奇异值设为$-1$，然后重新计算旋转矩阵$\boldsymbol{R}$。
 
-最后，我们可以计算最优的平移向量$\boldsymbol{t}$：
+最后，本文可以计算最优的平移向量$\boldsymbol{t}$：
 
 \begin{equation}
 \boldsymbol{t} = \boldsymbol{q}_c - \boldsymbol{R} \boldsymbol{p}_c
 \end{equation}
 
-通过应用旋转矩阵$\boldsymbol{R}$和平移向量$\boldsymbol{t}$，我们可以将点云$\boldsymbol{P}$对齐到点云$\boldsymbol{Q}$，从而实现点云配准。
+通过应用旋转矩阵$\boldsymbol{R}$和平移向量$\boldsymbol{t}$，本文可以将点云$\boldsymbol{P}$对齐到点云$\boldsymbol{Q}$，从而实现点云配准。
 
 \subsection{基于Levenberg-Marquardt算法的非线性优化求解}
 在数学和计算领域，Levenberg-Marquardt算法 (LMA或简称LM) \cite{levenberg1944method} ，也称为阻尼最小二乘法 (DLS) ，用于求解非线性最小二乘问题。这些最小化问题尤其出现在最小二乘曲线拟合中。LMA在高斯-牛顿算法 (GNA) 和梯度下降法之间进行插值。LMA比GNA更稳健，这意味着在许多情况下，即使它从距离最终最小值非常远的地方开始，也能找到解决方案。对于行为良好的函数和合理的初始参数，LMA往往比GNA慢。LMA也可以被视为使用信任区域方法的高斯-牛顿算法。
@@ -264,7 +264,7 @@ f(x) = \frac{1}{2} \sum_{j=1}^{m} r_j^2(x)
 
 其中 $x = (x_1, x_2, \dots, x_n)^T$ 是一个向量，每个 $r_j$ 是一个从 $\mathbb{R}^n$ 到 $\mathbb{R}$ 的函数。$r_j$ 被称为残差，并且假定 $m \geq n$。
 
-为了简化问题，我们用残差向量 $r : \mathbb{R}^n \rightarrow \mathbb{R}^m$ 来表示 $f$，定义为：
+为了简化问题，本文用残差向量 $r : \mathbb{R}^n \rightarrow \mathbb{R}^m$ 来表示 $f$，定义为：
 
 \begin{equation}
 r(x) =
@@ -278,15 +278,15 @@ r_m(x)
 
 现在，$f$ 可以重写为 $f(x) = \frac{1}{2} ||r(x)||^2$。$f$ 的导数可以用相对于 $x$ 的 $r$ 的雅可比矩阵 $J(x)$ 来表示，定义为 $J(x) = \frac{\partial r_j}{\partial x_i}$，其中 $1 \leq j \leq m$，$1 \leq i \leq n$。
 
-首先考虑线性情况，其中每个 $r_i$ 函数都是线性的。在这里，雅可比矩阵是常数，我们可以将 $r$ 表示为空间中的超平面，这样 $f$ 给出二次型：
+首先考虑线性情况，其中每个 $r_i$ 函数都是线性的。在这里，雅可比矩阵是常数，本文可以将 $r$ 表示为空间中的超平面，这样 $f$ 给出二次型：
 
 \begin{equation}
 f(x) = \frac{1}{2} ||Jx - r_0||^2
 \end{equation}
 
-我们还得到 $\nabla f(x) = J^T(Jx - r_0)$ 和 $\nabla^2 f(x) = J^TJ$。通过将 $\nabla f(x) = 0$ 求解最小值，我们得到 $x_\text{min} = (J^TJ)^{-1}J^Tr$，这是一组无约束优化问题的解。
+本文还得到 $\nabla f(x) = J^T(Jx - r_0)$ 和 $\nabla^2 f(x) = J^TJ$。通过将 $\nabla f(x) = 0$ 求解最小值，本文得到 $x_\text{min} = (J^TJ)^{-1}J^Tr$，这是一组无约束优化问题的解。
 
-回到一般的非线性情况，我们有：
+回到一般的非线性情况，本文有：
 
 \begin{equation}
 \nabla f(x) = J(x)^T r(x)
@@ -298,7 +298,7 @@ f(x) = \frac{1}{2} ||Jx - r_0||^2
 \label{eq:hessian}
 \end{equation}
 
-最小二乘问题的独特属性是，给定雅可比矩阵 $J$，如果可以将 $r_j$ 用线性函数近似 ($\nabla^2 r_j(x)$ 较小) 或残差 $r_j(x)$ 本身较小，我们可以实质上免费获得海森矩阵 ($\nabla^2 f(x)$) 。在这种情况下，海森矩阵简化为：
+最小二乘问题的独特属性是，给定雅可比矩阵 $J$，如果可以将 $r_j$ 用线性函数近似 ($\nabla^2 r_j(x)$ 较小) 或残差 $r_j(x)$ 本身较小，本文可以直接获得 Hessian 矩阵 ($\nabla^2 f(x)$) 。在这种情况下，Hessian 矩阵简化为：
 
 \begin{equation}
 \nabla^2 f(x) = J(x)^T J(x)
@@ -307,7 +307,7 @@ f(x) = \frac{1}{2} ||Jx - r_0||^2
 
 这与线性情况相同。这里通常使用的近似是在解附近的 $r_i$ 近似线性，这样 $\nabla^2 r_j(x)$ 较小。还要注意，只有在残差较小时，式 \ref{eq:hessian_approx} 才有效。对于大残差问题，不能使用二次近似求解\cite{李娇娇2022基于深度学习的} 。
 
-考虑到点云配准问题，我们可以将 Levenberg-Marquardt 算法应用于点云之间的非线性最小二乘优化问题。在这种情况下，我们寻求点云对应度量的最小距离，同时考虑旋转和平移变换。通过迭代地优化变换参数，Levenberg-Marquardt 算法可以在点云配准问题中找到一个稳定的解决方案。点云对应度量之间的误差主要有点到点 (point-to-point) 、点到面 (point-to-plane) 、面到面 (plane-to-plane) 这几类方式。如图 \ref{fig:point2plane} 所示，我们以最小化点到面距离为例，来说明 Levenberg-Marquardt 算法的求解过程。
+考虑到点云配准问题，本文可以将 Levenberg-Marquardt 算法应用于点云之间的非线性最小二乘优化问题。在这种情况下，本文寻求点云对应度量的最小距离，同时考虑旋转和平移变换。通过迭代地优化变换参数，Levenberg-Marquardt 算法可以在点云配准问题中找到一个稳定的解决方案。点云对应度量之间的误差主要有点到点 (point-to-point) 、点到面 (point-to-plane) 、面到面 (plane-to-plane) 这几类方式。如图 \ref{fig:point2plane} 所示，本文以最小化点到面距离为例，来说明 Levenberg-Marquardt 算法的求解过程。
 
 \begin{figure}[htbp]
     \centering
