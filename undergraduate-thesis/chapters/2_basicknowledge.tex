@@ -92,7 +92,7 @@
     \end{bmatrix}
 \end{align}
 
-对于正规旋转矩阵，本文可以使用群的定义来进行更精准的定义。
+对于旋转矩阵，本文可以使用群的定义来进行更精准的定义。
 \begin{equation}
     SO(n) = \{\boldsymbol{R} \in \mathbb{R}^{n \times n} | \boldsymbol{R}^T\boldsymbol{R} = \boldsymbol{I}, \det (\boldsymbol{R}) = 1\}
 \end{equation}
@@ -142,7 +142,7 @@
 依靠变换矩阵，本文可以对多次变换的累加进行很简洁的数学表达。假设本文有一个刚体$\boldsymbol{a}$，它的初始位置在原点，本文将它经过 $\boldsymbol{T}_1, \boldsymbol{T}_2$ 两次变换，则这个刚体的最终位置为$\widetilde{\boldsymbol{a}}' = \boldsymbol{T}_1 \boldsymbol{T}_2 \widetilde{\boldsymbol{a}}$。
 
 \subsection{欧拉角}
-三次坐标旋转依次可以描述任意旋转。本文考虑三次旋转，其中第一次旋转是关于 $\boldsymbol{k}$ 轴的角度 $\psi$，第二次旋转是关于 $\boldsymbol{j}$ 轴的角度 $\theta$，第三次旋转是关于 $\boldsymbol{i}$ 轴的角度 $\phi$，如图 \ref{fig:rotation} (a, b ,c)所示。为了简化符号，本文将这些角度排列成一个三维向量，称为欧拉角向量，定义为 
+三次坐标旋转依次可以描述任意旋转。本文考虑三次旋转，其中第一次旋转是关于 $x$ 轴的角度 $\psi$，第二次旋转是关于 $y$ 轴的角度 $\theta$，第三次旋转是关于 $z$ 轴的角度 $\phi$，如图 \ref{fig:rotation} (a, b ,c)所示。为了简化符号，本文将这些角度排列成一个三维向量，称为欧拉角向量，定义为 
 \begin{equation}
     \boldsymbol{u} := [\phi, \theta, \psi]^\text{T}
 \end{equation}
