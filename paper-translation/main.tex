@@ -38,8 +38,10 @@
     valueMaxWidth = 20em,
   },
   info = {
-    title = 基于深度学习的端到端多实例点云配准,
-    titleEn = {Deep Learning Based End-To-End \\ Multi-instance Point Cloud Registration},
+    title = 基于深度学习和聚类优化的多实例点云配准,
+    titleEn = {Optimized Multi-Instance Point Cloud Registration based on
+    Deep Learning and Cluster Methods
+    },
     % 想要删除某项封面信息，直接删除该项即可。
     % 想要让某项封面信息留空（但是保留下划线），请设置为空字符串。
     % 如需要换行，则用 “\\” 符号分割。
@@ -92,7 +94,19 @@
 \addbibresource{misc/ref.bib}
 
 % 文档开始
+\newcommand\BackgroundPicture{%
+  \put(0,0){%
+    \parbox[b][\paperheight]{\paperwidth}{%
+      \vfill
+      \centering%
+      \includegraphics[width=\paperwidth]{images/background.pdf}
+      \vfill
+    }}}
+
+% 文档开始
 \begin{document}
+\AddToShipoutPicture{\BackgroundPicture}
+
 
 % 标题页面：如无特殊需要，本部分无需改动
 % \input{misc/0_cover.tex}
